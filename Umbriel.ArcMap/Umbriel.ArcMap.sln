@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcMap.NetworkAnalysis", "Umbriel.ArcMap.NetworkAnalysis\Umbriel.ArcMap.NetworkAnalysis.csproj", "{F86DDE44-5B66-45F1-BFBD-A0336442544A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcMap.Editor", "Umbriel.ArcMap.Editor\Umbriel.ArcMap.Editor.csproj", "{B1E7BA50-3233-4910-96C3-024094215328}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{F86DDE44-5B66-45F1-BFBD-A0336442544A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F86DDE44-5B66-45F1-BFBD-A0336442544A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F86DDE44-5B66-45F1-BFBD-A0336442544A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1E7BA50-3233-4910-96C3-024094215328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1E7BA50-3233-4910-96C3-024094215328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1E7BA50-3233-4910-96C3-024094215328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1E7BA50-3233-4910-96C3-024094215328}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
