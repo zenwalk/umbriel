@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Umbriel.ArcMap.Editor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Henrico County, VA")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Umbriel.ArcMap.Editor")]
-[assembly: AssemblyCopyright("Copyright © Henrico County, VA 2009")]
+[assembly: AssemblyCopyright("Copyright © Jay Cummins, 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
