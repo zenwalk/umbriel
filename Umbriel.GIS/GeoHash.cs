@@ -36,7 +36,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////</summary>
 
-namespace AZGeohashlib
+namespace Umbriel.GIS
 {
     using System;
     using System.Collections.Generic;
