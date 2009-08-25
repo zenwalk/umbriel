@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Umbriel.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Henrico County, VA")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Umbriel.UnitTests")]
-[assembly: AssemblyCopyright("Copyright © Henrico County, VA 2009")]
+[assembly: AssemblyCopyright("Copyright © Jay Cummins, 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
