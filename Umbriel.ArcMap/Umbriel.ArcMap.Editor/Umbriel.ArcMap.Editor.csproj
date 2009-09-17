@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\_Umbriel.ArcMap.Editor\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\..\dev\debug\_Umbriel.ArcMap.Editor\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -115,6 +115,7 @@
       <DependentUpon>BatchExtendForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Util\EditorHelper.cs" />
+    <Compile Include="Util\Geohasher.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -155,6 +156,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Umbriel.GIS\Umbriel.GIS.csproj">
+      <Project>{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}</Project>
+      <Name>Umbriel.GIS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
