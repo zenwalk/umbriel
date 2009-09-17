@@ -197,6 +197,30 @@ namespace Umbriel.ArcMap.NetworkAnalysis
         }
 
         /// <summary>
+        /// Adds  junction flags to all of the selected point features
+        /// </summary>
+        /// <param name="layers">List of feature layers that contain selected points</param>
+        internal void AddJunctionFlags(List<IFeatureLayer> layers)
+        {
+            this.AddFlagCount = 0;
+
+            foreach (IFeatureLayer layer in layers)
+            {
+                this.AddEdgeFlags(layer);
+            }
+        }
+
+        /// <summary>
+        /// Adds the junction flags at the locations of selected features
+        /// </summary>
+        /// <param name="layer">IFeatureLayer containing the feature selection</param>
+        internal void AddJunctionFlags(IFeatureLayer layer)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
         /// Gets the default flag symbol
         /// </summary>
         /// <returns>ISymbol for the green square symbol</returns>
