@@ -138,7 +138,6 @@
   <ItemGroup>
     <Content Include="assemicon.ico" />
     <None Include="media\CountPathsIcon.bmp" />
-    <None Include="CountPathsIcon.bmp" />
     <EmbeddedResource Include="UI\FlagFeatureSelection.bmp" />
     <None Include="Resources\flag_green.bmp" />
     <None Include="Resources\greenflag.bmp" />
