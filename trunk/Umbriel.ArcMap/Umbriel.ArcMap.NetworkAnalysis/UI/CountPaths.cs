@@ -3,8 +3,8 @@
 // </copyright>
 // <author>Jay Cummins</author>
 // <email>cumminsjp@gmail.com</email>
-// <date>2009-08-05</date>
-// <summary>BaseCommand class file for add flags from a feature selection</summary>
+// <date>2009-09-17</date>
+// <summary>class file for the CountPaths Command</summary>
 
 namespace Umbriel.ArcMap.NetworkAnalysis.UI
 {
@@ -122,8 +122,11 @@ namespace Umbriel.ArcMap.NetworkAnalysis.UI
                 }
                 else
                 {
+
                     FlagFactory factory = new FlagFactory(this.ArcMapApplication);
-                    factory.AddEdgeFlags(layerList);
+
+                    PathAnalyzer analyzer = new PathAnalyzer(factory);
+                    analyzer.CountPaths(layerList);
 
                     TimeSpan elapsedTime = DateTime.Now.Subtract(start);
 
