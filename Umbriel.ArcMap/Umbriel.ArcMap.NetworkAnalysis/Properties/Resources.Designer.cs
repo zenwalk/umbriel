@@ -60,6 +60,13 @@ namespace Umbriel.ArcMap.NetworkAnalysis.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap CountPathsIcon {
+            get {
+                object obj = ResourceManager.GetObject("CountPathsIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap flag_green {
             get {
                 object obj = ResourceManager.GetObject("flag_green", resourceCulture);
