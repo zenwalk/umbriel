@@ -35,7 +35,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\_Umbriel.ArcMap.NetworkAnalysis\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\..\dev\debug\_Umbriel.ArcMap.NetworkAnalysis\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -101,7 +101,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\CountPaths.cs" />
     <Compile Include="UI\FlagFeatureSelection.cs" />
+    <Compile Include="Util\CountPathsResultTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Util\NetworkAnalysisHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assemicon.ico" />
+    <None Include="media\CountPathsIcon.bmp" />
+    <None Include="CountPathsIcon.bmp" />
     <EmbeddedResource Include="UI\FlagFeatureSelection.bmp" />
     <None Include="Resources\flag_green.bmp" />
     <None Include="Resources\greenflag.bmp" />
@@ -144,8 +150,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Umbriel.ArcMap.Editor\Umbriel.ArcMap.Editor.csproj">
+      <Project>{B1E7BA50-3233-4910-96C3-024094215328}</Project>
+      <Name>Umbriel.ArcMap.Editor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="ExtLib\" />
-    <Folder Include="media\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
