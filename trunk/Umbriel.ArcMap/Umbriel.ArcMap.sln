@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.GIS", "..\Umbriel.GIS\Umbriel.GIS.csproj", "{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcMapUI", "..\Umbriel.ArcMapUI\Umbriel.ArcMapUI.csproj", "{FCF616D4-2B65-4FBE-BD52-C00539FF4014}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.PurgeDomainValues", "Umbriel.ArcGIS.PurgeDomainValues\Umbriel.ArcGIS.PurgeDomainValues.csproj", "{8FD8FC74-6DFE-4FC9-8E76-512278939103}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -50,6 +54,14 @@ Global
 		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF616D4-2B65-4FBE-BD52-C00539FF4014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF616D4-2B65-4FBE-BD52-C00539FF4014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF616D4-2B65-4FBE-BD52-C00539FF4014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF616D4-2B65-4FBE-BD52-C00539FF4014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD8FC74-6DFE-4FC9-8E76-512278939103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD8FC74-6DFE-4FC9-8E76-512278939103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD8FC74-6DFE-4FC9-8E76-512278939103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD8FC74-6DFE-4FC9-8E76-512278939103}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
