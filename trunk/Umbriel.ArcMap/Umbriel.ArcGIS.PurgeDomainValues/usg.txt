@@ -1,0 +1,35 @@
+﻿
+Purge Domain Tool:
+
+
+PurgeDomainValues.exe -n <Domain Name>
+            -s <server name> -i <instance> 
+            -u <user name> -p <password> 
+            -D <Database>
+            -g <geodatabase path>
+            -V <Version Name>
+            -a <ESRI License Product Code>
+            -v <verbose>  -f <output file path>
+            
+            
+            Program Control:
+              -a            ESRI License Prodct Code Value (e.g. 40)
+            
+            
+
+            ESRI License Product Code Constants:
+            Constant                          Value  Description 
+            --------------------------------- ------  ------------------------------------------
+            esriLicenseProductCodeEngine        10   Engine Product Code 
+            esriLicenseProductCodeEngineGeoDB   20   Engine Enterprise GeoDatabase Product Code 
+            esriLicenseProductCodeArcServer     30   ArcServer Product Code 
+            esriLicenseProductCodeArcView       40   ArcView Product Code 
+            esriLicenseProductCodeArcEditor     50   ArcEditor Product Code 
+            esriLicenseProductCodeArcInfo       60   ArcInfo Product Code 
+            
+            
+            
+
+
+
+	
