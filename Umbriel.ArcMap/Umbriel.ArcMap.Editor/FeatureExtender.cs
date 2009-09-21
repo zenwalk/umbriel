@@ -177,7 +177,7 @@ namespace Umbriel.ArcMap.Editor
 
                         IConstructCurve constructCurve = new PolylineClass();
 
-                        esriSegmentExtension ext;
+                        esriSegmentExtension ext = esriSegmentExtension.esriNoExtension;
 
                         if (targetFeatures[0].nearestEndPoint.Equals(LineEndPoint.From))
                         {
