@@ -79,7 +79,7 @@ namespace Umbriel.ArcMapUI
             base.m_category = "Umbriel";
             base.m_caption = "Select Stacked Geometries";
             base.m_message = "Highlight the layer you wish to analyze and press this button.";
-            base.m_toolTip = "Click on the map to generate a geohash for that location.";
+            base.m_toolTip = "Highlight the layer you wish to analyze and press this button.";
             base.m_name = "Umbriel_SelectStackGeometries";   //unique id, non-localizable (e.g. "MyCategory_ArcMapTool")
 
             try
