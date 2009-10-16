@@ -195,6 +195,7 @@
             this.Name = "GeohashIDForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Geohash ID";
+            this.Load += new System.EventHandler(this.GeohashIDForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
