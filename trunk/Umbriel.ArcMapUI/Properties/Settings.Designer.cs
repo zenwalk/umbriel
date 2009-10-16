@@ -46,5 +46,29 @@ namespace Umbriel.ArcMapUI.Properties {
                 this["GeohashIDLaunchURLEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AddPhotoPointLastUsedPath {
+            get {
+                return ((string)(this["AddPhotoPointLastUsedPath"]));
+            }
+            set {
+                this["AddPhotoPointLastUsedPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("101,67,68,128,57,60,118")]
+        public string AddPhotoPointColumnWidths {
+            get {
+                return ((string)(this["AddPhotoPointColumnWidths"]));
+            }
+            set {
+                this["AddPhotoPointColumnWidths"] = value;
+            }
+        }
     }
 }

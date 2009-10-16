@@ -86,5 +86,10 @@ namespace Umbriel.ArcMapUI
                 System.Diagnostics.Process.Start(url);
             }
         }
+
+        private void GeohashIDForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

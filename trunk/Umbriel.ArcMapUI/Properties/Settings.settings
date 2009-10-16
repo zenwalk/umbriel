@@ -8,5 +8,11 @@
     <Setting Name="GeohashIDLaunchURLEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="AddPhotoPointLastUsedPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AddPhotoPointColumnWidths" Type="System.String" Scope="User">
+      <Value Profile="(Default)">101,67,68,128,57,60,118</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

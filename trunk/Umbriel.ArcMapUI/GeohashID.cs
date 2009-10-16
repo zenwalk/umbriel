@@ -1,19 +1,26 @@
-using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using ESRI.ArcGIS.ADF.BaseClasses;
-using ESRI.ArcGIS.ADF.CATIDs;
-using ESRI.ArcGIS.Framework;
-using ESRI.ArcGIS.ArcMapUI;
-using System.Windows.Forms;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.Geometry;
-using ESRI.ArcGIS.Display;
-
-
+// <copyright file="GeohashID.cs" company="Earth">
+// Copyright (c) 2009 All Rights Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>unknown-see svn</date>
+// <summary>
+////</summary>
 
 namespace Umbriel.ArcMapUI
 {
+    using System;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+    using ESRI.ArcGIS.ADF.BaseClasses;
+    using ESRI.ArcGIS.ADF.CATIDs;
+    using ESRI.ArcGIS.Framework;
+    using ESRI.ArcGIS.ArcMapUI;
+    using System.Windows.Forms;
+    using ESRI.ArcGIS.Carto;
+    using ESRI.ArcGIS.Geometry;
+    using ESRI.ArcGIS.Display;
+
     /// <summary>
     /// Summary description for GeohashID.
     /// </summary>
