@@ -37,11 +37,24 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeoHash.cs" />
+    <Compile Include="GeoJPEGHelper.cs" />
+    <Compile Include="Photo\GeoPhoto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Ext\EXIFextractor.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\EXIFextractor\EXIFextractor.csproj">
+      <Project>{748E81BC-D466-4E39-99AA-372ACBC2BB1E}</Project>
+      <Name>EXIFextractor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
