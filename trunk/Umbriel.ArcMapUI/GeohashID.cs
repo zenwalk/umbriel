@@ -113,9 +113,7 @@ namespace Umbriel.ArcMapUI
             if (hook is IMxApplication)
                 base.m_enabled = true;
             else
-                base.m_enabled = false;
-
-            
+                base.m_enabled = false;            
         }
 
         /// <summary>
