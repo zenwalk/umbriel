@@ -1,31 +1,30 @@
-﻿
+﻿// <copyright file="GeohashCalculatorForm.cs" company="Earth">
+// Copyright (c) 2009 All Rights Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2009-10-16</date>
+// <summary>
+////</summary>
 
 namespace Umbriel.ArcMapUI.UI
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Data;
-    using System.Drawing;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
     using System.Windows.Forms;
     using ESRI.ArcGIS.ArcMapUI;
     using ESRI.ArcGIS.Carto;
-    using ESRI.ArcGIS.Framework;
-    using ESRI.ArcGIS.esriSystem;
-    using ESRI.ArcGIS.Geodatabase;
-    using ESRI.ArcGIS.DataSourcesGDB;
-    using ESRI.ArcGIS.Geometry;
     using ESRI.ArcGIS.Editor;
+    using ESRI.ArcGIS.Framework;
+    using ESRI.ArcGIS.Geodatabase;
+    using ESRI.ArcGIS.Geometry;
 
+    /// <summary>
+    /// Form for end-user to specify the field to calculate and other calculation options
+    /// </summary>
     public partial class GeohashCalculatorForm : Form
     {
-        private IApplication ArcMapApplication { get; set; }
-        private IFeatureLayer FeatureLayer { get; set; }
-        public IMxDocument MxDocument { get; set; }
-
+        #region Contructors
         /// <summary>
         /// Initializes a new instance of the <see cref="GeohashCalculatorForm"/> class.
         /// </summary>
@@ -35,15 +34,12 @@ namespace Umbriel.ArcMapUI.UI
             InitializeComponent();
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GeohashCalculatorForm"/> class.
         /// </summary>
         /// <param name="arcmapApp">The arcmap app.</param>
         public GeohashCalculatorForm(IApplication arcmapApp)
         {
-
-
             InitializeComponent();
 
             this.ArcMapApplication = arcmapApp;
@@ -51,10 +47,35 @@ namespace Umbriel.ArcMapUI.UI
 
             labelLayerName.Text = string.Empty;
 
-            LoadFeatureLayer();
-
+            this.LoadFeatureLayer();
         }
+        #endregion
 
+        #region Properties
+        /// <summary>
+        /// Gets or sets IMxDocument reference
+        /// </summary>
+        /// <value>The IMxDocument reference </value>
+        public IMxDocument MxDocument { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arc map application refernece
+        /// </summary>
+        /// <value>IApplication reference</value>
+        private IApplication ArcMapApplication { get; set; }
+
+        /// <summary>
+        /// Gets or sets the highlighted feature layer
+        /// </summary>
+        /// <value>IFeatureLayer on which to update a geohash field</value>
+        private IFeatureLayer FeatureLayer { get; set; }
+        #endregion
+
+        /// <summary>
+        /// Handles the Click event of the buttonCalculate control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonCalculate_Click(object sender, EventArgs e)
         {
             IFeatureClass featureClass = this.FeatureLayer.FeatureClass;
@@ -67,21 +88,19 @@ namespace Umbriel.ArcMapUI.UI
             bool versionedWorkspace = versionedObject.IsRegisteredAsVersioned;
 
             if (versionedObject.IsRegisteredAsVersioned
-                && editor.EditState.Equals(esriEditState.esriStateNotEditing)
-                )
+                && editor.EditState.Equals(esriEditState.esriStateNotEditing))
             {
                 MessageBox.Show("You must be in an edit session when editing versioned feature classes.", "Geohash Calculator", MessageBoxButtons.OK);
             }
             else if (versionedObject.IsRegisteredAsVersioned
                 && editor.EditState.Equals(esriEditState.esriStateEditing)
-                && !datasetEdit.IsBeingEdited()
-                )
+                && !datasetEdit.IsBeingEdited())
             {
                 MessageBox.Show("You must be editing the same workspace as the highlighted layer.", "Geohash Calculator", MessageBoxButtons.OK);
             }
             else
             {
-                Stack<int> objectIDs = GetObjectIds();
+                Stack<int> objectIDs = this.GetObjectIds();
 
                 if (objectIDs.Count > 0)
                 {
@@ -145,6 +164,10 @@ namespace Umbriel.ArcMapUI.UI
             }   
         }
 
+        /// <summary>
+        /// Gets a stack of objectids to update
+        /// </summary>
+        /// <returns>integer stack of feature object ids</returns>
         private Stack<int> GetObjectIds()
         {
             Stack<int> objectIDs = new Stack<int>();
@@ -185,11 +208,10 @@ namespace Umbriel.ArcMapUI.UI
             {
                 this.FeatureLayer = (IFeatureLayer)this.MxDocument.SelectedLayer;
                 labelLayerName.Text = this.FeatureLayer.Name;
-                ReadAttributes();
+                this.ReadAttributes();
             }
         }
-
-
+        
         /// <summary>
         /// Reads the attributes from the feature layer
         /// </summary>
@@ -223,6 +245,11 @@ namespace Umbriel.ArcMapUI.UI
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonClose control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonClose_Click(object sender, EventArgs e)
         {
             this.Close();
