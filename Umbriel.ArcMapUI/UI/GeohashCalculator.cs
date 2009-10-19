@@ -1,15 +1,24 @@
-using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using ESRI.ArcGIS.ADF.BaseClasses;
-using ESRI.ArcGIS.ADF.CATIDs;
-using ESRI.ArcGIS.Framework;
-using ESRI.ArcGIS.ArcMapUI;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.Geometry;
+// <copyright file="GeohashCalculator.cs" company="Earth">
+// Copyright (c) 2009 All Rights Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2009-10-16</date>
+// <summary> Geohash calculator basecommand class file
+////</summary>
 
 namespace Umbriel.ArcMapUI.UI
 {
+    using System;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+    using ESRI.ArcGIS.ADF.BaseClasses;
+    using ESRI.ArcGIS.ADF.CATIDs;
+    using ESRI.ArcGIS.ArcMapUI;
+    using ESRI.ArcGIS.Carto;
+    using ESRI.ArcGIS.Framework;
+    using ESRI.ArcGIS.Geometry;
+
     /// <summary>
     /// Summary description for GeohashCalculator.
     /// </summary>
@@ -69,6 +78,7 @@ namespace Umbriel.ArcMapUI.UI
         #endregion
 
         private IApplication m_application;
+
         public GeohashCalculator()
         {
             base.m_category = "Umbriel"; //localizable text 
@@ -101,7 +111,7 @@ namespace Umbriel.ArcMapUI.UI
 
             m_application = hook as IApplication;
 
-            //Disable if it is not ArcMap
+            // Disable if it is not ArcMap
             if (hook is IMxApplication)
                 base.m_enabled = true;
             else
@@ -115,22 +125,29 @@ namespace Umbriel.ArcMapUI.UI
         /// </summary>
         public override void OnClick()
         {
-            IMxDocument doc = (IMxDocument)m_application.Document;
-            if (doc.SelectedLayer != null)
+            try
             {
-                if (doc.SelectedLayer is IFeatureLayer)
+                IMxDocument doc = (IMxDocument)m_application.Document;
+                if (doc.SelectedLayer != null)
                 {
-                    IFeatureLayer layer = (IFeatureLayer)doc.SelectedLayer;
-
-                    if (layer.FeatureClass.ShapeType.Equals(esriGeometryType.esriGeometryPoint))
+                    if (doc.SelectedLayer is IFeatureLayer)
                     {
-                        GeohashCalculatorForm form = new GeohashCalculatorForm(this.m_application);
-                        form.ShowDialog();
-                        form.Dispose();
+                        IFeatureLayer layer = (IFeatureLayer)doc.SelectedLayer;
+
+                        if (layer.FeatureClass.ShapeType.Equals(esriGeometryType.esriGeometryPoint))
+                        {
+                            GeohashCalculatorForm form = new GeohashCalculatorForm(this.m_application);
+                            form.ShowDialog();
+                            form.Dispose();
+                        }
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show("Geohash calculator only works with point layers.", "Geohash Calculator", System.Windows.Forms.MessageBoxButtons.OK);
+                        }
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("Geohash calculator only works with point layers.", "Geohash Calculator", System.Windows.Forms.MessageBoxButtons.OK);
+                        System.Windows.Forms.MessageBox.Show("You must highlight a feature layer in the Table of Contents.", "Geohash Calculator", System.Windows.Forms.MessageBoxButtons.OK);
                     }
                 }
                 else
@@ -138,9 +155,10 @@ namespace Umbriel.ArcMapUI.UI
                     System.Windows.Forms.MessageBox.Show("You must highlight a feature layer in the Table of Contents.", "Geohash Calculator", System.Windows.Forms.MessageBoxButtons.OK);
                 }
             }
-            else
+            catch (Exception ex) 
             {
-                System.Windows.Forms.MessageBox.Show("You must highlight a feature layer in the Table of Contents.", "Geohash Calculator", System.Windows.Forms.MessageBoxButtons.OK);
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                System.Windows.Forms.MessageBox.Show("An Error Occurred: \n" + ex.Message, "Geohash Calculator Error", System.Windows.Forms.MessageBoxButtons.OK);
             }
         }
 
