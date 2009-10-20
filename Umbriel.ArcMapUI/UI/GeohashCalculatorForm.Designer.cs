@@ -150,6 +150,7 @@
             this.Name = "GeohashCalculatorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Geohash Calculator";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GeohashCalculatorForm_KeyPress);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
