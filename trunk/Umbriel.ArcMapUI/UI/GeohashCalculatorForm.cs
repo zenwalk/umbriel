@@ -30,8 +30,11 @@ namespace Umbriel.ArcMapUI.UI
         /// </summary>
         public GeohashCalculatorForm()
         {
-            labelLayerName.Text = string.Empty;
             InitializeComponent();
+
+            labelLayerName.Text = string.Empty;
+            this.IsCalculating = false;
+            this.KeyPreview = true;
         }
 
         /// <summary>
@@ -48,6 +51,8 @@ namespace Umbriel.ArcMapUI.UI
             labelLayerName.Text = string.Empty;
 
             this.LoadFeatureLayer();
+            this.IsCalculating = false;
+            this.KeyPreview = true;
         }
         #endregion
 
@@ -69,6 +74,21 @@ namespace Umbriel.ArcMapUI.UI
         /// </summary>
         /// <value>IFeatureLayer on which to update a geohash field</value>
         private IFeatureLayer FeatureLayer { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is calculating.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is calculating; otherwise, <c>false</c>.
+        /// </value>
+        private bool IsCalculating { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [cancel calculation].
+        /// </summary>
+        /// <value><c>true</c> if [cancel calculation]; otherwise, <c>false</c>.</value>
+        private bool CancelCalculation { get; set; }
+
         #endregion
 
         /// <summary>
@@ -81,7 +101,7 @@ namespace Umbriel.ArcMapUI.UI
             IFeatureClass featureClass = this.FeatureLayer.FeatureClass;
             IDataset dataset = (IDataset)featureClass;
             IDatasetEdit datasetEdit = (IDatasetEdit)dataset;
-            
+
             IVersionedObject versionedObject = (IVersionedObject)dataset;
             IEditor editor = (IEditor)this.ArcMapApplication.FindExtensionByName("ESRI Object Editor");
 
@@ -152,16 +172,30 @@ namespace Umbriel.ArcMapUI.UI
                                     this.statusStrip.Refresh();
                                 }
                             }
+
+                            Application.DoEvents();
+
+                            if (this.CancelCalculation)
+                            {
+                                break;
+                            }
                         }
 
-                        toolStripStatusLabel.Text = "-- Calculate Finished --";
+                        if (this.CancelCalculation)
+                        {
+                            toolStripStatusLabel.Text = "-- Calculation Halted --";
+                        }
+                        else
+                        {
+                            toolStripStatusLabel.Text = "-- Calculate Finished --";
+                        }
                     }
                 }
                 else
                 {
                     MessageBox.Show("There are no features to calculate.", "Geohash Calculator", MessageBoxButtons.OK);
                 }
-            }   
+            }
         }
 
         /// <summary>
@@ -211,7 +245,7 @@ namespace Umbriel.ArcMapUI.UI
                 this.ReadAttributes();
             }
         }
-        
+
         /// <summary>
         /// Reads the attributes from the feature layer
         /// </summary>
@@ -253,6 +287,14 @@ namespace Umbriel.ArcMapUI.UI
         private void buttonClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void GeohashCalculatorForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)27)
+            {
+                this.CancelCalculation = true;
+            }
         }
     }
 }
