@@ -68,7 +68,6 @@
             this.dataGridView.TabIndex = 2;
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             this.dataGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridView_ColumnWidthChanged);
-            
             // 
             // splitContainerForm
             // 
@@ -80,12 +79,12 @@
             // splitContainerForm.Panel1
             // 
             this.splitContainerForm.Panel1.Controls.Add(this.dataGridView);
-            
             // 
             // splitContainerForm.Panel2
             // 
             this.splitContainerForm.Panel2.Controls.Add(this.buttonOK);
             this.splitContainerForm.Panel2.Controls.Add(this.buttonClose);
+            this.splitContainerForm.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerForm_Panel2_Paint);
             this.splitContainerForm.Size = new System.Drawing.Size(544, 381);
             this.splitContainerForm.SplitterDistance = 298;
             this.splitContainerForm.TabIndex = 3;
@@ -99,7 +98,6 @@
             this.Name = "CustomLayerPropertiesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PropertySet Editor";
-            
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.splitContainerForm.Panel1.ResumeLayout(false);
             this.splitContainerForm.Panel2.ResumeLayout(false);
