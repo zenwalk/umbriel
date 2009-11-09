@@ -139,5 +139,10 @@ namespace Umbriel.ArcGIS.Layer.UI
                 throw;
             }
         }
+
+        private void splitContainerForm_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
