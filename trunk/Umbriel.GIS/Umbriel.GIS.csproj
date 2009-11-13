@@ -64,7 +64,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Help\Umbriel.GIS.chm" />
+    <None Include="Help\Umbriel.GIS.chm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="LMStat\CreateLMStatTable.sql" />
     <None Include="Umbriel.GIS.HelpProject.shfb" />
   </ItemGroup>
