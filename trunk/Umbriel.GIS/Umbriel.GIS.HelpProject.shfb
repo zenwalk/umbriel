@@ -2,9 +2,19 @@
     <assemblies>
         <assembly assemblyPath=".\bin\Release\Umbriel.GIS.dll" xmlCommentsPath=".\bin\Release\Umbriel.GIS.xml" commentsOnly="False" />
     </assemblies>
-    <ProjectSummary />
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False" />
+        <namespaceSummaryItem name="Umbriel.GIS" isDocumented="True">Umbriel GIS Namespace</namespaceSummaryItem>
+        <namespaceSummaryItem name="Umbriel.GIS.LMStat" isDocumented="True">Umbriel License Manager Statistics Namespace</namespaceSummaryItem>
+        <namespaceSummaryItem name="Umbriel.GIS.Photo" isDocumented="True">Umbriel Photo Namespace</namespaceSummaryItem>
+    </namespaceSummaries>
+    <ProjectSummary>Collection of various GIS classes.
+GeoPhoto (exposing coordinate information and compass direction in the EXIF header of a photo file)
+GeoHash (c# implementation of the geohash algorithm)
+SpatialReferenceDotOrg (utility to obtain various WKT spatial reference formats from SpatialReference.org)
+LMStat (classes for parsing LMStat information)</ProjectSummary>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
-    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Privates, Protected, ProtectedInternalAsProtected, SealedProtected, PrivateFields</VisibleItems>
     <HtmlHelp1xCompilerPath path="" />
     <HtmlHelp2xCompilerPath path="" />
     <OutputPath>.\Help\</OutputPath>
