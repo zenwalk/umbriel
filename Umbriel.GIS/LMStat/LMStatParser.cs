@@ -7,6 +7,7 @@
 // <summary>
 ////</summary>
 
+
 namespace Umbriel.GIS.LMStat
 {
     using System;
