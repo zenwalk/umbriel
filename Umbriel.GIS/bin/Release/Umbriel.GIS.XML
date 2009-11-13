@@ -1,0 +1,419 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Umbriel.GIS</name>
+    </assembly>
+    <members>
+        <member name="T:Umbriel.GIS.Catalog">
+            <summary>
+            spatial reference catalog
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Catalog.EPSG">
+            <summary>
+            European Petroleum Survey Group spatial reference catalog
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Catalog.ESRI">
+            <summary>
+            ESRI's spatial reference catalog
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Catalog.IAU2000">
+            <summary>
+             IAU2000 spatial reference catalog
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Catalog.SRORG">
+            <summary>
+            spatial references submitted to spatialreference.org
+            </summary>
+        </member>
+        <member name="T:Umbriel.GIS.Format">
+            <summary>
+            spatial reference definition format
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.Proj4">
+            <summary>
+            Proj4 format
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.OGCWKT">
+            <summary>
+            OGC well known text
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.HumanReadableWKT">
+            <summary>
+            human readable well known text
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.GML">
+            <summary>
+            geography markup language
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.ESRIWKT">
+            <summary>
+            ESRI well known text
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.USGS">
+            <summary>
+            USGS format
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.MapServerMapfile">
+            <summary>
+            Map Server Map file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.MapServerPython">
+            <summary>
+            map server python
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.MapnikXML">
+            <summary>
+            mapnik xml
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.MapnikPython">
+            <summary>
+            mapnik python
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.PostGISInsert">
+            <summary>
+            postgis sql insert statement
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Format.Proj4js">
+            <summary>
+            proj4 javascript
+            </summary>
+        </member>
+        <member name="T:Umbriel.GIS.SpatialReferenceDotOrg">
+            <summary>
+            class for obtaining various spatial reference definition formats
+            from spatialreference.org
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.SpatialReferenceDotOrg.GetSpatialReference(System.Int32,Umbriel.GIS.Catalog,Umbriel.GIS.Format)">
+            <summary>
+            Gets the spatial reference text
+            </summary>
+            <param name="code">The spatial reference code for a catalog</param>
+            <param name="catalog">The spatial reference catalog (EPSG, ESRI, SR-ORG, etc)</param>
+            <param name="returnFormat">The return format for the spatial reference text (OGCWKT, ESRIWKT, PROJ4, etc</param>
+            <returns>text spatial reference definition</returns>
+        </member>
+        <member name="M:Umbriel.GIS.SpatialReferenceDotOrg.CatalogText(Umbriel.GIS.Catalog)">
+            <summary>
+            Gets the url text value for the catalog
+            </summary>
+            <param name="catalog">The catalog</param>
+            <returns>url text value</returns>
+        </member>
+        <member name="M:Umbriel.GIS.SpatialReferenceDotOrg.FormatText(Umbriel.GIS.Format)">
+            <summary>
+            Getsthe format text value for the url
+            </summary>
+            <param name="spatialreferenceFormat">The spatialreference format.</param>
+            <returns>url text for format</returns>
+        </member>
+        <member name="T:Umbriel.GIS.IPoint2D">
+            <summary>
+            IPoint2D interface
+            </summary>
+        </member>
+        <member name="P:Umbriel.GIS.IPoint2D.X">
+            <summary>
+            Gets or sets the X coordinate property
+            </summary>
+            <value>The X coordinate value</value>
+        </member>
+        <member name="P:Umbriel.GIS.IPoint2D.Y">
+            <summary>
+            Gets or sets the Y coordinate property
+            </summary>
+            <value>The Y coordinate</value>
+        </member>
+        <member name="T:Umbriel.GIS.ISpatialCoordinate">
+            <summary>
+            ISpatialCoordinate interface
+            </summary>
+        </member>
+        <member name="P:Umbriel.GIS.ISpatialCoordinate.Latitude">
+            <summary>
+            Gets or sets the latitude decimal property
+            </summary>
+            <value>The latitude decimal value</value>
+        </member>
+        <member name="P:Umbriel.GIS.ISpatialCoordinate.Longitude">
+            <summary>
+            Gets or sets the longitude decimal property
+            </summary>
+            <value>The longitude.</value>
+        </member>
+        <member name="T:Umbriel.GIS.Geohash">
+            <summary>
+            GeoHash class for encoding/decoding geohashes
+            
+            
+            GeoHash implementation  based on David Troy's geohash-native.c : 
+                
+                
+            geohash-native.c
+            (c) 2008 David Troy
+            dave@roundhousetech.com
+            
+            (The MIT License)
+            
+            Copyright (c) 2008 David Troy, Roundhouse Technologies LLC
+            
+            Permission is hereby granted, free of charge, to any person obtaining
+            a copy of this software and associated documentation files (the
+            'Software'), to deal in the Software without restriction, including
+            without limitation the rights to use, copy, modify, merge, publish,
+            distribute, sublicense, and/or sell copies of the Software, and to
+            permit persons to whom the Software is furnished to do so, subject to
+            the following conditions:
+            
+            The above copyright notice and this permission notice shall be
+            included in all copies or substantial portions of the Software.
+            
+            THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+            IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+            CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+            TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+            SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Geohash.BASE32">
+            <summary>
+            character map for geohash
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.Geohash.BITS">
+            <summary>
+            integer bit array
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Geohash"/> class.
+            </summary>
+            <param name="geohash">The geohash.</param>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.DecodeGeoHash(System.Char[])">
+            <summary>
+            Decodes the geohash string, returns ISpatialCoordinate
+            </summary>
+            <param name="geohash">The geohash character array</param>
+            <returns>ISpatialCoordinate of the geohash</returns>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.EncodeCoordinate(System.Double,System.Double,System.Int32)">
+            <summary>
+            Encodes the coordinate.
+            </summary>
+            <param name="latitude">The latitude value</param>
+            <param name="longitude">The longitude value</param>
+            <param name="precision">The precision of the geohash</param>
+            <returns>geohash string </returns>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.EncodeCoordinate(Umbriel.GIS.ISpatialCoordinate,System.Int32)">
+            <summary>
+            Encodes the coordinate.
+            </summary>
+            <param name="spatialCoord">The spatial coordindate reference</param>
+            <param name="precision">The precision of the geohash</param>
+            <returns>geohash string </returns>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.EncodeCoordinate(System.Double,System.Double)">
+            <summary>
+            Encodes the coordinate.
+            </summary>
+            <param name="latitude">The latitude value</param>
+            <param name="longitude">The longitude value</param>
+            <returns>geohash string </returns>
+        </member>
+        <member name="P:Umbriel.GIS.Geohash.GeoHashString">
+            <summary>
+            Gets the geohash string property
+            </summary>
+            <value>The geohash string value</value>
+        </member>
+        <member name="P:Umbriel.GIS.Geohash.GeoHashCoordinate">
+            <summary>
+            Gets the geohash coordinate.
+            </summary>
+            <value>The coordinate of the geohash </value>
+        </member>
+        <member name="T:Umbriel.GIS.Geohash.Coordinate">
+            <summary>
+            Coordinate Point Class
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.Coordinate.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Geohash.Coordinate"/> class.
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.Coordinate.#ctor(System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Geohash.Coordinate"/> class.
+            </summary>
+            <param name="x">The x ordinate  value</param>
+            <param name="y">The y ordinate  value</param>
+        </member>
+        <member name="M:Umbriel.GIS.Geohash.Coordinate.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Umbriel.GIS.Geohash.Coordinate.X">
+            <summary>
+            Gets or sets the X coordinate property
+            </summary>
+            <value>The X coordinate</value>
+        </member>
+        <member name="P:Umbriel.GIS.Geohash.Coordinate.Y">
+            <summary>
+            Gets or sets the Y coordinate property
+            </summary>
+            <value>The Y coordinate</value>
+        </member>
+        <member name="P:Umbriel.GIS.Geohash.Coordinate.Latitude">
+            <summary>
+            Gets or sets the latitude decimal property
+            </summary>
+            <value>The latitude decimal value</value>
+        </member>
+        <member name="P:Umbriel.GIS.Geohash.Coordinate.Longitude">
+            <summary>
+            Gets or sets the longitude decimal property
+            </summary>
+            <value>The longitude.</value>
+        </member>
+        <member name="T:Umbriel.GIS.LMStat.LicenseType">
+            <summary>
+            struct for license information parsed from an lmstat file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.LicenseName">
+            <summary>
+            Name of the license
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.LineLocation">
+            <summary>
+            line number in the lmstat text file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.TotalLicenses">
+            <summary>
+            total licenses available 
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.InUseLicenses">
+            <summary>
+            in use licenses
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.StatDateTime">
+            <summary>
+            date/time of the lmstat file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.ServerName">
+            <summary>
+            name of the license manager server
+            </summary>
+        </member>
+        <member name="T:Umbriel.GIS.LMStat.LMStatParser">
+            <summary>
+            Parser class for an LMSTAT text file
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.LMStat.LMStatParser"/> class.
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.LMStat.LMStatParser"/> class.
+            </summary>
+            <param name="path">The full file path</param>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.Parse">
+            <summary>
+            Parses the lmstats file in the StatsFilePath
+            </summary>
+            <returns>datatable of licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.NewLicenseTable">
+            <summary>
+            Creates a newlicense table.
+            </summary>
+            <returns>datatable for licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.GetLicenseTypes">
+            <summary>
+            Gets the license types.
+            </summary>
+            <returns>list of license types w/ attributes for each license (total, in-use)</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseLicenseName(System.String)">
+            <summary>
+            Parses the name of the license
+            </summary>
+            <param name="line">The line of text containing the license name</param>
+            <returns>name of the license</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseTotalLicenses(System.String)">
+            <summary>
+            Parses the number of total licenses
+            </summary>
+            <param name="line">The line of text containing  the license count</param>
+            <returns>count of total licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseInUseLicenses(System.String)">
+            <summary>
+            Parses the in use licenses
+            </summary>
+            <param name="line">The line of text containing  the license count</param>
+            <returns>count of in-use licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseMachineName">
+            <summary>
+            Parses the name of the machine from the lmstat file
+            </summary>
+            <returns>machine name string</returns>
+        </member>
+        <member name="P:Umbriel.GIS.LMStat.LMStatParser.StatsFilePath">
+            <summary>
+            Gets or sets the stats file path.
+            </summary>
+            <value>The stats file path.</value>
+        </member>
+        <member name="T:Umbriel.GIS.LMStat.LMStatTable">
+            <summary>
+             LMStatTable class 
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatTable.AddRows(System.Data.DataRowCollection)">
+            <summary>
+            Adds the lmstatparser table rows to the data table
+            </summary>
+            <param name="rows">The DataRowCollection of lmstatparser rows.</param>
+        </member>
+    </members>
+</doc>
