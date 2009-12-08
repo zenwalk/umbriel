@@ -64,6 +64,25 @@ namespace Umbriel.ArcGIS.Layer.Util
         }
 
         /// <summary>
+        /// Checks to see if a property exists in the property set
+        /// </summary>
+        /// <param name="propertySet">IPropertySet to test</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>bool Property Exists</returns>
+        internal static bool PropertyExists(IPropertySet propertySet, string propertyName)
+        {
+            try
+            {
+                object propertyValue = propertySet.GetProperty(propertyName);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Creates a property sets the LayerExtension property to "Umbriel"
         /// </summary>
         /// <returns>IPropertySet for Umbriel Layer Extention</returns>
@@ -167,6 +186,38 @@ namespace Umbriel.ArcGIS.Layer.Util
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Creates an ILayer from a path to a layer file.
+        /// </summary>
+        /// <param name="pathLayerFile">full path to layer file (e.g. c:\gis\road_centerlines.lyr)</param>
+        /// <returns>an ILayer created from the layer file path</returns>
+        internal static ILayer CreateLayer(string pathLayerFile)
+        {
+            try
+            {
+                if (System.IO.File.Exists(pathLayerFile) == true)
+                {
+                    ILayer layer;
+                    ILayerFile layerFile = new LayerFileClass();
+                    layerFile.Open(pathLayerFile);
+                    layer = layerFile.Layer;
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(layerFile);
+
+                    return layer;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Umbriel.ArcGIS.Layer.Util.LayerExtHelper.CreateLayer  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
                 throw;
             }
         }
