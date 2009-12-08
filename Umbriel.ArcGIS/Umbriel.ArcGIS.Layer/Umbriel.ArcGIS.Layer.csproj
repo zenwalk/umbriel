@@ -57,7 +57,9 @@
     <Reference Include="ESRI.ArcGIS.ADF, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="ESRI.ArcGIS.ArcMapUI, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
+    <Reference Include="ESRI.ArcGIS.ArcMapUI, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Carto, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -85,11 +87,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\System.Data.SQLite\bin\System.Data.SQLite.DLL</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LayerFile\LayerfileIndexBuilder.cs" />
+    <Compile Include="LayerFile\LayerfileIndexer.cs" />
+    <Compile Include="LayerFile\LayerfileIndexerHelper.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AddLayerFile.cs" />
     <Compile Include="UI\CustomLayerProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\CustomLayerPropertiesForm.cs">
@@ -97,6 +113,12 @@
     </Compile>
     <Compile Include="UI\CustomLayerPropertiesForm.Designer.cs">
       <DependentUpon>CustomLayerPropertiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SearchLayerFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SearchLayerFilesForm.Designer.cs">
+      <DependentUpon>SearchLayerFilesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Util\GeodatabaseHelper.cs" />
     <Compile Include="Util\LayerExtHelper.cs" />
@@ -135,11 +157,20 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Doc\Help\Umbriel.ArcGIS.Layer.chm" />
     <None Include="Doc\Umbriel.ArcGIS.Layer.shfb" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Include="LayerFile\layerfile.index" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder1\" />
+    <EmbeddedResource Include="UI\AddLayerFile.bmp" />
+    <EmbeddedResource Include="UI\SearchLayerFilesForm.resx">
+      <DependentUpon>SearchLayerFilesForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
