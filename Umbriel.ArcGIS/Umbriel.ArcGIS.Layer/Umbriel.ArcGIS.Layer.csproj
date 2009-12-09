@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Util\GeodatabaseHelper.cs" />
     <Compile Include="Util\LayerExtHelper.cs" />
+    <Compile Include="Util\LayerHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\CustomLayerProperties.bmp" />
