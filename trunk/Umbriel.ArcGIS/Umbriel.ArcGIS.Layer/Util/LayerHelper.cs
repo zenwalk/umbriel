@@ -6,7 +6,7 @@
 // <date>2008-06-06</date>
 // <summary>Layer Utility Class</summary>
 
-namespace ArcZona.ArcGIS.Carto
+namespace Umbriel.ArcGIS.Layer
 {
     using System;
     using System.Collections;
