@@ -1,0 +1,20 @@
+
+GISMetaLinq Tool:
+
+
+GISMetaLinq.exe -o <operation> 
+            -f <input metadata xml file path>
+            -out <output metadata xml file path>
+
+            
+            
+            
+          
+            
+GISMetaLinq Operations
+purgeanalyzesteps            
+            
+
+
+
+	
