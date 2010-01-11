@@ -119,6 +119,7 @@
     <Compile Include="UI\GeohashCalculatorForm.Designer.cs">
       <DependentUpon>GeohashCalculatorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\GoogleStreetView.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GeohashID.bmp" />
@@ -195,6 +196,9 @@
     <EmbeddedResource Include="UI\GeohashCalculatorForm.resx">
       <DependentUpon>GeohashCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\GoogleStreetView.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
