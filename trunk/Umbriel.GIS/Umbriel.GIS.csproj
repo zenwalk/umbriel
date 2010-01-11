@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="GeoHash.cs" />
     <Compile Include="GeoJPEGHelper.cs" />
+    <Compile Include="Google\GoogleMapsQStringBuilder.cs" />
     <Compile Include="LMStat\LMStatParser.cs" />
     <Compile Include="LMStat\LMStatTable.cs">
       <SubType>Component</SubType>
