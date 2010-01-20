@@ -102,17 +102,26 @@ namespace Umbriel.ArcMapUI.UI
             IDataset dataset = (IDataset)featureClass;
             IDatasetEdit datasetEdit = (IDatasetEdit)dataset;
 
-            IVersionedObject versionedObject = (IVersionedObject)dataset;
+            bool versionedWorkspace = false;
+
+            IWorkspace workspace = dataset.Workspace;
+
+            if (workspace.Type == esriWorkspaceType.esriRemoteDatabaseWorkspace)
+            {
+                IVersionedObject versionedObject = (IVersionedObject)dataset;
+                versionedWorkspace =versionedObject.IsRegisteredAsVersioned;
+            }
+
             IEditor editor = (IEditor)this.ArcMapApplication.FindExtensionByName("ESRI Object Editor");
 
-            bool versionedWorkspace = versionedObject.IsRegisteredAsVersioned;
 
-            if (versionedObject.IsRegisteredAsVersioned
+
+            if (versionedWorkspace
                 && editor.EditState.Equals(esriEditState.esriStateNotEditing))
             {
                 MessageBox.Show("You must be in an edit session when editing versioned feature classes.", "Geohash Calculator", MessageBoxButtons.OK);
             }
-            else if (versionedObject.IsRegisteredAsVersioned
+            else if (versionedWorkspace
                 && editor.EditState.Equals(esriEditState.esriStateEditing)
                 && !datasetEdit.IsBeingEdited())
             {
