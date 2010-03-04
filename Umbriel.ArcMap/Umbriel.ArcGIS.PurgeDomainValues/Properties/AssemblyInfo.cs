@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Umbriel")]
 [assembly: AssemblyProduct("Umbriel.ArcGIS.PurgeDomainValues")]
-[assembly: AssemblyCopyright("2009")]
+[assembly: AssemblyCopyright("Copyright © 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
