@@ -83,10 +83,6 @@
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\EXIFextractor\EXIFextractor.csproj">
-      <Project>{748E81BC-D466-4E39-99AA-372ACBC2BB1E}</Project>
-      <Name>EXIFextractor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Umbriel.ArcGIS\Umbriel.ArcGIS.Layer.SpatialiteLayer\Umbriel.ArcGIS.Layer.SpatialiteLayer.csproj">
       <Project>{2AE55B5F-D3D9-447F-9D0E-3F028ED4B03E}</Project>
       <Name>Umbriel.ArcGIS.Layer.SpatialiteLayer</Name>
