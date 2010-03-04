@@ -17,33 +17,77 @@ namespace Umbriel.GIS.Photo
     using System.Drawing.Imaging;
     using System.IO;
     using System.Text;
+    using System.Web.UI;
+    using ExifLibrary;
     using Umbriel.GIS;
 
+    /// <summary>
+    /// GeoPhoto class
+    /// </summary>
     public class GeoPhoto
     {
-        public string FilePath { get; private set; }
-        public double ImageDirection { get; private set; }
-        public bool MagneticNorth { get; private set; }
-        
-        public ISpatialCoordinate Coordinate { get; private set; }
-
-        private Bitmap PhotoBitmap { get; set; }
-
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeoPhoto"/> class.
+        /// </summary>
+        /// <param name="path">The path to the photo</param>
         public GeoPhoto(string path)
-        {            
+        {
             Bitmap photo = new Bitmap(path);
             this.PhotoBitmap = photo;
-            
-            ReadGPSCoordinate();
+            this.FilePath = path;
+
+            this.ReadGPSCoordinate();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeoPhoto"/> class.
+        /// </summary>
+        /// <param name="photo">The photo.</param>
         public GeoPhoto(Bitmap photo)
         {
             this.PhotoBitmap = photo;
 
-            ReadGPSCoordinate();
+            this.ReadGPSCoordinate();
         }
+        #endregion
 
+        /// <summary>
+        /// Gets the file path.
+        /// </summary>
+        /// <value>The file path.</value>
+        public string FilePath { get; private set; }
+
+        /// <summary>
+        /// Gets the image direction.
+        /// </summary>
+        /// <value>The image direction.</value>
+        public double ImageDirection { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [magnetic north].
+        /// </summary>
+        /// <value><c>true</c> if [magnetic north]; otherwise, <c>false</c>.</value>
+        public bool MagneticNorth { get; private set; }
+
+        /// <summary>
+        /// Gets the coordinate.
+        /// </summary>
+        /// <value>The coordinate.</value>
+        public ISpatialCoordinate Coordinate { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the photo bitmap.
+        /// </summary>
+        /// <value>The photo bitmap.</value>
+        private Bitmap PhotoBitmap { get; set; }
+
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
         public override string ToString()
         {
             string v = string.Empty;
@@ -53,7 +97,9 @@ namespace Umbriel.GIS.Photo
             {
                 sb.AppendLine(this.FilePath.ToString());
             }
-            catch{}
+            catch
+            {
+            }
             
             sb.AppendLine("Image Direction: " + this.ImageDirection.ToString());
             sb.AppendLine("Is Magnetic North:: " + this.MagneticNorth.ToString());
@@ -64,6 +110,9 @@ namespace Umbriel.GIS.Photo
             return v;
         }
 
+        /// <summary>
+        /// Reads the GPS coordinate.
+        /// </summary>
         private void ReadGPSCoordinate()
         {
             if (this.PhotoBitmap != null)
@@ -71,47 +120,47 @@ namespace Umbriel.GIS.Photo
                 ISpatialCoordinate coord = null;
 
                 Bitmap photo = this.PhotoBitmap;
+                
+                // Extract exif metadata
+                ExifFile file = ExifFile.Read(this.FilePath);
 
-                Goheer.EXIF.EXIFextractor er = new Goheer.EXIF.EXIFextractor(ref photo, "\n");
-
-                string gpsLong = er["Gps Longitude"].ToString();
-                string gpsLat = er["Gps Latitude"].ToString();
-
-                string imageDirection = er["Gps ImgDir"].ToString();
-                SetImageDirection(imageDirection);
-
-                string imageDirectionRef = er["Gps ImgDirRef"].ToString();
-
-                    this.MagneticNorth = (imageDirectionRef.StartsWith("M"));
-
-
-
-
-                int longRef = 1, latRef = 1;
-
-
-                if (er["Gps LongitudeRef"].ToString().Equals("W", StringComparison.CurrentCultureIgnoreCase))
+                foreach (ExifProperty exifProperty in file.Properties)
                 {
-                    longRef = -1;
+                    Trace.WriteLine(exifProperty.Name.ToString() + "=" + exifProperty.Value.ToString());
                 }
 
-                if (er["Gps LatitudeRef"].ToString().Equals("S", StringComparison.CurrentCultureIgnoreCase))
+                if (file.Properties.ContainsKey(ExifTag.GPSImgDirection))
                 {
-                    latRef = -1;
+                    this.SetImageDirection(file.Properties[ExifTag.GPSImgDirection].Value.ToString());
                 }
 
-                double gpsLongCoord = 0;
-                double gpsLatCoord = 0;
-                double gpsImageDirection = 0;
-
-                if (double.TryParse(gpsLong, out gpsLongCoord) && double.TryParse(gpsLat, out gpsLatCoord))                   
+                if (file.Properties.ContainsKey(ExifTag.GPSLatitude) && file.Properties.ContainsKey(ExifTag.GPSLongitude))
                 {
-                    coord = new Umbriel.GIS.Geohash.Coordinate();
-                    coord.Latitude = (decimal)gpsLatCoord * latRef;
-                    coord.Longitude = (decimal)gpsLongCoord * longRef;
-                    this.Coordinate = coord;
-                }
+                    float lon;
+                    float lat;
 
+                    GPSLatitudeLongitude latitude = (GPSLatitudeLongitude)file.Properties[ExifTag.GPSLatitude];
+                    GPSLatitudeLongitude longitude = (GPSLatitudeLongitude)file.Properties[ExifTag.GPSLongitude];
+
+                    lon = longitude.ToFloat();
+                    lat = latitude.ToFloat();
+
+                    if (file.Properties[ExifTag.GPSLongitudeRef].Value.ToString().StartsWith("W", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        lon = lon * -1;   
+                    }
+
+                    if (file.Properties[ExifTag.GPSLatitudeRef].Value.ToString().StartsWith("S", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        lat = lat * -1;
+                    }
+
+                    if (lat != 0 & lon != 0)
+                    {
+                        coord = new Umbriel.GIS.Geohash.Coordinate(lon, lat);
+                        this.Coordinate = coord;
+                    }                    
+                }
             }
             else
             {
@@ -119,6 +168,10 @@ namespace Umbriel.GIS.Photo
             }
         }
 
+        /// <summary>
+        /// Sets the image direction.
+        /// </summary>
+        /// <param name="imageDirection">The image direction.</param>
         private void SetImageDirection(string imageDirection)
         {
             if (imageDirection.Contains(@"/"))
@@ -140,8 +193,7 @@ namespace Umbriel.GIS.Photo
                 if (double.TryParse(imageDirection, out direction))
                 {
                     this.ImageDirection = direction;
-                }
-                
+                }                
             }
         }
     }
