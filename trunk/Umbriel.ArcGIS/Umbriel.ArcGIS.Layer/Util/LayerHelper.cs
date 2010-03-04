@@ -325,6 +325,111 @@ namespace Umbriel.ArcGIS.Layer
         }
 
         /// <summary>
+        /// Finds the feature layers.
+        /// </summary>
+        /// <param name="map">IMap in which to search</param>
+        /// <param name="service">The service string to search for</param>
+        /// <param name="exactMatch">if set to <c>true</c> [exact match].</param>
+        /// <param name="stringComparison">The string comparison.</param>
+        /// <returns>List of IFeatureLayer  within an IMap</returns>
+        public static List<IFeatureLayer> FindFeatureLayers(IMap map, string service, bool exactMatch, StringComparison stringComparison)
+        {
+            try
+            {
+                List<IFeatureLayer> layerList = new List<IFeatureLayer>();
+                
+                //UID uid = new UIDClass();
+                //uid.Value = "{E156D7E5-22AF-11D3-9F99-00C04F6BC78E}";
+
+                IEnumLayer layers = map.get_Layers(null, true);
+                ILayer layer = null;
+
+                string keyname = "INSTANCE";
+
+                while ((layer = layers.Next()) != null)
+                {
+                    if (layer is IFeatureLayer)
+                    {
+                        IFeatureLayer featureLayer = (IFeatureLayer)layer;
+                        //IGeoFeatureLayer geoFeatureLayer = (IGeoFeatureLayer)layer;
+                        IDataLayer dataLayer = (IDataLayer)layer;
+                        IDatasetName datasetName = (IDatasetName)dataLayer.DataSourceName;
+
+                        IWorkspaceName workspaceName = (IWorkspaceName)datasetName.WorkspaceName;
+                        
+                        //IFeatureClass featureClass = geoFeatureLayer.FeatureClass;
+                        //IDataset dataset = (IDataset)featureClass;
+
+                        //IWorkspace workspace = dataset.Workspace;
+
+                        IPropertySet propertySet = workspaceName.ConnectionProperties;
+
+                        Umbriel.ArcGIS.Layer.LayerHelper.PrintPropertySet(propertySet);
+
+                        Dictionary<string, string> properties = Layer.LayerHelper.BuildDictionary(propertySet);
+
+                        if (properties.ContainsKey(keyname))
+                        {
+                            if (exactMatch)
+                            {
+                                if (properties[keyname].Equals(service, stringComparison))
+                                {
+                                    layerList.Add(featureLayer);
+                                }
+                            }
+                            else
+                            {
+                                if (properties[keyname].IndexOf(service, 1, stringComparison) > -1)
+                                {
+                                    layerList.Add(featureLayer);
+                                }
+                            } 
+                        }                       
+                    }
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// searches an IMap for layers matching a specific layer name
+        /// </summary>
+        /// <param name="map">IMap in which to search</param>
+        /// <param name="layerName">name of the layer</param>
+        /// <returns>List of ILayer that matches the layerName criteria</returns>
+        public static List<ILayer> GetLayerList(IMap map)
+        {
+            try
+            {
+                List<ILayer> layerList = new List<ILayer>();
+
+                IEnumLayer enumLayer = (IEnumLayer)map.get_Layers(null, true);
+
+                ILayer layer = null;
+
+                while ((layer = enumLayer.Next()) != null)
+                {
+                    //IFeatureLayer featLayer = (IFeatureLayer)layer;
+                    //IDataset dataset = (IDataset)featLayer;
+                    layerList.Add(layer);
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
         /// searches an IMap for layers matching a specific layer name
         /// </summary>
         /// <param name="map">IMap in which to search</param>
@@ -334,6 +439,7 @@ namespace Umbriel.ArcGIS.Layer
         {
             return FindLayers(map, layerName, true);
         }
+
 
         /// <summary>
         /// searches an IMap for layers matching a specific layer name
@@ -390,6 +496,83 @@ namespace Umbriel.ArcGIS.Layer
             }
 
             return layerList;
+        }
+
+        /// <summary>
+        /// Prints the property set.
+        /// </summary>
+        /// <param name="ps">The IpropertySet</param>
+        public static void PrintPropertySet(IPropertySet propertySet)
+        {
+
+            object propsetNames = new object[propertySet.Count - 1];
+            object propsetValues = new object[propertySet.Count - 1];
+
+            propertySet.GetAllProperties(out propsetNames, out propsetValues);
+
+            object[] propsetNameArray = (object[])propsetNames;
+            object[] propsetValueArray = (object[])propsetValues;
+
+            for (int i = 0; i < propertySet.Count; i++)
+            {
+                Console.WriteLine(string.Format("{0}={1}", propsetNameArray[i].ToString(),propsetValueArray[i].ToString()));
+            }
+
+        }
+
+
+        public static ILayer CreateLayer(string pathLayerFile)
+        {
+            try
+            {
+                if (System.IO.File.Exists(pathLayerFile) == true)
+                {
+                    ILayer layer;
+                    ILayerFile layerFile = new LayerFileClass();
+                    layerFile.Open(pathLayerFile);
+                    layer = layerFile.Layer;
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(layerFile);
+
+                    return layer;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Umbriel.ArcGIS.Layer.Util.LayerHelper.CreateLayer  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
+                throw;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Builds a dictionary from the property set
+        /// </summary>
+        /// <param name="propertySet">The property set.</param>
+        /// <returns></returns>
+        public static Dictionary<string,string> BuildDictionary(IPropertySet propertySet)
+        {
+            Dictionary<string, string> properties = new Dictionary<string, string>();
+
+            object propsetNames = new object[propertySet.Count - 1];
+            object propsetValues = new object[propertySet.Count - 1];
+
+            propertySet.GetAllProperties(out propsetNames, out propsetValues);
+
+            object[] propsetNameArray = (object[])propsetNames;
+            object[] propsetValueArray = (object[])propsetValues;
+
+            for (int i = 0; i < propertySet.Count; i++)
+            {
+                properties.Add(propsetNameArray[i].ToString(), propsetValueArray[i].ToString());
+            }
+
+            return properties;
         }
 
         #endregion
