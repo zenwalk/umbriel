@@ -4,6 +4,113 @@
         <name>Umbriel.GIS</name>
     </assembly>
     <members>
+        <member name="T:Umbriel.GIS.LMStat.LicenseType">
+            <summary>
+            struct for license information parsed from an lmstat file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.LicenseName">
+            <summary>
+            Name of the license
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.LineLocation">
+            <summary>
+            line number in the lmstat text file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.TotalLicenses">
+            <summary>
+            total licenses available 
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.InUseLicenses">
+            <summary>
+            in use licenses
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.StatDateTime">
+            <summary>
+            date/time of the lmstat file
+            </summary>
+        </member>
+        <member name="F:Umbriel.GIS.LMStat.LicenseType.ServerName">
+            <summary>
+            name of the license manager server
+            </summary>
+        </member>
+        <member name="T:Umbriel.GIS.LMStat.LMStatParser">
+            <summary>
+            Parser class for an LMSTAT text file
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.LMStat.LMStatParser"/> class.
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.LMStat.LMStatParser"/> class.
+            </summary>
+            <param name="path">The full file path</param>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.Parse">
+            <summary>
+            Parses the lmstats file in the StatsFilePath
+            </summary>
+            <returns>datatable of licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.NewLicenseTable">
+            <summary>
+            Creates a newlicense table.
+            </summary>
+            <returns>datatable for licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.GetLicenseTypes">
+            <summary>
+            Gets the license types.
+            </summary>
+            <returns>list of license types w/ attributes for each license (total, in-use)</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseLicenseName(System.String)">
+            <summary>
+            Parses the name of the license
+            </summary>
+            <param name="line">The line of text containing the license name</param>
+            <returns>name of the license</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseTotalLicenses(System.String)">
+            <summary>
+            Parses the number of total licenses
+            </summary>
+            <param name="line">The line of text containing  the license count</param>
+            <returns>count of total licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseInUseLicenses(System.String)">
+            <summary>
+            Parses the in use licenses
+            </summary>
+            <param name="line">The line of text containing  the license count</param>
+            <returns>count of in-use licenses</returns>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseMachineName">
+            <summary>
+            Parses the name of the machine from the lmstat file
+            </summary>
+            <returns>machine name string</returns>
+        </member>
+        <member name="P:Umbriel.GIS.LMStat.LMStatParser.StatsFilePath">
+            <summary>
+            Gets or sets the stats file path.
+            </summary>
+            <value>The stats file path.</value>
+        </member>
+        <member name="T:Umbriel.GIS.GeoJPEGHelper">
+            <summary>
+            GeoJPEGHelper static class
+            </summary>
+        </member>
         <member name="T:Umbriel.GIS.Catalog">
             <summary>
             spatial reference catalog
@@ -122,6 +229,83 @@
             </summary>
             <param name="spatialreferenceFormat">The spatialreference format.</param>
             <returns>url text for format</returns>
+        </member>
+        <member name="T:Umbriel.GIS.Photo.GeoPhoto">
+            <summary>
+            GeoPhoto class
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Photo.GeoPhoto.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Photo.GeoPhoto"/> class.
+            </summary>
+            <param name="path">The path to the photo</param>
+        </member>
+        <member name="M:Umbriel.GIS.Photo.GeoPhoto.#ctor(System.Drawing.Bitmap)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Photo.GeoPhoto"/> class.
+            </summary>
+            <param name="photo">The photo.</param>
+        </member>
+        <member name="M:Umbriel.GIS.Photo.GeoPhoto.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:Umbriel.GIS.Photo.GeoPhoto.ReadGPSCoordinate">
+            <summary>
+            Reads the GPS coordinate.
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Photo.GeoPhoto.SetImageDirection(System.String)">
+            <summary>
+            Sets the image direction.
+            </summary>
+            <param name="imageDirection">The image direction.</param>
+        </member>
+        <member name="P:Umbriel.GIS.Photo.GeoPhoto.FilePath">
+            <summary>
+            Gets the file path.
+            </summary>
+            <value>The file path.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Photo.GeoPhoto.ImageDirection">
+            <summary>
+            Gets the image direction.
+            </summary>
+            <value>The image direction.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Photo.GeoPhoto.MagneticNorth">
+            <summary>
+            Gets a value indicating whether [magnetic north].
+            </summary>
+            <value><c>true</c> if [magnetic north]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Photo.GeoPhoto.Coordinate">
+            <summary>
+            Gets the coordinate.
+            </summary>
+            <value>The coordinate.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Photo.GeoPhoto.PhotoBitmap">
+            <summary>
+            Gets or sets the photo bitmap.
+            </summary>
+            <value>The photo bitmap.</value>
+        </member>
+        <member name="T:Umbriel.GIS.LMStat.LMStatTable">
+            <summary>
+             LMStatTable class 
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.LMStat.LMStatTable.AddRows(System.Data.DataRowCollection)">
+            <summary>
+            Adds the lmstatparser table rows to the data table
+            </summary>
+            <param name="rows">The DataRowCollection of lmstatparser rows.</param>
         </member>
         <member name="T:Umbriel.GIS.IPoint2D">
             <summary>
@@ -302,118 +486,208 @@
             </summary>
             <value>The longitude.</value>
         </member>
-        <member name="T:Umbriel.GIS.LMStat.LicenseType">
+        <member name="T:Umbriel.GIS.Google.QueryStringBuilder">
             <summary>
-            struct for license information parsed from an lmstat file
+             Google Maps Querystring builder
             </summary>
         </member>
-        <member name="F:Umbriel.GIS.LMStat.LicenseType.LicenseName">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.DefaultGoogleMapsBaseURL">
             <summary>
-            Name of the license
+            default google maps base url
             </summary>
         </member>
-        <member name="F:Umbriel.GIS.LMStat.LicenseType.LineLocation">
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.#ctor">
             <summary>
-            line number in the lmstat text file
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Google.QueryStringBuilder"/> class.
             </summary>
         </member>
-        <member name="F:Umbriel.GIS.LMStat.LicenseType.TotalLicenses">
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.#ctor(System.String)">
             <summary>
-            total licenses available 
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Google.QueryStringBuilder"/> class.
+            </summary>
+            <param name="baseURL">The base URL.</param>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.AppendQuery(System.String)">
+            <summary>
+            Appends the query.
+            </summary>
+            <param name="q">The google maps query </param>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.AppendMapCenter(System.Double,System.Double)">
+            <summary>
+            Appends the map center.
+            </summary>
+            <param name="latitude">The latitude.</param>
+            <param name="longitude">The longitude.</param>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.SetMapType(Umbriel.GIS.Google.QueryStringBuilder.GoogleMapTypes)">
+            <summary>
+            Sets the type of the map.
+            </summary>
+            <param name="mapType">Type of the map.</param>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.SetApproximateSpan(System.String)">
+            <summary>
+            Sets the approximate span.
+            </summary>
+            <param name="span">The approximate span of the map</param>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.BaseURL">
+            <summary>
+            Gets the base URL.
+            </summary>
+            <value>The base URL.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.MapCenterLatitude">
+            <summary>
+            Gets or sets the latitude.
+            </summary>
+            <value>The latitude.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.MapCenterLongitude">
+            <summary>
+            Gets or sets the longitude.
+            </summary>
+            <value>The longitude.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetView">
+            <summary>
+            Gets or sets the street view parameter class
+            </summary>
+            <value>The street view.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.QueryParameter">
+            <summary>
+            Gets or sets the query parameter (the q querystring parameter for google maps
+            </summary>
+            <value>The query parameter.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.MapType">
+            <summary>
+            Gets or sets the type of the map.
+            </summary>
+            <value>The type of the map.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.ApproximateSpan">
+            <summary>
+            Gets or sets the approximate span.
+            </summary>
+            <value>The approximate span.</value>
+        </member>
+        <member name="T:Umbriel.GIS.Google.QueryStringBuilder.GoogleMapTypes">
+            <summary>
+            Enumeration of Google Map map types
             </summary>
         </member>
-        <member name="F:Umbriel.GIS.LMStat.LicenseType.InUseLicenses">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.GoogleMapTypes.map">
             <summary>
-            in use licenses
+            Map Google Map Type
             </summary>
         </member>
-        <member name="F:Umbriel.GIS.LMStat.LicenseType.StatDateTime">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.GoogleMapTypes.satellite">
             <summary>
-            date/time of the lmstat file
+            Satellite View Google Map Type
             </summary>
         </member>
-        <member name="F:Umbriel.GIS.LMStat.LicenseType.ServerName">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.GoogleMapTypes.hybrid">
             <summary>
-            name of the license manager server
+            Hybrid View Google Map Type
             </summary>
         </member>
-        <member name="T:Umbriel.GIS.LMStat.LMStatParser">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.GoogleMapTypes.terrain">
             <summary>
-            Parser class for an LMSTAT text file
+            Terrain View Google Map Type
             </summary>
         </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.#ctor">
+        <member name="T:Umbriel.GIS.Google.QueryStringBuilder.StreetViewMapArrangement">
             <summary>
-            Initializes a new instance of the <see cref="T:Umbriel.GIS.LMStat.LMStatParser"/> class.
+            Enumeration of Google Streetview map layout configurations
             </summary>
         </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.#ctor(System.String)">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.StreetViewMapArrangement.Half">
             <summary>
-            Initializes a new instance of the <see cref="T:Umbriel.GIS.LMStat.LMStatParser"/> class.
-            </summary>
-            <param name="path">The full file path</param>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.Parse">
-            <summary>
-            Parses the lmstats file in the StatsFilePath
-            </summary>
-            <returns>datatable of licenses</returns>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.NewLicenseTable">
-            <summary>
-            Creates a newlicense table.
-            </summary>
-            <returns>datatable for licenses</returns>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.GetLicenseTypes">
-            <summary>
-            Gets the license types.
-            </summary>
-            <returns>list of license types w/ attributes for each license (total, in-use)</returns>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseLicenseName(System.String)">
-            <summary>
-            Parses the name of the license
-            </summary>
-            <param name="line">The line of text containing the license name</param>
-            <returns>name of the license</returns>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseTotalLicenses(System.String)">
-            <summary>
-            Parses the number of total licenses
-            </summary>
-            <param name="line">The line of text containing  the license count</param>
-            <returns>count of total licenses</returns>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseInUseLicenses(System.String)">
-            <summary>
-            Parses the in use licenses
-            </summary>
-            <param name="line">The line of text containing  the license count</param>
-            <returns>count of in-use licenses</returns>
-        </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatParser.ParseMachineName">
-            <summary>
-            Parses the name of the machine from the lmstat file
-            </summary>
-            <returns>machine name string</returns>
-        </member>
-        <member name="P:Umbriel.GIS.LMStat.LMStatParser.StatsFilePath">
-            <summary>
-            Gets or sets the stats file path.
-            </summary>
-            <value>The stats file path.</value>
-        </member>
-        <member name="T:Umbriel.GIS.LMStat.LMStatTable">
-            <summary>
-             LMStatTable class 
+            half street view, half map
             </summary>
         </member>
-        <member name="M:Umbriel.GIS.LMStat.LMStatTable.AddRows(System.Data.DataRowCollection)">
+        <member name="F:Umbriel.GIS.Google.QueryStringBuilder.StreetViewMapArrangement.CornerMap">
             <summary>
-            Adds the lmstatparser table rows to the data table
+            mostly street view, corner map
             </summary>
-            <param name="rows">The DataRowCollection of lmstatparser rows.</param>
+        </member>
+        <member name="T:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter">
+            <summary>
+            Class for the Google street view parameter
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter"/> class.
+            </summary>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.#ctor(System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter"/> class.
+            </summary>
+            <param name="latitude">The latitude.</param>
+            <param name="longitude">The longitude.</param>
+        </member>
+        <member name="M:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.Latitude">
+            <summary>
+            Gets or sets the latitude.
+            </summary>
+            <value>The latitude.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.Longitude">
+            <summary>
+            Gets or sets the longitude.
+            </summary>
+            <value>The longitude.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.MapArrangement">
+            <summary>
+            Gets or sets the map arrangement.
+            </summary>
+            <value>The map arrangement.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.Rotation">
+            <summary>
+            Gets or sets the rotation.
+            </summary>
+            <value>The rotation.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.TiltAngle">
+            <summary>
+            Gets or sets the tilt angle.
+            </summary>
+            <value>The tilt angle.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.ZoomLevel">
+            <summary>
+            Gets or sets the zoom level.
+            </summary>
+            <value>The zoom level.</value>
+        </member>
+        <member name="P:Umbriel.GIS.Google.QueryStringBuilder.StreetViewParameter.PitchAngle">
+            <summary>
+            Gets or sets the pitch angle.
+            </summary>
+            <value>The pitch angle.</value>
         </member>
     </members>
 </doc>
