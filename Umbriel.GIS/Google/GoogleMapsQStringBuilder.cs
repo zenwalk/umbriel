@@ -177,7 +177,7 @@ namespace Umbriel.GIS.Google
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
-        public string ToString()
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder(this.BaseURL);
             sb.Append('?');
@@ -284,7 +284,7 @@ namespace Umbriel.GIS.Google
             /// <returns>
             /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
             /// </returns>
-            public string ToString()
+            public override string ToString()
             {
                 StringBuilder sb;
                 sb = new StringBuilder("&layer=c");

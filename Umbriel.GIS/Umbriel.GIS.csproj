@@ -37,9 +37,14 @@
     <DocumentationFile>bin\Release\Umbriel.GIS.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ExifLibrary, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\exiflibrary.googlecode.com\bin\Release\ExifLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,18 +61,14 @@
     <Compile Include="SpatialReferenceDotOrg.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Ext\EXIFextractor.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\EXIFextractor\EXIFextractor.csproj">
-      <Project>{748E81BC-D466-4E39-99AA-372ACBC2BB1E}</Project>
-      <Name>EXIFextractor</Name>
-    </ProjectReference>
+    <Content Include="Lib\ExifLibrary.dll" />
+    <Content Include="Lib\ExifLibrary.pdb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Help\Umbriel.GIS.chm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Lib\ExifLibrary.dll.config" />
     <None Include="LMStat\CreateLMStatTable.sql" />
     <None Include="Umbriel.GIS.HelpProject.shfb" />
   </ItemGroup>
