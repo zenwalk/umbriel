@@ -97,8 +97,9 @@ namespace Umbriel.GIS.Photo
             {
                 sb.AppendLine(this.FilePath.ToString());
             }
-            catch
+            catch (Exception e)
             {
+                Trace.WriteLine(e.StackTrace);
             }
             
             sb.AppendLine("Image Direction: " + this.ImageDirection.ToString());
