@@ -194,7 +194,7 @@ namespace Umbriel.GIS.Metadata.GISMetaLinq
                 Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
                 string ver = v.Major.ToString() + "." + v.Minor.ToString() + "." + v.Revision.ToString() + "." + v.Build.ToString();
 
-                tail = "sdemeta.exe " + ver;
+                tail = "GISMetaLinq.exe " + ver;
 
                 Console.WriteLine(tail);
 
