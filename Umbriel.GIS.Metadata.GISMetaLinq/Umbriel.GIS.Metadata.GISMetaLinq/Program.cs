@@ -12,6 +12,7 @@ namespace Umbriel.GIS.Metadata.GISMetaLinq
     /// </summary>
     class Program
     {
+        //-o purgeanalyzesteps -f "\\w-dpu-48\dpu_sys\GIS\metadata\dpugis\xml\WATER_FITTINGS.XML" -out "\\w-dpu-48\dpu_sys\GIS\metadata\dpugis\xml\WATER_FITTINGS_OUTTEST.XML"
 
         [STAThread()]
         static void Main(string[] args)
@@ -102,7 +103,7 @@ namespace Umbriel.GIS.Metadata.GISMetaLinq
             stopwatch.Stop();
 
             Console.WriteLine("Delete Attempts: " + deletenodes.Count.ToString() + " Actual Deletes: " + removecount.ToString());
-            Console.WriteLine("Purge Analyze Steps Duration: " + (stopwatch.ElapsedTicks/1000).ToString("0.00000"));
+            Console.WriteLine("Purge Analyze Steps Duration (seconds): " + ((double)stopwatch.ElapsedMilliseconds /1000).ToString("0.0000"));
 
         }
 
@@ -181,7 +182,8 @@ namespace Umbriel.GIS.Metadata.GISMetaLinq
             try
             {
                 System.Reflection.Assembly assemblyID = System.Reflection.Assembly.GetExecutingAssembly();
-                System.IO.Stream streamID = assemblyID.GetManifestResourceStream("GISMetaLinq.usg.txt");
+                string[] resNames = assemblyID.GetManifestResourceNames();
+                System.IO.Stream streamID = assemblyID.GetManifestResourceStream("Umbriel.GIS.Metadata.GISMetaLinq.usg.txt");
                 System.IO.StreamReader sr = new System.IO.StreamReader(streamID);
 
                 string usage = sr.ReadToEnd();

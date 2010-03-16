@@ -110,4 +110,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>cp "C:\svn_workspace\umbriel.googlecode.com\trunk\Umbriel.GIS.Metadata.GISMetaLinq\Umbriel.GIS.Metadata.GISMetaLinq\bin\Release\Umbriel.GIS.Metadata.GISMetaLinq.exe" "C:\util\bin\GISMetaLinq.exe"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
