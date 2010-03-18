@@ -1,4 +1,4 @@
-﻿// <copyright file="SpatialReferenceDotOrg.cs" company="Earth">
+﻿// <copyright file="SpatialReferenceDotOrg.cs" company="Umbriel Project">
 // Copyright (c) 2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>
