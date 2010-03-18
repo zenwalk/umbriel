@@ -1,9 +1,9 @@
-﻿// <copyright file="Utility.cs" company="Henrico County, VA">
+﻿// <copyright file="Utility.cs" company="Umbriel Project">
 // Copyright (c) 2010 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>
-// <email>cum30@co.henrico.va.us</email>
-// <date>2010-02-??</date>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-03-14</date>
 // <summary>Utility class file </summary>
 
 namespace Umbriel.ArcGIS.Geodatabase
@@ -89,6 +89,34 @@ namespace Umbriel.ArcGIS.Geodatabase
             catch (Exception ex)
             {
                 Trace.WriteLine("AZGDBUtil.ArcSDEConnPropSet  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// parses the object class table name from the fully qualified object class name:
+        /// </summary>
+        /// <param name="objectClassName">Name of the object class.</param>
+        /// <returns>
+        /// A string containing only the object class name.  So and objectClassName of 'GIS.DBO.PARCELS' would be returned as PARCELS
+        /// </returns>
+        public static string ParseObjectClassName(string objectClassName)
+        {
+            try
+            {
+                if (objectClassName.LastIndexOf('.') > 0)
+                {
+                    return objectClassName.Substring(objectClassName.LastIndexOf('.') + 1).Trim();
+                }
+                else
+                {
+                    // if there's no period, then return the objectClassName as-is
+                    return objectClassName;
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("ParseObjectClassName  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
                 throw;
             }
         }

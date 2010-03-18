@@ -1,8 +1,8 @@
-// <copyright file="XMLGDBWorkspace.cs" company="Henrico County, VA">
+// <copyright file="XMLGDBWorkspace.cs" company="Umbriel Project">
 // Copyright (c) 2010 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>
-// <email>cum30@co.henrico.va.us</email>
+// <email>cumminsjp@gmail.com</email>
 // <date>2010-02-??</date>
 // <summary>XMLGDBWorkspace class file </summary>
 
