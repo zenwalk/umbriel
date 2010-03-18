@@ -1,4 +1,12 @@
-﻿using System.Reflection;
+﻿// <copyright file="AssemblyInfo.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Rights Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-03-14</date>
+// <summary>Utility class file </summary>
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,7 +16,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Umbriel.ArcGIS.Geodatabase.sde2spatialite")]
 [assembly: AssemblyDescription("console utility to export ArcSDE featureclass to spatialite")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("None")]
+[assembly: AssemblyCompany("Umbriel Project")]
 [assembly: AssemblyProduct("Umbriel.ArcGIS.Geodatabase.sde2spatialite")]
 [assembly: AssemblyCopyright("Copyright © Jay Cummins 2010")]
 [assembly: AssemblyTrademark("")]
@@ -28,6 +36,5 @@ using System.Runtime.InteropServices;
 //      Minor Version 
 //      Build Number
 //      Revision
-//
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.18.0")]
+[assembly: AssemblyFileVersion("1.0.18.0")]
