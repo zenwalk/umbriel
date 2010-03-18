@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Umbriel.ArcMap.NetworkAnalysis")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Umbriel Project")]
 [assembly: AssemblyProduct("Umbriel.ArcMap.NetworkAnalysis")]
 [assembly: AssemblyCopyright("Copyright © Jay Cummins, 2009")]
 [assembly: AssemblyTrademark("")]

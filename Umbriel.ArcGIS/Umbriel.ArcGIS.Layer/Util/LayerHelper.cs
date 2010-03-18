@@ -2,7 +2,7 @@
 // Copyright (c) 2008-2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>
-// <email>cumminsjp@gmail.com,cum30@co.henrico.va.us</email>
+// <email>cumminsjp@gmail.com,cumminsjp@gmail.com</email>
 // <date>2008-06-06</date>
 // <summary>Layer Utility Class</summary>
 

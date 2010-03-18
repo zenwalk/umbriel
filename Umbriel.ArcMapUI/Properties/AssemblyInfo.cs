@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Umbriel.ArcMapUI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Earth")]
+[assembly: AssemblyCompany("Umbriel Project")]
 [assembly: AssemblyProduct("Umbriel.ArcMapUI")]
 [assembly: AssemblyCopyright("2009")]
 [assembly: AssemblyTrademark("")]

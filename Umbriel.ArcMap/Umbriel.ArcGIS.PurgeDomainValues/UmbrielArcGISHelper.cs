@@ -1,4 +1,4 @@
-﻿// <copyright file="UmbrielArcGISHelper.cs" company="Earth">
+﻿// <copyright file="UmbrielArcGISHelper.cs" company="Umbriel Project">
 // Copyright (c) 2009 All Right Reserved
 // </copyright>
 // <author>Jay Cummins</author>

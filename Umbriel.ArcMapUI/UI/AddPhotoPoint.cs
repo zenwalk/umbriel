@@ -1,4 +1,4 @@
-// <copyright file="AddPhotoPoint.cs" company="Earth">
+// <copyright file="AddPhotoPoint.cs" company="Umbriel Project">
 // Copyright (c) 2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>

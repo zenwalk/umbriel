@@ -1,4 +1,4 @@
-﻿// <copyright file="GeohashCalculatorForm.cs" company="Earth">
+﻿// <copyright file="GeohashCalculatorForm.cs" company="Umbriel Project">
 // Copyright (c) 2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>
