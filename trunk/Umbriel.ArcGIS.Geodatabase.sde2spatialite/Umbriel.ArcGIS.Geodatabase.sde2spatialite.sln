@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Geodatabase.sde2spatialite", "Umbriel.ArcGIS.Geodatabase.sde2spatialite.csproj", "{FEC9BCB1-5103-4382-BB68-350065F27B91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Geodatabase", "..\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase.csproj", "{3CD95119-F261-4926-9BFB-CF8929424FA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.GIS", "..\Umbriel.GIS\Umbriel.GIS.csproj", "{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +17,14 @@ Global
 		{FEC9BCB1-5103-4382-BB68-350065F27B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC9BCB1-5103-4382-BB68-350065F27B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC9BCB1-5103-4382-BB68-350065F27B91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
