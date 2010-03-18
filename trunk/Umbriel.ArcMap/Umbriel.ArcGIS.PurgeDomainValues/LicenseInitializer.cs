@@ -1,8 +1,8 @@
-// <copyright file="LicenseInitializer.cs" company="Henrico County, VA">
+// <copyright file="LicenseInitializer.cs" company="Umbriel Project">
 // Copyright 2008 ESRI
 // </copyright>
 // <author>ESRI</author>
-// <email>cum30@co.henrico.va.us,cumminsjp@gmail.com</email>
+// <email>cumminsjp@gmail.com</email>
 // <date>2009-07-08</date>
 // <summary>SDEMeta Helper Class File
 //   Revision History:

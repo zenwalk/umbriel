@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.PurgeDomainV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Layer.SpatialiteLayer", "..\Umbriel.ArcGIS\Umbriel.ArcGIS.Layer.SpatialiteLayer\Umbriel.ArcGIS.Layer.SpatialiteLayer.csproj", "{2AE55B5F-D3D9-447F-9D0E-3F028ED4B03E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.ReplaceConnections", "Umbriel.ArcGIS.ReplaceConnections\Umbriel.ArcGIS.ReplaceConnections.csproj", "{B0A84DCD-A9FE-48EE-86D4-96F43A7312F2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Geodatabase", "..\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase.csproj", "{3CD95119-F261-4926-9BFB-CF8929424FA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Layer.ConnectionReport", "Umbriel.ArcGIS.Layer.ConnectionReport\Umbriel.ArcGIS.Layer.ConnectionReport.csproj", "{348E1F33-92C4-4645-AF65-E2A33D6D5A3F}"
@@ -74,10 +72,6 @@ Global
 		{2AE55B5F-D3D9-447F-9D0E-3F028ED4B03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AE55B5F-D3D9-447F-9D0E-3F028ED4B03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AE55B5F-D3D9-447F-9D0E-3F028ED4B03E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0A84DCD-A9FE-48EE-86D4-96F43A7312F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0A84DCD-A9FE-48EE-86D4-96F43A7312F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0A84DCD-A9FE-48EE-86D4-96F43A7312F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0A84DCD-A9FE-48EE-86D4-96F43A7312F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CD95119-F261-4926-9BFB-CF8929424FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU

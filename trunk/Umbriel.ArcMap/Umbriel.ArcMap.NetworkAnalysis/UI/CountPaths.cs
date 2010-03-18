@@ -1,4 +1,4 @@
-﻿// <copyright file="CountPaths.cs" company="Earth">
+﻿// <copyright file="CountPaths.cs" company="Umbriel Project">
 // Copyright (c) 2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>

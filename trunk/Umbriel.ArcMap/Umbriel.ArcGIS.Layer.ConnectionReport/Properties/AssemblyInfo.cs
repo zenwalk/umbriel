@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Umbriel.ArcGIS.Layer.ConnectionReport")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Henrico County, VA")]
+[assembly: AssemblyCompany("Umbriel Project")]
 [assembly: AssemblyProduct("Umbriel.ArcGIS.Layer.ConnectionReport")]
-[assembly: AssemblyCopyright("Copyright © Henrico County, VA 2010")]
+[assembly: AssemblyCopyright("Copyright ©  2010 Umbriel Project")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
