@@ -70,12 +70,12 @@ namespace Umbriel.UnitTests
         public void ReadGPSCoordinateTest()
         {
             string path = @"C:\temp\geoPhotoTesting\GPS_PhotoRename\090227111307.JPG";
-           GeoPhoto_Accessor target = new GeoPhoto_Accessor(path);
-            
+            GeoPhoto_Accessor target = new GeoPhoto_Accessor(path);
+
             target.ReadGPSCoordinate();
 
             Umbriel.GIS.ISpatialCoordinate coord = target.Coordinate;
-            
+
             System.Diagnostics.Debug.WriteLine(target.ToString());
 
 
