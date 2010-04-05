@@ -39,7 +39,6 @@
 namespace Umbriel.GIS
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
 
@@ -191,10 +190,10 @@ namespace Umbriel.GIS
 
                 int cd = BASE32.IndexOf(c);
 
-                Trace.WriteLine("char c = " + c.ToString());
-                Trace.WriteLine("int cd = " + cd.ToString());
+                //Trace.WriteLine("char c = " + c.ToString());
+                //Trace.WriteLine("int cd = " + cd.ToString());
 
-                Trace.WriteLine("bin cd = " + Convert.ToString(cd, 2));
+                //Trace.WriteLine("bin cd = " + Convert.ToString(cd, 2));
 
                 for (int j = 0; j < BITS.Length; j++)
                 {
