@@ -71,7 +71,10 @@ namespace Umbriel.ArcMap.Editor.UI
                 }
 
 
-                List<IFeatureLayer> layers = ArcZona.ArcGIS.Carto.LayerUtility.FindFeatureLayers(this.MxDocument.FocusMap);
+                //List<IFeatureLayer> layers = ArcZona.ArcGIS.Carto.LayerUtility.FindFeatureLayers(this.MxDocument.FocusMap);
+
+                List<IFeatureLayer> layers = Umbriel.ArcGIS.Layer.LayerHelper.FindFeatureLayers(this.MxDocument.FocusMap);
+                
 
                 Dictionary<int, IFeatureLayer> lineLayers = new Dictionary<int, IFeatureLayer>();
 
@@ -99,7 +102,8 @@ namespace Umbriel.ArcMap.Editor.UI
 
             if (this.MxDocument != null)
             {
-                List<IFeatureLayer> layers = ArcZona.ArcGIS.Carto.LayerUtility.FindFeatureLayers(this.MxDocument.FocusMap);
+                List<IFeatureLayer> layers = Umbriel.ArcGIS.Layer.LayerHelper.FindFeatureLayers(this.MxDocument.FocusMap);
+
                 Umbriel.ArcMap.Editor.Util.EditorHelper.RemoveLayersWithNoSelections(ref layers);
                 this.AvailableEditableFeatureLayers = layers;
 
