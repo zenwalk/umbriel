@@ -17,13 +17,13 @@ namespace Umbriel.ArcMap.Editor.Util
     /// <summary>
     /// Helper class for Umbriel Editor Tools
     /// </summary>
-    internal static class EditorHelper
+    public  class EditorHelper
     {
         /// <summary>
         /// Removes the layers with no feature selections.
         /// </summary>
         /// <param name="layers">List of IFeatureLayer</param>
-        internal static void RemoveLayersWithNoSelections(ref List<IFeatureLayer> layers)
+        public  static void RemoveLayersWithNoSelections(ref List<IFeatureLayer> layers)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Umbriel.ArcMap.Editor.Util
         /// Removes any layers from the list that are not point layers
         /// </summary>
         /// <param name="layers">List of IFeatureLayer</param>
-        internal static void RemoveLayersNonPointLayers(ref List<IFeatureLayer> layers)
+        public static void RemoveLayersNonPointLayers(ref List<IFeatureLayer> layers)
         {
             try
             {
@@ -72,6 +72,66 @@ namespace Umbriel.ArcMap.Editor.Util
                 System.Diagnostics.Trace.WriteLine(e.StackTrace);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Unions the cursor geometries.
+        /// </summary>
+        /// <param name="cursor">The cursor.</param>
+        /// <returns>a single geometry</returns>
+        public static IGeometry UnionCursorGeometries(IFeatureCursor cursor)
+        {
+            IFeature feature = null;
+            IGeometry unionGeometry = null;
+            ITopologicalOperator topoOperator = null;
+
+            while ((feature = cursor.NextFeature()) != null)
+            {
+                if (!feature.Shape.IsEmpty)
+                {
+                    if (unionGeometry != null)
+                    {
+                        topoOperator = (ITopologicalOperator)feature.Shape;
+                        unionGeometry = topoOperator.Union(unionGeometry);
+                    }
+                    else
+                    {
+                        unionGeometry = feature.Shape;
+                    }
+                }
+            }
+
+            return unionGeometry;
+        }
+
+
+        /// <summary>
+        /// Obtains the union of all feature geometires within a List of features
+        /// </summary>
+        /// <param name="featureList">list of features to union together</param>
+        /// <returns>IGeometry of the unioned shapes contained in the parameter list</returns>
+        public static IGeometry UnionGeometries(List<IFeature> featureList)
+        {
+                IGeometry unionGeometry = null;
+                ITopologicalOperator topoOperator = null;
+
+                foreach (IFeature feature in featureList)
+                {
+                    if (!feature.Shape.IsEmpty)
+                    {
+                        if (unionGeometry != null)
+                        {
+                            topoOperator = (ITopologicalOperator)feature.Shape;
+                            unionGeometry = topoOperator.Union(unionGeometry);
+                        }
+                        else
+                        {
+                            unionGeometry = feature.Shape;
+                        }
+                    }
+                }
+
+                return unionGeometry;           
         }
     }
 }

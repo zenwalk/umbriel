@@ -9,6 +9,7 @@
 namespace Umbriel.ArcMap.Editor.Util
 {
     using ESRI.ArcGIS.Geometry;
+    using ESRI.ArcGIS.esriSystem;
 
     /// <summary>
     /// Creates a geohash from an ESRI IPoint
@@ -29,9 +30,16 @@ namespace Umbriel.ArcMap.Editor.Util
         /// <returns>geohash string</returns>
         public static string CreateGeohash(IPoint pt,  int precision)
         {
+            IClone source = (IClone)pt;
+            IClone clone = source.Clone();
+
+            IPoint clonePoint = (IPoint)clone;
+
             ISpatialReference spatialReference = WGS84SpatialReference();
-            pt.Project(spatialReference);
-            string geohash = Umbriel.GIS.Geohash.EncodeCoordinate(pt.Y, pt.X, precision);
+
+            clonePoint.Project(spatialReference);
+
+            string geohash = Umbriel.GIS.Geohash.EncodeCoordinate(clonePoint.Y, clonePoint.X, precision);
 
             return geohash;
         }

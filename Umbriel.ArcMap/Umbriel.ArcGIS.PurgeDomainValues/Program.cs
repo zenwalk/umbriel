@@ -8,7 +8,7 @@ namespace Umbriel.ArcGIS.PurgeDomainValues
     using System.Reflection;
     using System.Text;
 
-    using ArcZona.ArcGIS.Geodatabase;
+    
     using ESRI.ArcGIS.Catalog;
     using ESRI.ArcGIS.DataSourcesGDB;
     using ESRI.ArcGIS.esriSystem;

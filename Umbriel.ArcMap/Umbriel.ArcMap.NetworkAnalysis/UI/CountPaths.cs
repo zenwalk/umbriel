@@ -18,6 +18,7 @@ namespace Umbriel.ArcMap.NetworkAnalysis.UI
     using ESRI.ArcGIS.ArcMapUI;
     using ESRI.ArcGIS.Carto;
     using ESRI.ArcGIS.Framework;
+    using Umbriel.ArcGIS.Geodatabase;
 
     /// <summary>
     /// CountPaths BaseCommand for ArcMap
@@ -106,8 +107,8 @@ namespace Umbriel.ArcMap.NetworkAnalysis.UI
 
             try
             {
-                layerList = ArcZona.ArcGIS.Carto.LayerUtility.FindFeatureLayers(map);
-
+                layerList = Umbriel.ArcGIS.Layer.LayerHelper.FindFeatureLayers(map);
+                
                 // remove any layers that don't have a feature selection
                 Util.NetworkAnalysisHelper.RemoveLayersWithNoSelections(ref layerList);
 
