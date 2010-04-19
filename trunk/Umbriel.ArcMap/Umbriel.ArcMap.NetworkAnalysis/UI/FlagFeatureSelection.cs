@@ -105,7 +105,7 @@ namespace Umbriel.ArcMap.NetworkAnalysis.UI
 
             try
             {
-                layerList = ArcZona.ArcGIS.Carto.LayerUtility.FindFeatureLayers(map);
+                layerList = Umbriel.ArcGIS.Layer.LayerHelper.FindFeatureLayers(map);
 
                 // remove any layers that don't have a feature selection
                 Util.NetworkAnalysisHelper.RemoveLayersWithNoSelections(ref layerList);

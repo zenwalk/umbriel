@@ -18,11 +18,12 @@ namespace Umbriel.ArcGIS
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-    using ArcZona.ArcGIS.Geodatabase;
+    
     using ESRI.ArcGIS.Catalog;
     using ESRI.ArcGIS.DataSourcesGDB;
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Geodatabase;
+    using Umbriel.ArcGIS.Geodatabase;
 
     public static class UmbrielArcGISHelper
     {
@@ -150,7 +151,7 @@ namespace Umbriel.ArcGIS
                         servInstance = instance;
                     }
                     
-                    IPropertySet ps = AZGDBUtil.ArcSDEConnPropSet(server, instance, username, passwrd, database, version, authmode);
+                    IPropertySet ps = Utility.ArcSDEConnPropSet(server, instance, username, passwrd, database, version, authmode);
                     IWorkspaceFactory workspaceFactory = new SdeWorkspaceFactoryClass();
                     try
                     {

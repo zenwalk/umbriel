@@ -27,6 +27,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Geodatabase"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcGIS.Layer.ConnectionReport", "Umbriel.ArcGIS.Layer.ConnectionReport\Umbriel.ArcGIS.Layer.ConnectionReport.csproj", "{348E1F33-92C4-4645-AF65-E2A33D6D5A3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.GIS.GeohashFunctions", "..\Umbriel.GIS.ClrFunctions\Umbriel.GIS.GeohashFunctions.csproj", "{F1BECF48-C476-4D31-AA42-4BA0A4FA7AA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.GIS.GeohashFunctions.GeohashFunctionTests", "GeohashFunctionTests\Umbriel.GIS.GeohashFunctions.GeohashFunctionTests.csproj", "{5A7D8E8E-2DBF-4675-A851-208DBA61AAC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.Utility", "..\Umbriel.Utility\Umbriel.Utility.csproj", "{C6F7C13C-552A-4320-ADFD-1AE73F42BDCE}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -80,6 +86,18 @@ Global
 		{348E1F33-92C4-4645-AF65-E2A33D6D5A3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{348E1F33-92C4-4645-AF65-E2A33D6D5A3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{348E1F33-92C4-4645-AF65-E2A33D6D5A3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1BECF48-C476-4D31-AA42-4BA0A4FA7AA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1BECF48-C476-4D31-AA42-4BA0A4FA7AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1BECF48-C476-4D31-AA42-4BA0A4FA7AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1BECF48-C476-4D31-AA42-4BA0A4FA7AA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A7D8E8E-2DBF-4675-A851-208DBA61AAC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A7D8E8E-2DBF-4675-A851-208DBA61AAC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A7D8E8E-2DBF-4675-A851-208DBA61AAC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A7D8E8E-2DBF-4675-A851-208DBA61AAC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F7C13C-552A-4320-ADFD-1AE73F42BDCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F7C13C-552A-4320-ADFD-1AE73F42BDCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F7C13C-552A-4320-ADFD-1AE73F42BDCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F7C13C-552A-4320-ADFD-1AE73F42BDCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -30,6 +30,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <ApplicationIcon>assemicon.ico</ApplicationIcon>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,10 +52,6 @@
     <RegisterForComInterop>true</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArcZona, Version=1.4.3492.13151, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExtLib\ArcZona.dll</HintPath>
-    </Reference>
     <Reference Include="ESRI.ArcGIS.ADF, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -88,6 +85,9 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -161,6 +161,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase.csproj">
+      <Project>{3CD95119-F261-4926-9BFB-CF8929424FA5}</Project>
+      <Name>Umbriel.ArcGIS.Geodatabase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Umbriel.ArcGIS\Umbriel.ArcGIS.Layer\Umbriel.ArcGIS.Layer.csproj">
+      <Project>{C4775701-E68E-4122-BAD6-8EFDAD8DBDD1}</Project>
+      <Name>Umbriel.ArcGIS.Layer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Umbriel.ArcMap.Editor\Umbriel.ArcMap.Editor.csproj">
       <Project>{B1E7BA50-3233-4910-96C3-024094215328}</Project>
       <Name>Umbriel.ArcMap.Editor</Name>

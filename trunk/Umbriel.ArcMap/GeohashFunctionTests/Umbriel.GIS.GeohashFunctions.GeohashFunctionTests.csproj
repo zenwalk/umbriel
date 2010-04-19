@@ -37,6 +37,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +52,10 @@
     <ProjectReference Include="..\..\Umbriel.GIS.ClrFunctions\Umbriel.GIS.GeohashFunctions.csproj">
       <Project>{F1BECF48-C476-4D31-AA42-4BA0A4FA7AA6}</Project>
       <Name>Umbriel.GIS.GeohashFunctions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Umbriel.Utility\Umbriel.Utility.csproj">
+      <Project>{C6F7C13C-552A-4320-ADFD-1AE73F42BDCE}</Project>
+      <Name>Umbriel.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
