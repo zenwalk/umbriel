@@ -184,6 +184,7 @@ namespace Umbriel.ArcGIS.Layer.ConnectionReport
                 // You may decide to do something different here. For example, you
                 // can try to elevate your privileges and access the file again.
                 //log.Add(e.Message);
+                Trace.Write(e.StackTrace);
             }
             catch (System.IO.DirectoryNotFoundException e)
             {
