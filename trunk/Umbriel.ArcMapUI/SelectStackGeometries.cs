@@ -1,22 +1,28 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using ESRI.ArcGIS.ADF.BaseClasses;
-using ESRI.ArcGIS.ADF.CATIDs;
-using ESRI.ArcGIS.Framework;
-using ESRI.ArcGIS.ArcMapUI;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.Geodatabase;
-using ESRI.ArcGIS.Geometry;
-// using System.Linq;
-
+// <copyright file="SelectStackGeometries.cs" company="Umbriel Project">
+// Copyright (c) 2009 All Rights Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>unknown-see svn</date>
+// <summary> class file for SelectStackGeometries command for ArcMap
+////</summary>
 
 namespace Umbriel.ArcMapUI
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+    using ESRI.ArcGIS.ADF.BaseClasses;
+    using ESRI.ArcGIS.ADF.CATIDs;
+    using ESRI.ArcGIS.ArcMapUI;
+    using ESRI.ArcGIS.Carto;
+    using ESRI.ArcGIS.Framework;
+    using ESRI.ArcGIS.Geodatabase;
+    using ESRI.ArcGIS.Geometry;
+
     /// <summary>
-    /// Summary description for SelectStackGeometries.
+    /// SelectStackGeometries ArcMap Command
     /// </summary>
     [Guid("3d87d6c5-d800-4717-8414-dea69ec0e1c7")]
     [ClassInterface(ClassInterfaceType.None)]
@@ -24,6 +30,10 @@ namespace Umbriel.ArcMapUI
     public sealed class SelectStackGeometries : BaseCommand
     {
         #region COM Registration Function(s)
+        /// <summary>
+        /// Registers the function.
+        /// </summary>
+        /// <param name="registerType">Type of the register.</param>
         [ComRegisterFunction()]
         [ComVisible(false)]
         static void RegisterFunction(Type registerType)
@@ -36,16 +46,16 @@ namespace Umbriel.ArcMapUI
             //
         }
 
+        /// <summary>
+        /// Unregisters the function.
+        /// </summary>
+        /// <param name="registerType">Type of the register.</param>
         [ComUnregisterFunction()]
         [ComVisible(false)]
         static void UnregisterFunction(Type registerType)
         {
             // Required for ArcGIS Component Category Registrar support
             ArcGISCategoryUnregistration(registerType);
-
-            //
-            // TODO: Add any COM unregistration code here
-            //
         }
 
         #region ArcGIS Component Category Registrar generated code
@@ -73,14 +83,21 @@ namespace Umbriel.ArcMapUI
         #endregion
         #endregion
 
+        /// <summary>
+        /// ArcMap IApplication ref
+        /// </summary>
         private IApplication m_application;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectStackGeometries"/> class.
+        /// </summary>
         public SelectStackGeometries()
         {
             base.m_category = "Umbriel";
             base.m_caption = "Select Stacked Geometries";
             base.m_message = "Highlight the layer you wish to analyze and press this button.";
             base.m_toolTip = "Highlight the layer you wish to analyze and press this button.";
-            base.m_name = "Umbriel_SelectStackGeometries";   //unique id, non-localizable (e.g. "MyCategory_ArcMapTool")
+            base.m_name = "Umbriel_SelectStackGeometries";
 
             try
             {
@@ -102,17 +119,21 @@ namespace Umbriel.ArcMapUI
         public override void OnCreate(object hook)
         {
             if (hook == null)
+            {
                 return;
+            }
 
             m_application = hook as IApplication;
 
             //Disable if it is not ArcMap
             if (hook is IMxApplication)
+            {
                 base.m_enabled = true;
+            }
             else
+            {
                 base.m_enabled = false;
-
-            // TODO:  Add other initialization code
+            }
         }
 
         /// <summary>
@@ -122,7 +143,6 @@ namespace Umbriel.ArcMapUI
         {
             IMxDocument mxDoc = (IMxDocument)m_application.Document;
             IFeatureLayer featureLayer = null;
-
 
             if (mxDoc.SelectedLayer != null && mxDoc.SelectedLayer is IFeatureLayer)
             {
@@ -151,7 +171,7 @@ namespace Umbriel.ArcMapUI
 
                     allGeometries.Add(feature.OID, wkb);
 
-                    if ((counter % 500 == 0))
+                    if (counter % 500 == 0)
                     {
                         OnMessageStatus("Geometry read: " + counter.ToString() + "  of  " + featureCount.ToString());
                     }
@@ -161,10 +181,9 @@ namespace Umbriel.ArcMapUI
                 foreach (KeyValuePair<int, byte[]> item in allGeometries)
                 {
                     counter++;
+
                     // IGeometry geometry = item.Value;
                     byte[] wkbAnalyze = item.Value;
-
-                    // ITopologicalOperator topoOperator =(ITopologicalOperator) geometry;
 
                     OnMessageStatus("Analyzing geometry " + counter.ToString() + " of " + allGeometries.Count.ToString());
 
@@ -206,25 +225,10 @@ namespace Umbriel.ArcMapUI
 
                 mxDoc.ActiveView.Refresh();
 
-
-
                 System.Windows.Forms.MessageBox.Show(
     "Stack Finding complete! Analyzed " + counter.ToString() + " geometries and found " + oids.Count.ToString() + " stacked features.",
     "Select Stack Geometries",
     System.Windows.Forms.MessageBoxButtons.OK);
-
-                //IFeatureSelection featureSelection = (IFeatureSelection)featureLayer;
-
-                //featureSelection.Clear();
-
-                //IQueryByLayer queryLayer = new QueryByLayerClass();
-                //queryLayer.ByLayer = featureLayer;
-                //queryLayer.FromLayer = featureLayer;
-                //queryLayer.LayerSelectionMethod = esriLayerSelectionMethod.esriLayerSelectAreIdenticalTo;
-                //queryLayer.ResultType = esriSelectionResultEnum.esriSelectionResultAdd;
-                //queryLayer.UseSelectedFeatures = false;
-                //featureSelection.SelectionSet = queryLayer.Select();
-
             }
             else
             {
@@ -235,6 +239,10 @@ namespace Umbriel.ArcMapUI
             }
         }
 
+        /// <summary>
+        /// Called when [message status].
+        /// </summary>
+        /// <param name="message">The message.</param>
         private void OnMessageStatus(string message)
         {
             m_application.StatusBar.set_Message(0, message);
@@ -242,6 +250,11 @@ namespace Umbriel.ArcMapUI
 
         #endregion
 
+        /// <summary>
+        /// Converts the geometry to WKB.
+        /// </summary>
+        /// <param name="geometry">The geometry.</param>
+        /// <returns>WKB byte array</returns>
         private static byte[] ConvertGeometryToWKB(IGeometry geometry)
         {
             IWkb wkb = geometry as IWkb;
@@ -253,10 +266,18 @@ namespace Umbriel.ArcMapUI
             return b;
         }
 
+        /// <summary>
+        /// Unsafes the compare.
+        /// </summary>
+        /// <param name="a1">The first byte array.</param>
+        /// <param name="a2">The second byte array.</param>
+        /// <returns>boolean true if equal</returns>
         private static unsafe bool UnsafeCompare(byte[] a1, byte[] a2)
         {
             if (a1 == null || a2 == null || a1.Length != a2.Length)
+            {
                 return false;
+            }
             fixed (byte* p1 = a1, p2 = a2)
             {
                 byte* x1 = p1, x2 = p2;
@@ -269,7 +290,5 @@ namespace Umbriel.ArcMapUI
                 return true;
             }
         }
-
-
     }
 }

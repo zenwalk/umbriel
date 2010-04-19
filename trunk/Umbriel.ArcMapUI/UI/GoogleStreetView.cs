@@ -135,7 +135,7 @@ namespace Umbriel.ArcMapUI.UI
                     IEnvelope env = doc.ActiveView.Extent;
 
                     IPoint pt;
-
+                    
                     double metersPerUnit = 1;
 
                     if (srMap is IProjectedCoordinateSystem)
