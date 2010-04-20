@@ -86,15 +86,22 @@ namespace Umbriel.ArcMapUI.UI
                         {
                             string progid = reader[0].ToString();
 
-                            if (!reader[1].Equals(System.DBNull.Value)
-                               && reader[1].ToString().IsNumeric())
+                            if (progid.Equals("Separator", StringComparison.CurrentCultureIgnoreCase))
                             {
-                                int subtype = Convert.ToInt32(reader[1].ToString());
-                                AddItem(progid, subtype);
+                                BeginGroup(); 
                             }
                             else
                             {
-                                AddItem(progid);
+                                if (!reader[1].Equals(System.DBNull.Value)
+                                   && reader[1].ToString().IsNumeric())
+                                {
+                                    int subtype = Convert.ToInt32(reader[1].ToString());
+                                    AddItem(progid, subtype);
+                                }
+                                else
+                                {
+                                    AddItem(progid);
+                                }
                             }
                         }
                     }
