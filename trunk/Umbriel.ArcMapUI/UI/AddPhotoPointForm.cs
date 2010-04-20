@@ -182,15 +182,18 @@ namespace Umbriel.ArcMapUI.UI
 
                         Umbriel.GIS.Photo.GeoPhoto geoPhoto = new Umbriel.GIS.Photo.GeoPhoto(file);
 
-                        // item.SubItems.Add(item.Text);  // filename
-                        item.SubItems.Add(lengthKb.ToString("0.##") + " Kb"); // Size
-                        item.SubItems.Add(System.IO.Path.GetExtension(file)); // Type
-                        item.SubItems.Add(fileInfo.LastWriteTime.ToString()); // Last Modified
-                        item.SubItems.Add(geoPhoto.Coordinate.Latitude.ToString("0.#####")); // Latitude
-                        item.SubItems.Add(geoPhoto.Coordinate.Longitude.ToString("0.#####")); // Longitude
-                        item.SubItems.Add(geoPhoto.ImageDirection.ToString("0.#####")); // compass
+                        if (geoPhoto.Coordinate != null)
+                        {
+                            // item.SubItems.Add(item.Text);  // filename
+                            item.SubItems.Add(lengthKb.ToString("0.##") + " Kb"); // Size
+                            item.SubItems.Add(System.IO.Path.GetExtension(file)); // Type
+                            item.SubItems.Add(fileInfo.LastWriteTime.ToString()); // Last Modified
+                            item.SubItems.Add(geoPhoto.Coordinate.Latitude.ToString("0.#####")); // Latitude
+                            item.SubItems.Add(geoPhoto.Coordinate.Longitude.ToString("0.#####")); // Longitude
+                            item.SubItems.Add(geoPhoto.ImageDirection.ToString("0.#####")); // compass
 
-                        listViewFiles.Items.Add(item);
+                            listViewFiles.Items.Add(item);
+                        }
                     }
 
                     System.Diagnostics.Debug.WriteLine(file);
