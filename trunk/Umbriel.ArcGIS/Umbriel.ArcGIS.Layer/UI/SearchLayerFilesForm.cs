@@ -40,7 +40,10 @@ namespace Umbriel.ArcGIS.Layer.UI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRebuildIndex_Click(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.LayerfileIndexSearchPaths.Count.Equals(0))
+            List<string> layerfileIndexSearchPaths = new List<string>();
+
+
+            if (layerfileIndexSearchPaths.Count.Equals(0))
             {
                 MessageBox.Show("There are no search paths specified in the Layer.Config", "Search Layer Files", MessageBoxButtons.OK);
             }
@@ -50,7 +53,7 @@ namespace Umbriel.ArcGIS.Layer.UI
                 
                 List<string> paths = new List<string>();
 
-                foreach (string path in Properties.Settings.Default.LayerfileIndexSearchPaths)
+                foreach (string path in layerfileIndexSearchPaths)
                 {
                     paths.Add(path);
                 }
