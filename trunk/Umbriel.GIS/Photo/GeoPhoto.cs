@@ -20,7 +20,7 @@ namespace Umbriel.GIS.Photo
     using System.Web.UI;
     using ExifLibrary;
     using Umbriel.GIS;
-
+    
     /// <summary>
     /// GeoPhoto class
     /// </summary>
@@ -33,11 +33,13 @@ namespace Umbriel.GIS.Photo
         /// <param name="path">The path to the photo</param>
         public GeoPhoto(string path)
         {
+            this.PhotoDateTime = null;
             Bitmap photo = new Bitmap(path);
             this.PhotoBitmap = photo;
             this.FilePath = path;
-
+            
             this.ReadGPSCoordinate();
+            this.ReadDateTaken();
         }
 
         /// <summary>
@@ -75,6 +77,13 @@ namespace Umbriel.GIS.Photo
         /// </summary>
         /// <value>The coordinate.</value>
         public ISpatialCoordinate Coordinate { get; private set; }
+        
+        /// <summary>
+        /// Gets or sets the photo date time.
+        /// </summary>
+        /// <value>The photo date time.</value>
+        public DateTime? PhotoDateTime { get; private set; }
+        
 
         /// <summary>
         /// Gets or sets the photo bitmap.
@@ -162,6 +171,43 @@ namespace Umbriel.GIS.Photo
                         this.Coordinate = coord;
                     }                    
                 }
+            }
+            else
+            {
+                throw new NullReferenceException();
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the date the photo was taken.
+        /// </summary>
+        private void ReadDateTaken()
+        {
+            if (this.PhotoBitmap != null)
+            {
+                DateTime datetaken = DateTime.Now;
+
+                Bitmap photo = this.PhotoBitmap;
+
+                // Extract exif metadata
+                ExifFile file = ExifFile.Read(this.FilePath);
+
+                ExifProperty exifProperty = file.Properties[ExifTag.DateTime];
+
+                if (exifProperty != null)
+                {
+                    try
+                    {
+                        datetaken = Convert.ToDateTime(exifProperty.Value);
+                        this.PhotoDateTime = datetaken;
+                    }
+                    catch
+                    {
+                    }
+                }
+                
+                return ;         
             }
             else
             {
