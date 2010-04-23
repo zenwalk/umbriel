@@ -248,5 +248,20 @@ namespace Umbriel.ArcGIS.Geodatabase
                 throw;
             }
         }
+
+        /// <summary>
+        /// Creates a WGS84 spatial reference.
+        /// </summary>
+        /// <returns>ISpatialReference for WGS84 geo</returns>
+        public static ISpatialReference GetWGS84SpatialReference()
+        {
+            SpatialReferenceEnvironment spatialReferenceEnv = new SpatialReferenceEnvironmentClass();
+
+            IGeographicCoordinateSystem geoCS = spatialReferenceEnv.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_WGS1984);
+            ISpatialReference spatialReference = geoCS;
+            spatialReference.SetFalseOriginAndUnits(-180, -90, 1000000);
+
+            return spatialReference;
+        }
     }
 }
