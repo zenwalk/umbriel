@@ -35,7 +35,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\dev\debug\_Umbriel.ArcMapUI\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -79,6 +79,11 @@
     <Reference Include="ESRI.ArcGIS.SystemUI, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.Utility, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\Microsoft.NET\Primary Interop Assemblies\stdole.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -87,6 +92,7 @@
     <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternalReferences\Sqlite\System.Data.SQLite.DLL</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
@@ -94,7 +100,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="GeohashID.cs" />
     <Compile Include="GeohashIDForm.cs">
       <SubType>Form</SubType>
@@ -132,6 +138,7 @@
     <Compile Include="UI\UmbrielArcMapToolbar.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GeohashID.bmp" />
@@ -170,6 +177,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase\Umbriel.ArcGIS.Geodatabase.csproj">
+      <Project>{3CD95119-F261-4926-9BFB-CF8929424FA5}</Project>
+      <Name>Umbriel.ArcGIS.Geodatabase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Umbriel.ArcGIS\Umbriel.ArcGIS.Layer\Umbriel.ArcGIS.Layer.csproj">
       <Project>{C4775701-E68E-4122-BAD6-8EFDAD8DBDD1}</Project>
       <Name>Umbriel.ArcGIS.Layer</Name>
@@ -189,9 +200,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="UmbrielArcMapToolbar.sqlite">
+    <EmbeddedResource Include="Umbriel.ArcMapUI.settings.sqlite" />
+    <EmbeddedResource Include="UmbrielArcMapToolbar.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SelectStackGeometries.bmp" />
@@ -214,6 +226,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\GoogleStreetView.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Docs\Readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\DefaultGPSPhotoHTMLPopup.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

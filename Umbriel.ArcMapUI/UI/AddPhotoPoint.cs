@@ -77,15 +77,22 @@ namespace Umbriel.ArcMapUI.UI
 
         private IApplication m_application;
 
+        /// <summary>
+        /// Gets or sets the add photo form.
+        /// </summary>
+        /// <value>The add photo form.</value>
         private AddPhotoPointForm AddPhotoForm { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddPhotoPoint"/> class.
+        /// </summary>
         public AddPhotoPoint()
         {
             base.m_category = "Umbriel"; //localizable text 
             base.m_caption = "Add a photo point using the GPS coordinate in EXIF Header";  //localizable text 
             base.m_message = "Add a photo point using the GPS coordinate in EXIF Header";  //localizable text
             base.m_toolTip = "Add a photo point using the GPS coordinate in EXIF Header";  //localizable text
-            base.m_name = "Umbriel_AddPhotoPoint";   //unique id, non-localizable (e.g. "MyCategory_ArcMapTool")
+            base.m_name = "Umbriel_AddPhotoPoint";   
 
             try
             {
@@ -127,12 +134,22 @@ namespace Umbriel.ArcMapUI.UI
         /// </summary>
         public override void OnClick()
         {
-            if (this.AddPhotoForm == null)
+            try
             {
-               this.AddPhotoForm  = new AddPhotoPointForm(); 
-           }
-            
-            this.AddPhotoForm.Show();
+                if (this.AddPhotoForm == null || this.AddPhotoForm.IsDisposed)
+                {
+                    this.AddPhotoForm = new AddPhotoPointForm();
+                }
+
+                this.AddPhotoForm.MxDocument = (IMxDocument)m_application.Document;
+
+                this.AddPhotoForm.Show();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
         }
 
         #endregion
