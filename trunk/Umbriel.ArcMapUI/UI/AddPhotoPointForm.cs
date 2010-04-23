@@ -13,19 +13,20 @@ namespace Umbriel.ArcMapUI.UI
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data;
-    using System.Drawing;
     using System.Diagnostics;
+    using System.Drawing;
     using System.IO;
     using System.Text;
     using System.Windows.Forms;
     using ESRI.ArcGIS.ArcMapUI;
     using ESRI.ArcGIS.Carto;
-    using ESRI.ArcGIS.Framework;
-    using ESRI.ArcGIS.esriSystem;
-    using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.DataSourcesGDB;
+    using ESRI.ArcGIS.Display;
+    using ESRI.ArcGIS.esriSystem;
+    using ESRI.ArcGIS.Framework;
+    using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.Geometry;
-    
+    using Umbriel.ArcGIS.Geodatabase;
 
     /// <summary>
     /// Form for end-users to specify file paths for image files that contain 
@@ -33,19 +34,20 @@ namespace Umbriel.ArcMapUI.UI
     /// </summary>
     public partial class AddPhotoPointForm : Form
     {
-        private IApplication ArcMapApplication { get; set; }
-        public IMxDocument MxDocument { get; set; }
-
+        // TODO: restore form dimensions / column widths
+        // TODO: enable/disable MakeLayer button based on grid contents
+        // TODO: cleanup / manage scratch workspaces (or don't use them).
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="AddPhotoPointForm"/> class.
         /// </summary>
         public AddPhotoPointForm()
         {
             InitializeComponent();
-            SetTooltips();
-            InitializeListView();
-            this.AllowDrop = true;
+            this.SetTooltips();
 
+            this.AllowDrop = true;
+            this.PhotoTable = new GPSPhotoTable();
         }
 
         /// <summary>
@@ -55,45 +57,81 @@ namespace Umbriel.ArcMapUI.UI
         public AddPhotoPointForm(IApplication arcmapApp)
         {
             InitializeComponent();
-            SetTooltips();
-            InitializeListView();
+            this.SetTooltips();
+
             this.AllowDrop = true;
 
             // LoadSettings();
-
             this.ArcMapApplication = arcmapApp;
             this.MxDocument = (IMxDocument)arcmapApp.Document;
-        }
 
+            this.PhotoTable = new GPSPhotoTable();
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets or sets the mx document.
+        /// </summary>
+        /// <value>The mx document.</value>
+        public IMxDocument MxDocument { get; set; }
+
+        /// <summary>
+        /// Gets or sets the photo table.
+        /// </summary>
+        /// <value>The photo table.</value>
+        private GPSPhotoTable PhotoTable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arc map application.
+        /// </summary>
+        /// <value>The arc map application.</value>
+        private IApplication ArcMapApplication { get; set; }
+        #endregion
+
+        /// <summary>
+        /// Handles the Click event of the buttonAddPhotos control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonAddPhotos_Click(object sender, EventArgs e)
         {
             openFileDialog.Title = "Add Photo Files";
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.AddPhotoPointLastUsedPath))
+
+            string lastusedpath = Util.Settings.ReadSetting("AddPhotoPointLastUsedPath");
+
+            if (!string.IsNullOrEmpty(lastusedpath))
             {
-                openFileDialog.InitialDirectory = Properties.Settings.Default.AddPhotoPointLastUsedPath;
+                openFileDialog.InitialDirectory = lastusedpath;
             }
+
             openFileDialog.CheckFileExists = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-
                 if (openFileDialog.FileNames.Length > 0)
                 {
                     string path = System.IO.Path.GetDirectoryName(openFileDialog.FileNames[0]);
+                    Util.Settings.WriteSetting("AddPhotoPointLastUsedPath", path);
 
-                    Properties.Settings.Default.AddPhotoPointLastUsedPath = path;
-                    Properties.Settings.Default.Save();
-
-                    AddPhotosToListView(openFileDialog.FileNames);
+                    this.AddPhotosToTable(openFileDialog.FileNames);
                 }
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonClose control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Sets the tooltips.
+        /// </summary>
         private void SetTooltips()
         {
             ToolTip toolTip = new ToolTip();
@@ -102,44 +140,10 @@ namespace Umbriel.ArcMapUI.UI
         }
 
         /// <summary>
-        /// Initializes the list view.
+        /// Handles the DragEnter event of the AddPhotoPointForm control.
         /// </summary>
-        private void InitializeListView()
-        {
-
-
-            int defaultWidth = -2;
-
-            listViewFiles.Columns.Add("Name", defaultWidth
-                , HorizontalAlignment.Left);
-
-            listViewFiles.Columns.Add("Size",
-                                 defaultWidth,
-                                 HorizontalAlignment.Right);
-
-            listViewFiles.Columns.Add("Type",
-                                 defaultWidth,
-                                 HorizontalAlignment.Left);
-
-            listViewFiles.Columns.Add("Modified",
-                                defaultWidth,
-                                 HorizontalAlignment.Left);
-
-            listViewFiles.Columns.Add("Latitude",
-                                 defaultWidth,
-                            HorizontalAlignment.Left);
-
-            listViewFiles.Columns.Add("Longitude", defaultWidth, HorizontalAlignment.Left);
-
-            listViewFiles.Columns.Add("Compass Direction", defaultWidth, HorizontalAlignment.Left);
-
-
-            SetColumnWidths();
-
-
-
-        }
-
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DragEventArgs"/> instance containing the event data.</param>
         private void AddPhotoPointForm_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false) == true)
@@ -148,69 +152,89 @@ namespace Umbriel.ArcMapUI.UI
             }
         }
 
+        /// <summary>
+        /// Handles the DragDrop event of the AddPhotoPointForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DragEventArgs"/> instance containing the event data.</param>
         private void AddPhotoPointForm_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            try
+            {
+                System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+                
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                
+                System.Drawing.Point pt = pictureBoxQuickAdd.PointToClient(new System.Drawing.Point(e.X, e.Y));
 
-            AddPhotosToListView(files);
+                if (pt.X >= pictureBoxQuickAdd.Location.X &&
+                    pt.X <= (pictureBoxQuickAdd.Location.X + pictureBoxQuickAdd.Width) &&
+                    pt.Y >= pictureBoxQuickAdd.Location.Y &&
+                    pt.Y <= (pictureBoxQuickAdd.Location.Y + pictureBoxQuickAdd.Height))
+                {
+                    this.PhotoTable.Clear();
+
+                    progressBar.Value = 0;
+                    progressBar.Maximum = files.Length;
+
+                    progressBar.Visible = true;
+
+                    this.Refresh();
+
+                    this.PhotoTable.ProgressEvent += new GPSPhotoReadProgressEventHandler(this.PhotoTable_ProgressEvent);
+
+                    this.PhotoTable.AddPhotoFilePaths(files);
+
+                    this.PhotoTable.ProgressEvent -= this.PhotoTable_ProgressEvent;
+                    progressBar.Visible = false;
+
+                    if (this.PhotoTable.Rows.Count > 0)
+                    {
+                        this.buttonMakeLayer_Click(this, null);
+                        this.Close();
+                    }
+                }
+                else
+                {
+                    this.AddPhotosToTable(files);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                System.Windows.Forms.Cursor.Current = Cursors.Default;
+            }
         }
-
 
         /// <summary>
         /// Adds the photos to list view.
         /// </summary>
         /// <param name="files">The files.</param>
-        private void AddPhotosToListView(string[] files)
+        private void AddPhotosToTable(string[] files)
         {
-            this.Cursor = Cursors.WaitCursor;
-
             try
             {
-                listViewFiles.BeginUpdate();
+                this.Cursor = Cursors.WaitCursor;
 
-                foreach (string file in files)
-                {
-                    if (!NameExistsInList(ref listViewFiles, file))
-                    {
-                        ListViewItem item = new ListViewItem();
-                        item.Name = file;
-                        item.Text = System.IO.Path.GetFileName(file);
+                progressBar.Value = 0;
+                progressBar.Maximum = files.Length;
 
-                        FileInfo fileInfo = new FileInfo(file);
+                progressBar.Visible = true;
 
-                        double lengthKb = fileInfo.Length * 0.0009765625;
+                this.Refresh();
 
-                        Umbriel.GIS.Photo.GeoPhoto geoPhoto = new Umbriel.GIS.Photo.GeoPhoto(file);
+                this.PhotoTable.ProgressEvent += new GPSPhotoReadProgressEventHandler(this.PhotoTable_ProgressEvent);
 
-                        if (geoPhoto.Coordinate != null)
-                        {
-                            // item.SubItems.Add(item.Text);  // filename
-                            item.SubItems.Add(lengthKb.ToString("0.##") + " Kb"); // Size
-                            item.SubItems.Add(System.IO.Path.GetExtension(file)); // Type
-                            item.SubItems.Add(fileInfo.LastWriteTime.ToString()); // Last Modified
-                            item.SubItems.Add(geoPhoto.Coordinate.Latitude.ToString("0.#####")); // Latitude
-                            item.SubItems.Add(geoPhoto.Coordinate.Longitude.ToString("0.#####")); // Longitude
-                            item.SubItems.Add(geoPhoto.ImageDirection.ToString("0.#####")); // compass
+                this.PhotoTable.AddPhotoFilePaths(files);
 
-                            listViewFiles.Items.Add(item);
-                        }
-                    }
+                this.PhotoTable.ProgressEvent -= this.PhotoTable_ProgressEvent;
+                progressBar.Visible = false;
 
-                    System.Diagnostics.Debug.WriteLine(file);
-                }
-
-                listViewFiles.EndUpdate();
-
-                if (string.IsNullOrEmpty(Properties.Settings.Default.AddPhotoPointColumnWidths))
-                {
-                    listViewFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                }
-                else
-                {
-                    SetColumnWidths();
-                }
-
-                listViewFiles.Refresh();
+                dataGridView.DataSource = this.PhotoTable;
+                this.SetColumnWidths();                
             }
             catch (Exception ex)
             {
@@ -221,6 +245,16 @@ namespace Umbriel.ArcMapUI.UI
             {
                 this.Cursor = Cursors.Default;
             }
+        }
+
+        /// <summary>
+        /// Handles the ProgressEvent event of the PhotoTable control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="Umbriel.ArcGIS.Geodatabase.ProgressEventArgs"/> instance containing the event data.</param>
+        private void PhotoTable_ProgressEvent(object sender, ProgressEventArgs e)
+        {
+            progressBar.Value = e.Index;
         }
 
         /// <summary>
@@ -245,119 +279,243 @@ namespace Umbriel.ArcMapUI.UI
             return exists;
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonRemoveAll control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
-            listViewFiles.Items.Clear();
+            if (this.PhotoTable != null)
+            {
+                this.PhotoTable.Rows.Clear();
+            }
         }
 
-        private void listViewFiles_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
-        {
-        }
-
+        /// <summary>
+        /// Handles the FormClosing event of the AddPhotoPointForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.FormClosingEventArgs"/> instance containing the event data.</param>
         private void AddPhotoPointForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string value = string.Empty;
+            // TODO: save form dimensions / column widths
+            List<string> columnsWidths = new List<string>();
 
-            for (int i = 0; i < listViewFiles.Columns.Count; i++)
+            for (int i = 0; i < dataGridView.ColumnCount; i++)
             {
-                if (i > 0)
-                {
-                    value += ',';
-                }
-
-                value += listViewFiles.Columns[i].Width.ToString();
+                columnsWidths.Add(dataGridView.Columns[i].Width.ToString());
             }
 
-            Debug.WriteLine("AddPhotoPointForm_FormClosing: " + value);
+            Util.Settings.WriteSetting("AddPhotoPointColumnWidths", string.Join(",", columnsWidths.ToArray()));
 
-            Properties.Settings.Default.AddPhotoPointColumnWidths = value;
-            Properties.Settings.Default.Save();
+            ////string value = string.Empty;
+
+            ////for (int i = 0; i < listViewFiles.Columns.Count; i++)
+            ////{
+            ////    if (i > 0)
+            ////    {
+            ////        value += ',';
+            ////    }
+
+            ////    value += listViewFiles.Columns[i].Width.ToString();
+            ////}
+
+            ////Debug.WriteLine("AddPhotoPointForm_FormClosing: " + value);
+
+            ////Properties.Settings.Default.AddPhotoPointColumnWidths = value;
+            ////Properties.Settings.Default.Save();
         }
 
+        /// <summary>
+        /// Handles the Click event of the buttonMakeLayer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void buttonMakeLayer_Click(object sender, EventArgs e)
+        {
+            IFeatureClass featureClass = this.PhotoTable.ToFeatureClass();
+
+            if (this.MxDocument != null && featureClass != null)
+            {
+                IFeatureLayer layer = new FeatureLayerClass();
+                layer.Name = "GPS Photos    -     " + DateTime.Now.ToString();
+                layer.FeatureClass = featureClass;
+
+                // set the hotlink to the FullPath field
+                IHotlinkContainer hotlink = (IHotlinkContainer)layer;
+                hotlink.HotlinkField = "FullPath";
+                hotlink.HotlinkType = esriHyperlinkType.esriHyperlinkTypeURL;
+
+                IHTMLPopupInfo htmlPopupInfo = (IHTMLPopupInfo)layer;
+                htmlPopupInfo.HTMLPopupEnabled = true;
+
+                string xsl = this.ReadDefaultXSLT();
+
+                if (!string.IsNullOrEmpty(xsl))
+                {
+                    htmlPopupInfo.HTMLPresentationStyle = esriHTMLPopupStyle.esriHTMLPopupStyleXSLStylesheet;
+                    htmlPopupInfo.HTMLXSLStylesheet = xsl;                    
+                }
+                else
+                {
+                    htmlPopupInfo.HTMLPresentationStyle = esriHTMLPopupStyle.esriHTMLPopupStyleTwoColumnTable;
+                }
+
+                IGeoFeatureLayer geoFeatureLayer = (IGeoFeatureLayer)layer;
+                ISimpleRenderer renderer = new SimpleRendererClass();
+                renderer.Label = "Photo Locations";
+                renderer.Symbol = this.GetGPSPhotoSymbol();
+
+                IRotationRenderer rotationRenderer = (IRotationRenderer)renderer;
+                rotationRenderer.RotationField = "MagneticNorth";
+                rotationRenderer.RotationType = esriSymbolRotationType.esriRotateSymbolGeographic;
+
+                geoFeatureLayer.Renderer = (IFeatureRenderer)renderer;
+
+                this.MxDocument.FocusMap.AddLayer((ILayer)layer);
+                this.MxDocument.UpdateContents();
+
+                this.Close();
+            }
+        }
+
+        /// <summary>
+        /// Gets the GPS photo symbol.
+        /// </summary>
+        /// <returns>ISymbol for GPS Locations</returns>
+        private ISymbol GetGPSPhotoSymbol()
+        {
+            IMultiLayerMarkerSymbol multiLayerMarkerSymbol = new MultiLayerMarkerSymbolClass();
+
+            ICharacterMarkerSymbol viewshedSymbol = this.GetGPSPhotoViewshedSymbol();
+            multiLayerMarkerSymbol.AddLayer(viewshedSymbol);
+
+            ICharacterMarkerSymbol charSymbol = new CharacterMarkerSymbol();
+
+            // IFontDisp fontDisp = (IFontDisp)(new StdFont());
+            IRgbColor rgbColor = new RgbColor();
+
+            // Define the color we want to use
+            rgbColor.Red = 255;
+            rgbColor.Green = 0;
+            rgbColor.Blue = 0;
+
+            // Define the Font we want to use            
+            charSymbol.Font = ESRI.ArcGIS.Utility.Converter.ToStdFont(new System.Drawing.Font("ESRI Default Marker", 30f));
+
+            // Set the CharacterMarkerSymbols Properties
+            charSymbol.Size = 8;
+            charSymbol.Angle = 0;
+            charSymbol.CharacterIndex = 34;
+            charSymbol.Color = rgbColor;
+            charSymbol.XOffset = 0;
+            charSymbol.YOffset = 0;
+
+            multiLayerMarkerSymbol.AddLayer(charSymbol);
+
+            return (ISymbol)multiLayerMarkerSymbol;
+        }
+
+        /// <summary>
+        /// Gets the GPS photo viewshed symbol.
+        /// </summary>
+        /// <returns>ICharacterMarkerSymbol for GPS Photo</returns>
+        private ICharacterMarkerSymbol GetGPSPhotoViewshedSymbol()
+        {
+            ICharacterMarkerSymbol charSymbol = new CharacterMarkerSymbol();
+
+            // IFontDisp fontDisp = (IFontDisp)(new StdFont());
+            IRgbColor rgbColor = new RgbColor();
+
+            // Define the color we want to use
+            rgbColor.Red = 255;
+            rgbColor.Green = 0;
+            rgbColor.Blue = 0;
+
+            // Define the Font we want to use
+            charSymbol.Font = ESRI.ArcGIS.Utility.Converter.ToStdFont(new System.Drawing.Font("ESRI Dimensioning", 30f));
+
+            // Set the CharacterMarkerSymbols Properties
+            charSymbol.Size = 30;
+            charSymbol.Angle = 90;
+            charSymbol.CharacterIndex = 45;
+            charSymbol.Color = rgbColor;
+            charSymbol.XOffset = 4;
+            charSymbol.YOffset = 0;
+
+            return charSymbol;
+        }
+
+        /// <summary>
+        /// Sets the column widths.
+        /// </summary>
         private void SetColumnWidths()
         {
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.AddPhotoPointColumnWidths))
-            {
-                string[] colWidths = Properties.Settings.Default.AddPhotoPointColumnWidths.Split(',');
+            List<string> columnsWidths = new List<string>(
+                Util.Settings.ReadSetting("AddPhotoPointColumnWidths").Split(','));
 
-                for (int i = 0; i < listViewFiles.Columns.Count; i++)
+            if (columnsWidths.Count.Equals(dataGridView.ColumnCount))
+            {
+                for (int i = 0; i < dataGridView.ColumnCount; i++)
                 {
-                    listViewFiles.Columns[i].Width = Convert.ToInt32(colWidths[i]);
+                    dataGridView.Columns[i].Width = Convert.ToInt32(columnsWidths[i]);
                 }
             }
+            else
+            {
+                dataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            }
+        }
+
+        /// <summary>
+        /// Reads the default XSLT.
+        /// </summary>
+        /// <returns>XSL string </returns>
+        private string ReadDefaultXSLT()
+        {
+            string xsl = string.Empty;
+            string xsltpath = Util.Settings.AssemblyDirectory + @"\UI\DefaultGPSPhotoHTMLPopup.xslt";
+
+            if (File.Exists(xsltpath))
+            {
+                TextReader reader = new StreamReader(xsltpath);
+                xsl = reader.ReadToEnd();
+                reader.Close();
+                reader.Dispose();
+            }
+
+            return xsl;
         }
 
         private void pictureBoxQuickAdd_Click(object sender, EventArgs e)
         {
-            if (listViewFiles.Items.Count > 0
-                && this.ArcMapApplication != null)
+        }
+
+        private void buttonMakeLayer_KeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the AddPhotoPointForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
+        private void AddPhotoPointForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.B)
             {
-                IScratchWorkspaceFactory scratchWorkspaceFactory = new ScratchWorkspaceFactoryClass();
-                IWorkspace scratchWorkspace = scratchWorkspaceFactory.CreateNewScratchWorkspace();
-                IFeatureWorkspace featureWorkspace = (IFeatureWorkspace)scratchWorkspace;
+                this.PhotoTable.LoadPhotoIntoBLOB = !this.PhotoTable.LoadPhotoIntoBLOB;
 
-                ISpatialReference spatialReference = Umbriel.GIS.GeodatabaseHelper.GetWGS84SpatialReference();
-
-                 IFeatureClass featureclass = featureWorkspace.CreateFeatureClass(
-                this.GetUniqueFeatureClassName(),
-                null ,
-                null,
-                null,
-                 esriFeatureType.esriFTSimple,
-                 "SHAPE",
-                 string.Empty
-                );
-                
-
+                if (this.PhotoTable.LoadPhotoIntoBLOB)
+                {
+                    MessageBox.Show("Photo Load Enabled.", "Make Layer", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show("Photo Load Disabled.", "Make Layer", MessageBoxButtons.OK);
+                }
             }
         }
-
-        private string GetUniqueFeatureClassName()
-        {
-            return "Photo" + DateTime.Now.Ticks.ToString();
-        }
-
-        private IFields CreateIFields(ISpatialReference spatialReference)
-        {
-            // Create fields collection
-            IFields fields = new FieldsClass();
-            IFieldsEdit fieldsEdit = (IFieldsEdit)fields;
-
-            // Create the geometry field
-            IGeometryDef geometryDef = new GeometryDefClass();
-            IGeometryDefEdit geometryDefEdit = (IGeometryDefEdit)geometryDef;
-            
-            // Assign Geometry Definition
-            geometryDefEdit.GeometryType_2 = esriGeometryType.esriGeometryPoint;
-            geometryDefEdit.GridCount_2 = 1;
-            geometryDefEdit.set_GridSize(0, 0.5);
-            geometryDefEdit.AvgNumPoints_2 = 2;
-            geometryDefEdit.HasM_2 = false;
-            geometryDefEdit.HasZ_2 = true;
-            geometryDefEdit.SpatialReference_2 = spatialReference;
-
-            // Create OID Field
-            IField fieldOID = new FieldClass();
-            IFieldEdit fieldEditOID = (IFieldEdit)fieldOID;
-            fieldEditOID.Name_2 = "OBJECTID";
-            fieldEditOID.AliasName_2 = "OBJECTID";
-            fieldEditOID.Type_2 = esriFieldType.esriFieldTypeOID;
-            fieldsEdit.AddField(fieldOID);
-
-            // Create Geometry Field
-            IField fieldShape = new FieldClass();
-            IFieldEdit fieldEditShape = (IFieldEdit)fieldShape;
-            fieldEditShape.Name_2 = "SHAPE";
-            fieldEditShape.AliasName_2 = "SHAPE";
-            fieldEditShape.Type_2 = esriFieldType.esriFieldTypeGeometry;
-            fieldEditShape.GeometryDef_2 = geometryDef;
-            fieldsEdit.AddField(fieldShape);
-
-
-
-            return fields;
-        }
-
-
     }
 }

@@ -79,10 +79,10 @@ namespace Umbriel.ArcMapUI
         }
 
         private void LaunchURL(string geohash)
-        {
-            if (Properties.Settings.Default.GeohashIDLaunchURLEnabled)
+        {   
+            if (Util.Settings.ReadSetting("GeohashIDLaunchURLEnabled").ToBoolean())
             {
-                string url = Properties.Settings.Default.GeohashIDLaunchURL.Replace("~~GEOHASH~~", geohash);
+                string url = string.Format(Util.Settings.ReadSetting("GeohashIDLaunchURL"),geohash);
                 System.Diagnostics.Process.Start(url);
             }
         }
