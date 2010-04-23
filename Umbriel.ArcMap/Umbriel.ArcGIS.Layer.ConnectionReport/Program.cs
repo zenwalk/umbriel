@@ -19,8 +19,6 @@ namespace Umbriel.ArcGIS.Layer.ConnectionReport
 
         public static string ExcludeDBPath { get; private set; }
 
-        //-d "\\w-dpu-48\data\AdminHome\ARM03\Image 5_30_07\Desktop\StreetLights"  -o "\\w-dpu-48\dpu_sys\GIS\wdpu48.data.AdminHome.connectionreport.txt" -mindate 2006-05-15 -maxdate 2006-05-31
-
         [STAThread()]
         static void Main(string[] args)
         {
