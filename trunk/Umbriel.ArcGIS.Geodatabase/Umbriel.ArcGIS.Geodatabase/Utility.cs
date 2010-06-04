@@ -149,7 +149,8 @@ namespace Umbriel.ArcGIS.Geodatabase
                 IDataset dataset = null;
                 while ((dataset = enumDataset.Next()) != null)
                 {
-                    string objectName = dataset.Name;
+                    string[] objectNameTokens = dataset.Name.Split('.');
+                    string objectName = objectNameTokens[objectNameTokens.Length - 1];
 
                     if (exactMatch)
                     {
@@ -178,7 +179,8 @@ namespace Umbriel.ArcGIS.Geodatabase
                     IDataset subDataset = null;
                     while ((subDataset = subDatasets.Next()) != null)
                     {
-                        string objectName = subDataset.Name;
+                        string[] objectNameTokens = subDataset.Name.Split('.');
+                        string objectName = objectNameTokens[objectNameTokens.Length - 1];
 
                         if (exactMatch)
                         {
