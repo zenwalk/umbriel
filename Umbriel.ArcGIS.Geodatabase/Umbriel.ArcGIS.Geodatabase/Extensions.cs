@@ -1,5 +1,4 @@
-﻿using System.Data;
-
+﻿
 /// <summary>
 /// Extension methods.
 /// </summary>

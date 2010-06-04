@@ -3,11 +3,8 @@
 namespace Umbriel.ArcGIS.Geodatabase
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
-    public class ProgressEventArgs :  EventArgs
+    public class ProgressEventArgs : EventArgs
     {
         public ProgressEventArgs(int index, int count)
         {
