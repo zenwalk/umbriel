@@ -12,12 +12,8 @@ namespace Umbriel.ArcGIS.Geodatabase
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.Common;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using ESRI.ArcGIS.Carto;
     using ESRI.ArcGIS.DataSourcesGDB;
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Geodatabase;
