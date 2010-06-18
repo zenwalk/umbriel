@@ -120,13 +120,21 @@ namespace Umbriel.GIS
         /// <returns>text spatial reference definition</returns>
         public static string GetSpatialReference(int code, Catalog catalog, Format returnFormat)
         {
-            string url = "http://www.spatialreference.org/ref/" + CatalogText(catalog) + "/" + code.ToString() + "/" + FormatText(returnFormat) + "/";
+            if (!IsSpatialReferenceDotOrgAvailable())
+            {
+                throw new System.Net.WebException(string.Format("{0} is not available.", Constants.SpatialReferenceDomain));
+            }
+
+            string url = Constants.SpatialReferenceDomain +  "/ref/" + CatalogText(catalog) + "/" + code.ToString() + "/" + FormatText(returnFormat) + "/";
 
             byte[] buf = new byte[8192];
             StringBuilder sb = new StringBuilder();
 
             // prepare the web page we will be asking for
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
+            request.Timeout = 6000;
+
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             Stream resStream = response.GetResponseStream();
@@ -154,6 +162,43 @@ namespace Umbriel.GIS
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the spatial reference.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <param name="returnFormat">The return format.</param>
+        /// <returns></returns>
+        public static string GetSpatialReference(int code, Format returnFormat)
+        {
+            foreach (Catalog catalog in System.Enum.GetValues(typeof(Catalog)))
+            {
+                string s = string.Empty;
+
+                try
+                {
+                    s = GetSpatialReference(code, catalog, returnFormat);
+                }
+                catch (System.Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine(string.Format("\n{0}\n", ex.Message));                    
+                }
+
+                if (!string.IsNullOrEmpty(s))
+                {
+                    return  s.Trim();
+                }                
+            }
+            return string.Empty;
+        }
+
+
+        public static bool IsSpatialReferenceDotOrgAvailable()
+        {
+            WebRequest request = WebRequest.Create(Constants.SpatialReferenceDomain);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            return !(response == null || response.StatusCode != HttpStatusCode.OK);
+        }
+        
         /// <summary>
         /// Gets the url text value for the catalog
         /// </summary>
