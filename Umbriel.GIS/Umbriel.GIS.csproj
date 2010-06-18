@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="GeoHash.cs" />
     <Compile Include="GeoJPEGHelper.cs" />
     <Compile Include="Google\GoogleMapsQStringBuilder.cs" />
