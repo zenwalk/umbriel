@@ -125,6 +125,9 @@ namespace Umbriel.GIS
                 throw new System.Net.WebException(string.Format("{0} is not available.", Constants.SpatialReferenceDomain));
             }
 
+            //Wait a couple of seconds before hitting spatialreference.org again
+            System.Threading.Thread.Sleep(2000);  
+
             string url = Constants.SpatialReferenceDomain +  "/ref/" + CatalogText(catalog) + "/" + code.ToString() + "/" + FormatText(returnFormat) + "/";
 
             byte[] buf = new byte[8192];
