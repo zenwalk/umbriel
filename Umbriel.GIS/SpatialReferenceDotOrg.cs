@@ -198,6 +198,7 @@ namespace Umbriel.GIS
         public static bool IsSpatialReferenceDotOrgAvailable()
         {
             WebRequest request = WebRequest.Create(Constants.SpatialReferenceDomain);
+            request.Timeout = 6000;
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             return !(response == null || response.StatusCode != HttpStatusCode.OK);
         }

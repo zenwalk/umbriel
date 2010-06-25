@@ -81,6 +81,10 @@ namespace Umbriel.Utility
 
         #region Methods
 
+        /// <summary>
+        /// Generates the single address.
+        /// </summary>
+        /// <returns></returns>
         public string GenerateSingleAddress()
         {
             RandomDataGenerator dataGenerator = new RandomDataGenerator();
