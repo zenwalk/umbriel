@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Umbriel.Extensions")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Extension Methods for Umbriel Project")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Umbriel Project")]
 [assembly: AssemblyProduct("Umbriel.Extensions")]
