@@ -99,5 +99,17 @@ namespace Umbriel.UnitTests
             Assert.IsTrue(counter == count);
 
         }
+
+        public void OpenAddressRESTPost()
+        {
+            //string json = "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"id\":null,\"properties\":{\"city\":\"HENRICO\",\"osmid\":null,\"quality\":\"Digitized\",\"region\":\"\",\"created_by\":\"curl\",\"street\":\"STAPLES MILL RD\",\"postcode\":\"23228\",\"country\":\"US\",\"housename\":\"\",\"reference\":\"http://www.openaddresses.org\",\"housenumber\":\"9157\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[-77.514477,37.641423]},\"crs\":{\"type\":\"EPSG\",\"properties\":{\"code\":900913}}}]}";
+            //string url = "http://openaddress.org/addresses";
+
+
+
+
+
+        }
+
     }
 }
