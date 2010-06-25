@@ -19,6 +19,7 @@ namespace Umbriel.ArcMapUI.UI
     using ESRI.ArcGIS.Framework;
     using ESRI.ArcGIS.Geometry;
     using Umbriel.GIS.Google;
+    using ESRI.ArcGIS.esriSystem;
 
     /// <summary>
     /// Summary description for GoogleStreetView.
@@ -187,5 +188,7 @@ namespace Umbriel.ArcMapUI.UI
         }
 
         #endregion
+
+       
     }
 }

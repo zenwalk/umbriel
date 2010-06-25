@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using ESRI.ArcGIS.ADF.CATIDs;
 using ESRI.ArcGIS.ADF.BaseClasses;
+using Umbriel.Extensions;
 
 namespace Umbriel.ArcMapUI.UI
 {
