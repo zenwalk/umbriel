@@ -38,10 +38,10 @@
             this.buttonClose = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.progressBarLayer = new System.Windows.Forms.ProgressBar();
-            this.progressBarOperation = new System.Windows.Forms.ProgressBar();
-            this.labelOperation = new System.Windows.Forms.Label();
             this.labelLayerName = new System.Windows.Forms.Label();
+            this.labelOperation = new System.Windows.Forms.Label();
+            this.progressBarOperation = new System.Windows.Forms.ProgressBar();
+            this.progressBarLayer = new System.Windows.Forms.ProgressBar();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -167,25 +167,21 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.buttonClose);
             this.splitContainer2.Panel2.Controls.Add(this.buttonExport);
+            this.splitContainer2.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer2_Panel2_Paint);
             this.splitContainer2.Size = new System.Drawing.Size(467, 345);
             this.splitContainer2.SplitterDistance = 271;
             this.splitContainer2.TabIndex = 12;
             // 
-            // progressBarLayer
+            // labelLayerName
             // 
-            this.progressBarLayer.Location = new System.Drawing.Point(3, 36);
-            this.progressBarLayer.Name = "progressBarLayer";
-            this.progressBarLayer.Size = new System.Drawing.Size(461, 25);
-            this.progressBarLayer.TabIndex = 9;
-            this.progressBarLayer.Visible = false;
-            // 
-            // progressBarOperation
-            // 
-            this.progressBarOperation.Location = new System.Drawing.Point(3, 112);
-            this.progressBarOperation.Name = "progressBarOperation";
-            this.progressBarOperation.Size = new System.Drawing.Size(461, 25);
-            this.progressBarOperation.TabIndex = 10;
-            this.progressBarOperation.Visible = false;
+            this.labelLayerName.AutoSize = true;
+            this.labelLayerName.BackColor = System.Drawing.Color.Transparent;
+            this.labelLayerName.Location = new System.Drawing.Point(3, 14);
+            this.labelLayerName.Name = "labelLayerName";
+            this.labelLayerName.Size = new System.Drawing.Size(90, 16);
+            this.labelLayerName.TabIndex = 13;
+            this.labelLayerName.Text = "Export Layer: ";
+            this.labelLayerName.Visible = false;
             // 
             // labelOperation
             // 
@@ -198,16 +194,21 @@
             this.labelOperation.Text = "Reading Attributes:";
             this.labelOperation.Visible = false;
             // 
-            // labelLayerName
+            // progressBarOperation
             // 
-            this.labelLayerName.AutoSize = true;
-            this.labelLayerName.BackColor = System.Drawing.Color.Transparent;
-            this.labelLayerName.Location = new System.Drawing.Point(3, 14);
-            this.labelLayerName.Name = "labelLayerName";
-            this.labelLayerName.Size = new System.Drawing.Size(90, 16);
-            this.labelLayerName.TabIndex = 13;
-            this.labelLayerName.Text = "Export Layer: ";
-            this.labelLayerName.Visible = false;
+            this.progressBarOperation.Location = new System.Drawing.Point(3, 112);
+            this.progressBarOperation.Name = "progressBarOperation";
+            this.progressBarOperation.Size = new System.Drawing.Size(461, 25);
+            this.progressBarOperation.TabIndex = 10;
+            this.progressBarOperation.Visible = false;
+            // 
+            // progressBarLayer
+            // 
+            this.progressBarLayer.Location = new System.Drawing.Point(3, 36);
+            this.progressBarLayer.Name = "progressBarLayer";
+            this.progressBarLayer.Size = new System.Drawing.Size(461, 25);
+            this.progressBarLayer.TabIndex = 9;
+            this.progressBarLayer.Visible = false;
             // 
             // ExportToSpatiaLiteForm
             // 
