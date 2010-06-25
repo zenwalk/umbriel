@@ -177,6 +177,12 @@
       <DependentUpon>SearchLayerFilesForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Umbriel.GIS.Extensions\Umbriel.Extensions.csproj">
+      <Project>{11708003-2B1F-4CB5-A227-907004A2E95B}</Project>
+      <Name>Umbriel.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

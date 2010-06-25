@@ -64,6 +64,33 @@ namespace Umbriel.ArcGIS.Layer.Util
         }
 
         /// <summary>
+        /// Removes the umbriel property set (propertyset with a name/value of LayerExtension/umbriel
+        /// </summary>
+        /// <param name="layerExtensions">ILayerExtensions</param>
+        internal static void RemovePropertySet(ILayerExtensions layerExtensions)
+        {
+            if (UmbrielPropertySetExists(layerExtensions))
+            {
+                for (int i = 0; i < layerExtensions.ExtensionCount; i++)
+                {
+                    object layerExtension = layerExtensions.get_Extension(i);
+
+                    if (layerExtension is IPropertySet)
+                    {
+                        IPropertySet propertySet = (IPropertySet)layerExtension;
+                        string val = propertySet.GetProperty("LayerExtension").ToString();
+                        if (val.Equals("umbriel", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            layerExtensions.RemoveExtension(i);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        /// <summary>
         /// Checks to see if a property exists in the property set
         /// </summary>
         /// <param name="propertySet">IPropertySet to test</param>
@@ -74,6 +101,7 @@ namespace Umbriel.ArcGIS.Layer.Util
             try
             {
                 object propertyValue = propertySet.GetProperty(propertyName);
+
                 return true;
             }
             catch (Exception)
