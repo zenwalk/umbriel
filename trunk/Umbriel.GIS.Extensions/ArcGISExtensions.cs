@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using OIDList = System.Collections.Generic.List<int>;
+using PropertyDictionary = System.Collections.Generic.Dictionary<string, string>;
 using LayerList = System.Collections.Generic.List<ESRI.ArcGIS.Carto.ILayer>;
 using Reflect = System.Reflection;
 
@@ -56,9 +58,10 @@ namespace Umbriel.Extensions
 
         /// <summary>
         /// Converts the ISpatialReference to Proj4 //TODO: write ToProj4 method
+        /// NOT IMPLEMENTED YET
         /// </summary>
-        /// <param name="sr">The sr.</param>
-        /// <returns></returns>
+        /// <param name="sr">The ISpatialReference</param>
+        /// <returns>proj4 string</returns>
         public static string ToProj4(this ISpatialReference sr)
         {
             string proj4text = string.Empty;
@@ -72,7 +75,7 @@ namespace Umbriel.Extensions
         /// Determines if the ILayer has Z in geometry definition
         /// </summary>
         /// <param name="layer">The layer.</param>
-        /// <returns></returns>
+        /// <returns>true if there is a z value in the geometry definition</returns>
         public static bool Is3D(this ILayer layer)
         {
             IFeatureLayer featureLayer = (IFeatureLayer)layer;
@@ -173,7 +176,7 @@ namespace Umbriel.Extensions
         /// Creates an object array from an OIDList
         /// </summary>
         /// <param name="oidlist">The oidlist.</param>
-        /// <returns></returns>
+        /// <returns>an object array of the integers in the OIDList</returns>
         public static object[] ToObjectArray(this OIDList oidlist)
         {
             List<object> objectlist = oidlist.ConvertAll<object>(x => x as object);
@@ -188,6 +191,115 @@ namespace Umbriel.Extensions
         {
             DataColumn wkbcolumn = new DataColumn("WKB", typeof(byte[]));
             table.Columns.Add(wkbcolumn);
+        }
+
+        /// <summary>
+        /// Converts an IPropertySet to a Dictionary
+        /// </summary>
+        /// <param name="propertySet">The IPropertySet</param>
+        /// <returns>PropertyDictionary</returns>
+        public static PropertyDictionary ToDictionary(this IPropertySet propertySet)
+        {
+            PropertyDictionary dict = new PropertyDictionary();
+
+            object propsetNames = new object[propertySet.Count - 1];
+            object propsetValues = new object[propertySet.Count - 1];
+
+            propertySet.GetAllProperties(out propsetNames, out propsetValues);
+
+            object[] propsetNameArray = (object[])propsetNames;
+            object[] propsetValueArray = (object[])propsetValues;
+
+            for (int i = 0; i < propertySet.Count; i++)
+            {
+                dict.Add(propsetNameArray[i].ToString(), propsetValueArray[i].ToString());
+            }
+
+            return dict;
+        }
+        
+        /// <summary>
+        /// Converts a 2-column datatable to IPropertySet
+        /// </summary>
+        /// <param name="table">The DataTable (2 columns only)</param>
+        /// <returns>IPropertySet of string,string</returns>
+        public static IPropertySet ToPropertySet(this DataTable table)
+        {
+            if (table.Columns.Count > 2)
+            {
+                throw new ArgumentOutOfRangeException("Cannot convert tables with more than 2 columns to IPropertySet");
+            }
+
+            IPropertySet propertySet = new PropertySetClass();
+
+            foreach (DataRow row in table.Rows)
+            {
+                propertySet.SetProperty(row[0].ToString(), row[1].ToString());
+            }
+
+            return propertySet;
+        }
+
+        /// <summary>
+        /// Searches ILayer's layerextensions for any PropertySets that contain name/value combo
+        /// and this method uses a default string comparison value of CurrentCultureIgnoreCase
+        /// </summary>
+        /// <param name="layer">The ILayer</param>
+        /// <param name="propertysetname">The propertyset name.</param>
+        /// <param name="propertysetvalue">The propertyset value.</param>
+        /// <returns>List of IPropertySet</returns>
+        public static List<IPropertySet> FindExtensionPropertySet(this ILayer layer, string propertysetname, string propertysetvalue)
+        {
+            return layer.FindExtensionPropertySet(propertysetname, propertysetvalue, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Searches ILayer's layerextensions for any PropertySets that contain name/value combo
+        /// </summary>
+        /// <param name="layer">The ILayer</param>
+        /// <param name="propertysetname">The propertyset name.</param>
+        /// <param name="propertysetvalue">The propertyset value.</param>
+        /// <param name="comparison">The string comparison method</param>
+        /// <returns>List of IPropertySet</returns>
+        public static List<IPropertySet> FindExtensionPropertySet(this ILayer layer,string propertysetname, string propertysetvalue, StringComparison comparison)
+        {
+            List<IPropertySet> propertySets = new List<IPropertySet>();
+
+            ILayerExtensions layerExtensions = (ILayerExtensions)layer;            
+
+            try
+            {
+                if (layerExtensions.ExtensionCount > 0)
+                {
+                    for (int i = 0; i < layerExtensions.ExtensionCount; i++)
+                    {
+                        object layerExtension = layerExtensions.get_Extension(i);
+
+                        if (layerExtension is IPropertySet)
+                        {
+                            IPropertySet propertySet = (IPropertySet)layerExtension;
+
+                            try
+                            {
+                                if (propertySet.GetProperty(propertysetname).ToString().Equals(propertysetvalue,comparison))
+                                {
+                                    propertySets.Add(propertySet);
+                                }                         
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+
+                return propertySets;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
         }
     }
 }
