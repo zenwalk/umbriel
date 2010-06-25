@@ -14,6 +14,7 @@ using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.ArcMapUI;
 using Umbriel.ArcGIS.Layer;
+using Umbriel.Extensions;
 
 namespace Umbriel.ArcGIS.Spatialite.UI
 {
@@ -22,10 +23,10 @@ namespace Umbriel.ArcGIS.Spatialite.UI
         private bool isLoading;
         private bool isExporting;
 
-        public event EventHandler<EventArgs>  StartExportingEvent = delegate { };
+        public event EventHandler<EventArgs> StartExportingEvent = delegate { };
         public event EventHandler<EventArgs> StopExportingEvent = delegate { };
-        
-        public Dictionary<int,ILayer> ExportLayers { get; private set; }
+
+        public Dictionary<int, ILayer> ExportLayers { get; private set; }
 
         public ExportToSpatiaLiteForm()
         {
@@ -63,7 +64,7 @@ namespace Umbriel.ArcGIS.Spatialite.UI
 
             labelLayerName.Visible = false;
             progressBarLayer.Visible = false;
-            
+
             labelOperation.Visible = false;
             progressBarOperation.Visible = false;
 
@@ -107,7 +108,10 @@ namespace Umbriel.ArcGIS.Spatialite.UI
                 if (this.MxDocument.SelectedLayer != null)
                 {
                     layers = new List<ILayer>();
-                    layers.Add(this.MxDocument.SelectedLayer);
+                    if (!this.MxDocument.SelectedLayer.Is3D())
+                    {
+                        layers.Add(this.MxDocument.SelectedLayer);
+                    }
                 }
                 else
                 {
@@ -129,12 +133,12 @@ namespace Umbriel.ArcGIS.Spatialite.UI
                 extent = this.MxDocument.ActiveView.Extent;
             }
 
-
             int i = 0;
 
             foreach (ILayer layer in layers)
             {
-                if (layer is IFeatureLayer)
+                if (layer is IFeatureLayer
+                    && !layer.Is3D())
                 {
                     IFeatureLayer featureLayer = (IFeatureLayer)layer;
                     IFeatureSelection featureSelection = (IFeatureSelection)featureLayer;
@@ -163,7 +167,6 @@ namespace Umbriel.ArcGIS.Spatialite.UI
                         }
                         selectedVisibleInCurrentExtent = (c > 0);
                     }
-
 
                     if (onlySelectedFeatures & onlyCurrentExtent)
                     {
@@ -196,7 +199,6 @@ namespace Umbriel.ArcGIS.Spatialite.UI
             return exportLayers;
         }
 
- 
         private void LoadLayersIntoTreeview(Dictionary<int, ILayer> layers)
         {
             // treeViewLayers
@@ -259,7 +261,7 @@ namespace Umbriel.ArcGIS.Spatialite.UI
         private void buttonExport_Click(object sender, EventArgs e)
         {
             isExporting = true;
-            this.StartExportingEvent(this, new EventArgs());            
+            this.StartExportingEvent(this, new EventArgs());
 
             try
             {
@@ -268,12 +270,11 @@ namespace Umbriel.ArcGIS.Spatialite.UI
 
                 SpatialiteExporter exporter = new SpatialiteExporter(path);
 
-                if (this.checkBoxHighlightedLayer.Checked)
+                if (this.checkBoxExportCurrentExtent.Checked)
                 {
-                    exporter.Extent =  this.MxDocument.ActiveView.Extent;
+                    exporter.Extent = this.MxDocument.ActiveView.Extent;
                 }
 
-                
                 if (this.ExportLayers != null)
                 {
                     progressBarLayer.Minimum = 0;
@@ -284,30 +285,93 @@ namespace Umbriel.ArcGIS.Spatialite.UI
                     foreach (KeyValuePair<int, ILayer> kvp in this.ExportLayers)
                     {
                         progressBarLayer.Value = ++k;
-                        
+
                         labelLayerName.Text = string.Format("Exporting Layer: {0} ({1} of {2})", kvp.Value.Name, k, this.ExportLayers.Count);
                         labelLayerName.Refresh();
 
+                        DialogResult result = DialogResult.OK;
+
                         try
                         {
-                            progressBarOperation.Value = 0;
-                            progressBarOperation.Minimum = 0;
+                            int srid = -1;
 
-                            exporter.AttributeExportProgress += new SpatialiteExporter.ExportProgressChanged(exporter_AttributeExportProgress);
-                            exporter.GeometryExportProgress += new SpatialiteExporter.ExportProgressChanged(exporter_GeometryExportProgress);
-                            exporter.GeometryReadProgress += new SpatialiteExporter.ExportProgressChanged(exporter_GeometryReadProgress);
-                            exporter.AttributeReadProgress += new SpatialiteExporter.ExportProgressChanged(exporter_AttributeReadProgress);
+                            try
+                            {
+                                exporter.FindSRID(kvp.Value);
+                            }
+                            catch (InvalidSpatialReferenceException)
+                            {
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
 
-                            exporter.Export(kvp.Value);
 
-                            exporter.AttributeExportProgress -= exporter_AttributeExportProgress;
-                            exporter.GeometryExportProgress -= exporter_GeometryExportProgress;
-                            exporter.GeometryReadProgress -= exporter_GeometryReadProgress;
-                            exporter.AttributeReadProgress -= exporter_AttributeReadProgress;
 
+                            if (srid.Equals(-1))
+                            {
+                                result = MessageBox.Show(
+                                    string.Format(
+                                    "Spatial Reference: {0} ({1}) does not exist in spatialite.\n Do you wish to look up as EPSG?",
+                                    kvp.Value.GetSpatialReference().Name,
+                                    srid)
+                                    , "Export to Spatialite", MessageBoxButtons.YesNo);
+
+                                if (result == DialogResult.Yes)
+                                {
+                                    srid = exporter.FindSRID(kvp.Value, "epsg");
+
+                                    if (srid.Equals(-1))
+                                    {
+                                        MessageBox.Show(
+                                             string.Format(
+                                             "Spatial Reference: {0} ({1}) does not exist in spatialite as EPSG either.  :( ",
+                                             kvp.Value.GetSpatialReference().Name,
+                                             srid)
+                                             , "Export to Spatialite", MessageBoxButtons.OK);
+
+                                        result = DialogResult.Cancel;
+                                    }
+                                    else
+                                    {
+                                        result = MessageBox.Show(
+                                                   string.Format(
+                                                   "Spatial Reference: {0} ({1}) does exist in spatialite as EPSG!",
+                                                   kvp.Value.GetSpatialReference().Name,
+                                                   srid)
+                                                   , "Export to Spatialite", MessageBoxButtons.OK);
+                                    }
+
+                                }
+                            }
+
+                            if (result == DialogResult.OK)
+                            {
+                                progressBarOperation.Value = 0;
+                                progressBarOperation.Minimum = 0;
+
+                                exporter.StatusMessageEvent += new SpatialiteExporter.StatusMessageDelegate(exporter_StatusMessageEvent);
+                                exporter.AttributeExportProgress += new SpatialiteExporter.ExportProgressChanged(exporter_AttributeExportProgress);
+                                exporter.GeometryExportProgress += new SpatialiteExporter.ExportProgressChanged(exporter_GeometryExportProgress);
+                                exporter.GeometryReadProgress += new SpatialiteExporter.ExportProgressChanged(exporter_GeometryReadProgress);
+                                exporter.AttributeReadProgress += new SpatialiteExporter.ExportProgressChanged(exporter_AttributeReadProgress);
+
+
+                                exporter.Export(kvp.Value,((IFeatureLayer)(kvp.Value)).FeatureClass.ToOIDList(),srid, 1000);
+
+                                // exporter.Export(kvp.Value, srid);
+
+                                exporter.AttributeExportProgress -= exporter_AttributeExportProgress;
+                                exporter.GeometryExportProgress -= exporter_GeometryExportProgress;
+                                exporter.GeometryReadProgress -= exporter_GeometryReadProgress;
+                                exporter.AttributeReadProgress -= exporter_AttributeReadProgress;
+
+                                MessageBox.Show(string.Format("Export to '{0}' is complete.", path), "Export to Spatialite.", MessageBoxButtons.OK);
+                            }
                         }
-                        catch (SQLiteException ex)
-                        {
+                        catch (InvalidSpatialReferenceException ex)                        {
+                            
                             string message = "Sqlite/Spatialite Exception: \n\n{0}\n\n";
 
                             MessageBox.Show(string.Format(message, ex.Message),
@@ -329,17 +393,23 @@ namespace Umbriel.ArcGIS.Spatialite.UI
             finally
             {
                 isExporting = false;
-                this.StopExportingEvent(this, new EventArgs());            
+                this.StopExportingEvent(this, new EventArgs());
             }
+        }
+
+        void exporter_StatusMessageEvent(object sender, ExporterEventArgs args)
+        {
+            labelOperation.Text = args.Message;
+            labelOperation.Refresh();
         }
 
         void exporter_AttributeReadProgress(object sender, ExporterProgressEventArgs args)
         {
             labelOperation.Text = string.Format("Attribute read {0} of {1} complete.", args.Current, args.Total);
-
-            progressBarOperation.Maximum = args.Total; 
+            labelOperation.Refresh();
+            progressBarOperation.Maximum = args.Total;
             progressBarOperation.Value = args.Current;
-            
+
         }
 
         void exporter_GeometryReadProgress(object sender, ExporterProgressEventArgs args)
@@ -347,24 +417,29 @@ namespace Umbriel.ArcGIS.Spatialite.UI
             labelOperation.Text = string.Format("Geometry read {0} of {1} complete.", args.Current, args.Total);
             labelOperation.Refresh();
 
-            progressBarOperation.Maximum = args.Total; 
-            progressBarOperation.Value = args.Current;            
+            progressBarOperation.Maximum = args.Total;
+            progressBarOperation.Value = args.Current;
         }
 
         void exporter_GeometryExportProgress(object sender, ExporterProgressEventArgs args)
         {
             labelOperation.Text = string.Format("Geometry export {0} of {1} complete.", args.Current, args.Total);
-
+            labelOperation.Refresh();
             progressBarOperation.Maximum = args.Total;
-            progressBarOperation.Value = args.Current;           
+            progressBarOperation.Value = args.Current;
         }
 
         void exporter_AttributeExportProgress(object sender, ExporterProgressEventArgs args)
         {
             labelOperation.Text = string.Format("Attribute export {0} of {1} complete.", args.Current, args.Total);
-
+            labelOperation.Refresh();
             progressBarOperation.Maximum = args.Total;
-            progressBarOperation.Value = args.Current;           
+            progressBarOperation.Value = args.Current;
+        }
+
+        private void splitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

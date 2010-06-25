@@ -18,14 +18,18 @@ namespace Umbriel.ArcGIS.Spatialite
     using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.Geometry;
     using Umbriel.ArcGIS.Spatialite;
+    using Umbriel.Extensions;
 
     public class SpatialLiteDB
     {
         public delegate void StatusMessageDelegate(string message);
 
-        public event StatusMessageDelegate StatusMessageEvent;
-        
+        public delegate void InsertEventHandler(object sender, SpatialiteProgressEventArgs args);
 
+        public event StatusMessageDelegate StatusMessageEvent = delegate { };
+
+        public event InsertEventHandler InsertEvent = delegate { };
+        
         #region Fields
         private string databasePath;
 
@@ -53,7 +57,7 @@ namespace Umbriel.ArcGIS.Spatialite
             set
             {
                 databasePath = value;
-                SetConnectionString(databasePath);
+                this.SetConnectionString(databasePath);
             }
         }
 
@@ -74,8 +78,6 @@ namespace Umbriel.ArcGIS.Spatialite
             this.GeometryFieldName = "Geometry";
 
             this.DatabaseFilePath = databasePath;
-            this.Open();
-
         }
 
         #endregion
@@ -147,14 +149,9 @@ namespace Umbriel.ArcGIS.Spatialite
         /// <summary>
         /// Opens the connection to the sqlite database (always loads the spatial extension):
         /// </summary>
-        public void Open()
+        private void Open()
         {
-            SQLiteConnection cnn = new SQLiteConnection(this.ConnectionString);
-
-            cnn.Open();
-
-            this.SQLiteDatabaseConn = cnn;
-
+            this.SQLiteDatabaseConn.Open();
             LoadSpatialLiteExtension();  //load the spatial extension
         }
 
@@ -212,8 +209,7 @@ namespace Umbriel.ArcGIS.Spatialite
 
 
         }
-
-
+        
         //public string GenerateCreateTableSQL(DataTable table)
         //{
         //    StringBuilder sqlStatement = new StringBuilder();
@@ -286,43 +282,41 @@ namespace Umbriel.ArcGIS.Spatialite
         /// <summary>
         /// Closes this connection to the sqlite database.
         /// </summary>
-        public void Close()
+        private void Close()
         {
-            if (SQLiteDatabaseConn != null)
+            if (this.SQLiteDatabaseConn != null 
+                && this.SQLiteDatabaseConn.State != ConnectionState.Closed)
             {
-                SQLiteDatabaseConn.Close();
+                this.SQLiteDatabaseConn.Close();
             }
         }
 
         public void CreateTable(string sql)
         {
-            if (this.SQLiteDatabaseConn.State == ConnectionState.Open)
+            try
             {
-                try
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, this.SQLiteDatabaseConn))
                 {
-                    SQLiteCommand cmd = new SQLiteCommand(sql, this.SQLiteDatabaseConn);
-
+                    this.SQLiteDatabaseConn.Open();
                     int result = cmd.ExecuteNonQuery();
-
-                    cmd.Dispose();
-
-                    return;
-                }
-                catch (SQLiteException exSQLite)
-                {
-                    System.Diagnostics.Trace.WriteLine(exSQLite.StackTrace);
-                    throw;
-                    //return;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Trace.WriteLine(ex.StackTrace);
-                    throw;
-                }
+                }                
+            }
+            catch (SQLiteException exSQLite)
+            {
+                System.Diagnostics.Trace.WriteLine(exSQLite.StackTrace);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+            finally
+            {
+                this.SQLiteDatabaseConn.Close();
             }
         }
-
-
+        
         public void AddGeometryColumn(string tableName, string columnName, int srid, EnumGeometryType geometryType)
         {
             AddGeometryColumn(tableName, columnName, srid, geometryType,2);
@@ -330,15 +324,6 @@ namespace Umbriel.ArcGIS.Spatialite
 
         public void AddGeometryColumn(string tableName, string columnName, int srid, EnumGeometryType geometryType, int dimension)
         {
-            ConnectionState connectionState = this.SQLiteDatabaseConn.State;
-
-            if (this.SQLiteDatabaseConn.State != ConnectionState.Open)
-            {
-                this.SQLiteDatabaseConn.Open();
-            }
-
-            this.LoadSpatialLiteExtension();  
-
             String addGeometryColumnClause = String.Format("('{0}', '{1}', {2}, '{3}', {4})",
                                                                tableName,
                                                                columnName,
@@ -354,6 +339,8 @@ namespace Umbriel.ArcGIS.Spatialite
                     string.Format("SELECT AddGeometryColumn {0};", addGeometryColumnClause),
                     this.SQLiteDatabaseConn))
                 {
+                    this.SQLiteDatabaseConn.Open();
+
                     object result = cmd.ExecuteScalar();
 
                     if (Convert.ToInt32(result) == 0)
@@ -362,7 +349,6 @@ namespace Umbriel.ArcGIS.Spatialite
                                    "Cannot create geometry column with type of '{0}', srid:{1}",
                                    geometryType.GetStringValue(), srid));
                     }
-
                 }
             }
             catch (SQLiteException)
@@ -376,10 +362,10 @@ namespace Umbriel.ArcGIS.Spatialite
             }
             finally
             {
-                if (connectionState == ConnectionState.Closed)
+                if (this.SQLiteDatabaseConn.State != ConnectionState.Closed)
                 {
-                    this.SQLiteDatabaseConn.Close();
-                }
+                    this.Close();
+                }                
             }
         }
 
@@ -388,12 +374,8 @@ namespace Umbriel.ArcGIS.Spatialite
             // "UPDATE [{0}] SET {1} = GeomFromWKB({2},{3})";
             // Constants.UpdateGeometryFromWKBSQL
 
-            ConnectionState connectionState = this.SQLiteDatabaseConn.State;
 
-            if (this.SQLiteDatabaseConn.State != ConnectionState.Open)
-            {
-                this.SQLiteDatabaseConn.Open();
-            }
+            this.SQLiteDatabaseConn.Open();
 
             try
             {
@@ -419,16 +401,12 @@ namespace Umbriel.ArcGIS.Spatialite
             }
             finally
             {
-                if (connectionState == ConnectionState.Closed)
-                {
-                    this.SQLiteDatabaseConn.Close();
-                }
+                this.Close();
             }
 
 
         }
-
-
+        
         public void Insert(DataTable table, Dictionary<string,string> fieldNameMap)
         {
             this.Insert(table, table.TableName.Replace(' ', '_'),fieldNameMap);
@@ -438,43 +416,56 @@ namespace Umbriel.ArcGIS.Spatialite
         {
             string insertSQL = this.CreateParameterInsert(table, tablename, fieldNameMap);
 
-            SQLiteCommand command = this.SQLiteDatabaseConn.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = insertSQL;
-
-            foreach (DataColumn col in table.Columns)
+            using (SQLiteCommand command = this.SQLiteDatabaseConn.CreateCommand())
             {
-                command.Parameters.Add(
-                    new SQLiteParameter("@" + fieldNameMap[col.ColumnName]));
-            }
+                command.CommandType = CommandType.Text;
+                command.CommandText = insertSQL;
 
-            using (SQLiteTransaction trans = this.SQLiteDatabaseConn.BeginTransaction())
-            {
-                
-
-                foreach (DataRow row in table.Rows)
+                foreach (DataColumn col in table.Columns)
                 {
-                    for (int i = 0; i < command.Parameters.Count; i++)
-                    {
-                        command.Parameters[i].Value = row[i];    
-                    }
-
-                    command.ExecuteNonQuery();                    
+                    command.Parameters.Add(
+                        new SQLiteParameter("@" + fieldNameMap[col.ColumnName]));
                 }
 
-                trans.Commit();
-                trans.Dispose();
 
+                try
+                {
+                    this.Open();
+
+                    using (SQLiteTransaction trans = this.SQLiteDatabaseConn.BeginTransaction())
+                    {
+                        int totalRows = table.Rows.Count;
+                        int r = 0;
+
+                        foreach (DataRow row in table.Rows)
+                        {
+                            for (int i = 0; i < command.Parameters.Count; i++)
+                            {
+                                command.Parameters[i].Value = row[i];
+                            }
+
+                            int result = command.ExecuteNonQuery();
+
+                            if (result.Equals(1))
+                            {
+                                this.OnInsert(r, totalRows);
+                                r++;
+                            }
+                        }
+
+                        trans.Commit();                        
+                    }
+                }
+                finally
+                {
+                    this.Close();
+                }
+
+     
             }
-
-
-
-            
-
-            Trace.WriteLine(insertSQL);
-
-
         }
+
+
 
         public void AddDataTable(DataTable table,Dictionary<string,string> fieldMap)
         {
@@ -485,16 +476,6 @@ namespace Umbriel.ArcGIS.Spatialite
         public int FindSRID(string proj4text)
         {
             int srid = -1;
-            ConnectionState connectionState = this.SQLiteDatabaseConn.State;
-
-            if (this.SQLiteDatabaseConn.State != ConnectionState.Open)
-            {
-                this.SQLiteDatabaseConn.Open();
-            }
-
-            this.LoadSpatialLiteExtension();
-
-            //string stest = "select srid from spatial_ref_sys where proj4text = '" + proj4text  + "'";
 
             try
             {
@@ -502,6 +483,9 @@ namespace Umbriel.ArcGIS.Spatialite
                     Constants.SelectSRIDByProj4text,
                     this.SQLiteDatabaseConn))
                 {
+
+                    this.Open();
+
                     cmd.Parameters.AddWithValue("@proj4text", proj4text);
 
                     object result = cmd.ExecuteScalar();
@@ -527,14 +511,149 @@ namespace Umbriel.ArcGIS.Spatialite
             }
             finally
             {
-                if (connectionState == ConnectionState.Closed)
-                {
-                    this.SQLiteDatabaseConn.Close();
-                }                
+                this.Close();
             }
 
             return srid;
         }
+
+        public int FindSRID(int srid)
+        {
+            return this.FindSRID(srid, "esri");
+        }
+
+        public int FindSRID(int srid, string authname)
+        {
+            try
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand(
+                    Constants.SelectSRIDByAuthSRID,
+                    this.SQLiteDatabaseConn))
+                {
+                    cmd.Parameters.AddWithValue(@"@authname", authname);
+                    cmd.Parameters.AddWithValue(@"@authsrid", srid);
+
+                    this.Open();
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (Convert.ToInt32(result) == 0)
+                    {
+                        throw new InvalidSpatialReferenceException(
+                            string.Format(
+                                   "Spatial reference doesn't exist \n{0}-{1}.",
+                                   authname, srid),
+                                   srid,
+                                   authname);
+                    }
+
+                    srid = Convert.ToInt32(result);
+                }
+            }
+            catch (SQLiteException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+            finally
+            {
+                this.Close();
+            }
+
+            return srid;
+        }
+
+
+        /// <summary>
+        /// Checks to see if the table exists in the database
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns>true if the table exists</returns>
+        public bool TableExists(string tableName)
+        {
+            bool exists = false;
+
+            string sql = "SELECT name FROM sqlite_master WHERE name='{0}'";
+
+            try
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand(
+                    string.Format(sql,tableName),
+                    this.SQLiteDatabaseConn))
+                {
+                    this.Open();
+
+                    SQLiteDataReader rdr = cmd.ExecuteReader();
+
+                    if (rdr.HasRows)
+                    {
+                        exists = true;
+                    }
+                }
+            }
+            catch (SQLiteException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+            finally
+            {
+                this.Close();
+            }
+
+            return exists;
+        }
+
+        public bool ColumnExists(string tableName, string columnName)
+        {
+            bool exists = false;
+
+            string sql = "PRAGMA table_info('{0}')";
+
+            try
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand(
+                    string.Format(sql, tableName),
+                    this.SQLiteDatabaseConn))
+                {
+                    this.Open();
+
+                    SQLiteDataReader rdr = cmd.ExecuteReader();
+
+                    while (rdr.Read())
+                    {
+                        if (rdr["name"].ToString().Equals(columnName, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            exists = true;
+                        }
+                    }
+                }
+            }
+            catch (SQLiteException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+            finally
+            {
+                this.Close();
+            }
+
+            return exists;
+        }
+
 
         private string CreateParameterInsert(DataTable table, string tablename, Dictionary<string, string> fieldNameMap)
         {
@@ -669,18 +788,14 @@ namespace Umbriel.ArcGIS.Spatialite
         /// </summary>
         public void LoadSpatialLiteExtension()
         {
-
             if (this.SQLiteDatabaseConn != null)
             {
                 if (this.SQLiteDatabaseConn.State == ConnectionState.Open)
                 {
-
-
                     string exePath = Process.GetCurrentProcess().MainModule.FileName;
 
                     string exeDir = System.IO.Path.GetDirectoryName(exePath);
                     string spatiaLiteLibDir = exeDir + @"\ExtLib\";
-
 
                     try
                     {
@@ -689,10 +804,7 @@ namespace Umbriel.ArcGIS.Spatialite
                             //load the spatial extension:
                             command.CommandText = @"SELECT load_extension('libspatialite-2.dll');";
                             int recordsAffected = command.ExecuteNonQuery();
-
-
                         }
-
                     }
                     catch (System.Data.SQLite.SQLiteException sqliteException)
                     {
@@ -702,17 +814,8 @@ namespace Umbriel.ArcGIS.Spatialite
                     {
                         throw;
                     }
-
-
                 }
             }
-
-
-
-
-
-
-
         }
 
         #endregion
@@ -722,6 +825,13 @@ namespace Umbriel.ArcGIS.Spatialite
         #endregion
 
         #region Private Methods
+
+        private void OnInsert(int rowIndex, int total)
+        {
+            this.InsertEvent(this,
+                new SpatialiteProgressEventArgs(rowIndex, total));            
+        }
+
         private string GetDBConnectionString()
         {
             return this.ConnectionString;
@@ -733,9 +843,14 @@ namespace Umbriel.ArcGIS.Spatialite
                 StatusMessageEvent(message);
         }
 
+        /// <summary>
+        /// Sets the connection string.
+        /// </summary>
+        /// <param name="path">The path.</param>
         private void SetConnectionString(string path)
         {
-            this.ConnectionString = string.Format(Properties.Settings.Default.BasicSQliteConnectionString, path);            
+            this.ConnectionString = string.Format(Properties.Settings.Default.BasicSQliteConnectionString, path);
+            this.SQLiteDatabaseConn = new SQLiteConnection(this.ConnectionString);
         }
 
         /// <summary>
@@ -995,13 +1110,7 @@ namespace Umbriel.ArcGIS.Spatialite
 
 
 
-        #endregion
-
-
-
-
-
-            
+        #endregion            
     }
 
 

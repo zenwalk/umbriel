@@ -18,6 +18,14 @@
             }
         }
 
+        public static string SelectSRIDByAuthSRID
+        {
+            get
+            {
+                return "select srid from spatial_ref_sys where auth_name=@authname and auth_srid=@authsrid";
+            }
+        }
+
         public static string UpdateGeometryFromWKBSQL
         {
             get

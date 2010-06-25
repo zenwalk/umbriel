@@ -15,11 +15,16 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.ArcMapUI;
 using Umbriel.ArcGIS;
 using Umbriel.ArcGIS.Layer;
+using Umbriel.Extensions;
 
-
+using LayerDictionary = System.Collections.Generic.Dictionary<int, ESRI.ArcGIS.Carto.ILayer>;
+using OIDList = System.Collections.Generic.List<int>;
 
 namespace Umbriel.ArcGIS.Spatialite
 {
+    /// <summary>
+    /// Exports a Featurelayer to a spatialite database
+    /// </summary>
     public class SpatialiteExporter
     {
         public delegate void StatusMessageDelegate(object sender, ExporterEventArgs args);
@@ -37,24 +42,67 @@ namespace Umbriel.ArcGIS.Spatialite
         public event StatusMessageDelegate StatusMessageEvent = delegate { };
 
         #region Fields
+        private string databasePath = string.Empty;
 
+        private string geometryFieldName = "geom";
         #endregion
 
         #region Constructors
         public SpatialiteExporter()
         {
+            this.CommitInterval = 0;
         }
 
         public SpatialiteExporter(string databasePath)
         {
             this.DatabasePath = databasePath;
+            this.CommitInterval = 0;
         }
         #endregion
 
         #region Properties
-        public string DatabasePath { get; private set; }
+        
+        public string DatabasePath
+        {
+            get
+            {
+                return databasePath;
+            }
+            set
+            {
+                databasePath = value;
+
+                this.SpatialiteDatabase =  new SpatialLiteDB(databasePath);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the geometry field for the target table
+        /// </summary>
+        /// <value>The name of the geometry field.</value>
+        public string GeometryFieldName
+        {
+            get
+            {
+                return geometryFieldName;
+            }
+            set
+            {
+                geometryFieldName = value;
+            }
+        }
+
 
         private Dictionary<string, string> FieldNameMap { get; set; }
+
+
+        // TODO: use a commit interval while exporting:
+
+        /// <summary>
+        /// Gets or sets the commit interval.
+        /// </summary>
+        /// <value>The commit interval.</value>
+        public int CommitInterval { get; private set; }
 
         /// <summary>
         /// Gets or sets the extent which is used to filter features
@@ -70,23 +118,27 @@ namespace Umbriel.ArcGIS.Spatialite
         /// </value>
         public bool SelectedFeaturesOnly { get; set; }
 
+
+        private SpatialLiteDB SpatialiteDatabase { get; set; }
+
         #endregion
 
         #region Methods
 
         public string CreateTableDDL(DataTable table)
         {
+            return CreateTableDDL(table, table.TableName.Replace(' ', '_'));
+        }
+
+        public string CreateTableDDL(DataTable table, string tableName)
+        {
             int c = 0; // column counter
 
             this.FieldNameMap = new Dictionary<string, string>();
 
-
-
-
-
             StringBuilder sb = new StringBuilder("CREATE TABLE [");
 
-            sb.Append(table.TableName.Replace(' ', '_'));
+            sb.Append(tableName);
             sb.Append("] (");
 
             foreach (DataColumn col in table.Columns)
@@ -105,24 +157,10 @@ namespace Umbriel.ArcGIS.Spatialite
                     }
 
                     sb.Append(sqlField);
-
                 }
 
                 c++;
             }
-
-            //if (Constants.GeometryType.ContainsKey(geometrytype))
-            //{
-            //    if (c > 0)
-            //    {
-            //        sb.Append(',');
-            //    }
-
-            //    sb.Append("geom ");
-            //    sb.Append(' ');
-            //    sb.Append(Constants.GeometryType[geometrytype]);
-            //}
-
             sb.Append(')');
 
             return sb.ToString();
@@ -154,19 +192,40 @@ namespace Umbriel.ArcGIS.Spatialite
             return ddl;
         }
 
+        public int FindSRID(ILayer layer)
+        {
+            IGeoDataset g = (IGeoDataset)layer;
+            
+            return this.FindSRID(g.SpatialReference, new SpatialLiteDB(this.DatabasePath));
+        }
+
+        public int FindSRID(ILayer layer, string authname)
+        {
+            IGeoDataset g = (IGeoDataset)layer;
+
+            return this.FindSRID(g.SpatialReference, new SpatialLiteDB(this.DatabasePath), authname);
+        }
+
         public int FindSRID(ILayer layer, SpatialLiteDB database)
         {
             IGeoDataset g = (IGeoDataset)layer;
             return this.FindSRID(g.SpatialReference, database);
         }
-
+        
         public int FindSRID(ISpatialReference sr, SpatialLiteDB database)
+        {
+            return FindSRID(sr, database, "esri");
+        }
+
+        public int FindSRID(ISpatialReference sr, SpatialLiteDB database, string authname)
         {
             int srid = -1;
 
-            string s = Umbriel.GIS.SpatialReferenceDotOrg.GetSpatialReference(sr.FactoryCode, Umbriel.GIS.Format.Proj4);
+            srid = sr.FactoryCode;
 
-            srid = database.FindSRID(s);
+            // string s = Umbriel.GIS.SpatialReferenceDotOrg.GetSpatialReference(sr.FactoryCode, Umbriel.GIS.Format.Proj4);
+            
+            srid = database.FindSRID(srid, authname);
 
             return srid;
         }
@@ -181,22 +240,89 @@ namespace Umbriel.ArcGIS.Spatialite
             this.Export(this.DatabasePath, layer);
         }
 
+        public void Export(ILayer layer, int srid)
+        {
+            this.Export(this.DatabasePath, srid, layer);
+        }
 
-        public void Export(string spatialiteDatabasePath, Dictionary<int, ILayer> layers)
+        public void Export(ILayer layer, int srid, int commitinterval)
+        {
+            this.CommitInterval = commitinterval;
+
+            this.Export(layer, srid);
+        }
+
+        public void Export(ILayer layer, OIDList oids, int srid, int commitinterval)
+        {
+            IGeometryFactory3 factory = new GeometryEnvironment() as IGeometryFactory3;
+
+            IFeatureLayer featureLayer = (IFeatureLayer)layer;
+            IDataset dataset = (IDataset)featureLayer.FeatureClass;
+
+            GeoDataTableAdapter.GeoAdapter adapter = new GeoDataTableAdapter.GeoAdapter(dataset.Workspace);
+
+
+            this.CommitInterval = commitinterval;
+            int i = 0;
+
+            string tableName = layer.Name.Replace(' ', '_');
+
+            while (i < oids.Count)
+            {
+                int elementcount;
+
+                if (i + this.CommitInterval > oids.Count)
+                {
+                    elementcount = oids.Count - i;
+                }
+                else
+                {
+                    elementcount = this.CommitInterval;
+                }
+
+                OIDList oidrange = oids.GetRange(i, elementcount);
+
+                object[] vals = oidrange.ToObjectArray();
+
+                DataTable table =  adapter.GetAttributeTable(dataset.Name, featureLayer.FeatureClass.OIDFieldName, vals);
+                table.AddWKBColumn();
+
+                foreach (DataRow row in table.Rows)
+                {
+                    int oid = Convert.ToInt32(row[featureLayer.FeatureClass.OIDFieldName]);
+                    IFeature feature = featureLayer.FeatureClass.GetFeature(oid);
+
+                    byte[] wkbgeometry = (byte[])factory.CreateWkbVariantFromGeometry(feature.ShapeCopy);
+
+                    row["WKB"] = wkbgeometry;
+                }
+
+                Write(table, tableName, srid, featureLayer.FeatureClass);
+
+                i += this.CommitInterval;
+            }            
+        }
+
+        public void Export(string spatialiteDatabasePath, LayerDictionary layers)
         {
             foreach (KeyValuePair<int, ILayer> item in layers)
             {
                 this.Export(spatialiteDatabasePath, item.Value);
             }
         }
-
+        
         public void Export(string spatialiteDatabasePath, ILayer layer)
+        {
+            SpatialLiteDB db = new SpatialLiteDB(spatialiteDatabasePath);
+            int srid = this.FindSRID(layer, db);
+            this.Export(spatialiteDatabasePath, srid, layer);
+        }
+                
+        public void Export(string spatialiteDatabasePath, int srid, ILayer layer)
         {
             try
             {
-                SpatialLiteDB db = new SpatialLiteDB(spatialiteDatabasePath);
-
-                int srid = this.FindSRID(layer, db);
+                this.DatabasePath = spatialiteDatabasePath;
 
                 if (srid > 0)
                 {
@@ -232,16 +358,15 @@ namespace Umbriel.ArcGIS.Spatialite
                         }
 
                         table = adapter.GetAttributeTable(dataset.Name, featureLayer.FeatureClass.OIDFieldName, vals);
-
-
-
                     }
-
-                    // no events for the adapter, so just 1 step for now.
-                    // TODO: update GeoDataTableAdapter w/ events.
-                    this.OnAttributeReadProgress(0, 1);
-                    table = adapter.GetAttributeTable(featureTable, dataset.Name.Replace('.', '_'));
-                    this.OnAttributeReadProgress(1, 1);
+                    else
+                    {
+                        // no events for the adapter, so just 1 step for now.
+                        // TODO: update GeoDataTableAdapter w/ events.
+                        this.OnAttributeReadProgress(0, 1);
+                        table = adapter.GetAttributeTable(featureTable, dataset.Name.Replace('.', '_'));
+                        this.OnAttributeReadProgress(1, 1);
+                    }
 
                     DataColumn wkbcolumn = new DataColumn("WKB", typeof(byte[]));
                     table.Columns.Add(wkbcolumn);
@@ -263,14 +388,14 @@ namespace Umbriel.ArcGIS.Spatialite
                         row["WKB"] = wkbgeometry;
                     }
 
-                    WriteTable(db, srid, table, featureLayer.FeatureClass);
+                    WriteTable(this.SpatialiteDatabase, srid, table, featureLayer.FeatureClass);
                 }
                 else
                 {
 
                 }
 
-                db.Close();
+                // this.SpatialiteDatabase.Close();
             }
             catch (Exception ex)
             {
@@ -289,6 +414,9 @@ namespace Umbriel.ArcGIS.Spatialite
             string s = CreateTableDDL(table);
             database.CreateTable(s);
 
+
+            database.InsertEvent += new SpatialLiteDB.InsertEventHandler(database_InsertEvent);
+            
             database.Insert(table, this.FieldNameMap);
 
             try
@@ -304,21 +432,26 @@ namespace Umbriel.ArcGIS.Spatialite
                                                         geometryColumn,
                                                         srid,
                                                         Constants.SpatialiteGeometryType[fc.ShapeType]);
+                
+                    this.OnStatusMessage(string.Format("Geometry column ({0}) with SRID: {1} successfully added to table: {2}!",
+                        geometryColumn,
+                        srid,
+                        tableName));
 
-                this.OnStatusMessage(string.Format("Geometry column ({0}) with SRID: {1} successfully added to table: {2}!",
-                    geometryColumn,
-                    srid,
-                    tableName));
+                    this.OnStatusMessage(string.Format("Updating geometry column ({0}) in table: {1}",
+                        geometryColumn,
+                        tableName));
+                
 
-                this.OnStatusMessage(string.Format("Updating geometry column ({0}) in table: {1}",
-                    geometryColumn,
-                    tableName));
+                this.OnGeometryExportProgress(0, 1);
 
                 database.UpdateGeometryColumnFromWKB(
                     tableName,
                     geometryColumn,
                     srid,
                     "wkb");
+
+                this.OnGeometryExportProgress(1, 1);
 
                 this.OnStatusMessage(string.Format("Sucessfully update geometry column ({0}) in table: {1}!",
                     geometryColumn,
@@ -328,7 +461,76 @@ namespace Umbriel.ArcGIS.Spatialite
             {
                 throw;
             }
+
+
+            database.InsertEvent -= database_InsertEvent;
         }
+
+        private void Write(DataTable table, string tableName, int srid,IFeatureClass featureclass)
+        {
+            if (!this.SpatialiteDatabase.TableExists(tableName))
+            {
+                string ddl = CreateTableDDL(table,tableName);
+                this.SpatialiteDatabase.CreateTable(ddl);
+
+
+
+                //add the geometry column
+                this.OnStatusMessage(string.Format("Adding geometry column ({0}) with SRID: {1} to table: {2}",
+                    this.GeometryFieldName,
+                    srid,
+                    tableName));
+
+                //this.SpatialiteDatabase.AddGeometryColumn(
+                //                        tableName,
+                //                        this.geometryFieldName,
+                //                        srid,
+                //                        Constants.SpatialiteGeometryType[featureclass.ShapeType]);
+
+                this.OnStatusMessage(string.Format("Geometry column ({0}) with SRID: {1} successfully added to table: {2}!",
+                    this.GeometryFieldName,
+                    srid,
+                    tableName));
+            }
+
+
+            // insert the records:
+            this.SpatialiteDatabase.Insert(table,tableName, this.FieldNameMap);
+
+
+
+            //update geometry field with the WKB field
+            try
+            {
+
+                this.OnGeometryExportProgress(0, 1);
+
+                 //this.SpatialiteDatabase.UpdateGeometryColumnFromWKB(
+                 //   tableName,
+                 //   this.GeometryFieldName,
+                 //   srid,
+                 //   "wkb");
+
+                this.OnGeometryExportProgress(1, 1);
+
+                this.OnStatusMessage(string.Format("Sucessfully update geometry column ({0}) in table: {1}!",
+                    this.GeometryFieldName,
+                    tableName));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+
+        }
+
+        void database_InsertEvent(object sender, SpatialiteProgressEventArgs args)
+        {
+            this.OnAttributeExportProgress(args.Current, args.Total);
+        }
+
+
 
 
         /// <summary>
