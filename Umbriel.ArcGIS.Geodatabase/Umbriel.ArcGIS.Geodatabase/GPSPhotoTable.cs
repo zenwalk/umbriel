@@ -18,6 +18,7 @@ namespace Umbriel.ArcGIS.Geodatabase
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.Geometry;
+    using Umbriel.Extensions;
 
     /// <summary>
     /// GPSPhotoReadProgress EventHandler

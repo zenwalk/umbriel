@@ -77,7 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
     <Compile Include="GPSPhotoTable.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -114,6 +113,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Umbriel.GIS.Extensions\Umbriel.Extensions.csproj">
+      <Project>{11708003-2B1F-4CB5-A227-907004A2E95B}</Project>
+      <Name>Umbriel.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Umbriel.GIS\Umbriel.GIS.csproj">
       <Project>{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}</Project>
       <Name>Umbriel.GIS</Name>
