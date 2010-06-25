@@ -53,6 +53,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ESRI.ArcGIS.3DAnalyst, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.ADF, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -65,8 +68,13 @@
     <Reference Include="ESRI.ArcGIS.Carto, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.Controls, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
-    <Reference Include="ESRI.ArcGIS.Display, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
+    <Reference Include="ESRI.ArcGIS.Display, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Editor, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
     <Reference Include="ESRI.ArcGIS.Framework, Version=9.3.0.1770, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -135,6 +143,7 @@
       <DependentUpon>GeohashCalculatorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\GoogleStreetView.cs" />
+    <Compile Include="UI\SpatialiteExportMenu.cs" />
     <Compile Include="UI\UmbrielArcMapToolbar.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -188,6 +197,10 @@
     <ProjectReference Include="..\Umbriel.ArcMap\Umbriel.ArcMap.Editor\Umbriel.ArcMap.Editor.csproj">
       <Project>{B1E7BA50-3233-4910-96C3-024094215328}</Project>
       <Name>Umbriel.ArcMap.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Umbriel.Extensions\Umbriel.Extensions.csproj">
+      <Project>{11708003-2B1F-4CB5-A227-907004A2E95B}</Project>
+      <Name>Umbriel.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Umbriel.GIS\Umbriel.GIS.csproj">
       <Project>{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}</Project>

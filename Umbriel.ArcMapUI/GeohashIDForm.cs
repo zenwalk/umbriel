@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using ESRI.ArcGIS.Geometry;
+using Umbriel.Extensions;
 
 namespace Umbriel.ArcMapUI
 {
