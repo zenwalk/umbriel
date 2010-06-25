@@ -1,4 +1,4 @@
-﻿// <copyright file="LayerHelper.cs" company="self">
+﻿// <copyright file="LayerHelper.cs" company="Umbriel Project">
 // Copyright (c) 2008-2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>

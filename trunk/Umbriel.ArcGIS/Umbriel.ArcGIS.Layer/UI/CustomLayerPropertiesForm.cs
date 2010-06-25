@@ -10,9 +10,12 @@ namespace Umbriel.ArcGIS.Layer.UI
 {
     using System;
     using System.Data;
+    using System.Linq;
     using System.Windows.Forms;
     using ESRI.ArcGIS.esriSystem;
     using Umbriel.ArcGIS.Layer.Util;
+    using Umbriel.Extensions;
+    using PropertyDictionary = System.Collections.Generic.Dictionary<string, string>;
 
     /// <summary>
     /// CustomLayerProperties Form to display and modify the name/values in a PropertySet
@@ -43,6 +46,7 @@ namespace Umbriel.ArcGIS.Layer.UI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonClose_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -78,6 +82,7 @@ namespace Umbriel.ArcGIS.Layer.UI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.OK;
             this.Save();
         }
 
@@ -130,7 +135,9 @@ namespace Umbriel.ArcGIS.Layer.UI
                 DataView view = (DataView)dataGridView.DataSource;
 
                 DataTable table = view.Table;
-                LayerExtHelper.UpdatePropertySet(this.PropertySet, table);
+
+                this.PropertySet = table.ToPropertySet();
+
                 this.Close();
             }
             catch (Exception ex)

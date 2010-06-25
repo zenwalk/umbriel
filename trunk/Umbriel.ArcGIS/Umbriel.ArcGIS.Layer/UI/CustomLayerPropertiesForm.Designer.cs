@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonOK = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomLayerPropertiesForm));
+            this.buttonSave = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.splitContainerForm = new System.Windows.Forms.SplitContainer();
@@ -38,23 +39,25 @@
             this.splitContainerForm.SuspendLayout();
             this.SuspendLayout();
             // 
-            // buttonOK
+            // buttonSave
             // 
-            this.buttonOK.Location = new System.Drawing.Point(187, 44);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 0;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonSave.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.Location = new System.Drawing.Point(104, 19);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(160, 36);
+            this.buttonSave.TabIndex = 0;
+            this.buttonSave.Text = "&Save and Close";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(269, 44);
+            this.buttonClose.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonClose.Location = new System.Drawing.Point(271, 19);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(75, 23);
+            this.buttonClose.Size = new System.Drawing.Size(180, 36);
             this.buttonClose.TabIndex = 1;
-            this.buttonClose.Text = "&Close";
+            this.buttonClose.Text = "&Close without Saving";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
@@ -82,7 +85,7 @@
             // 
             // splitContainerForm.Panel2
             // 
-            this.splitContainerForm.Panel2.Controls.Add(this.buttonOK);
+            this.splitContainerForm.Panel2.Controls.Add(this.buttonSave);
             this.splitContainerForm.Panel2.Controls.Add(this.buttonClose);
             this.splitContainerForm.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerForm_Panel2_Paint);
             this.splitContainerForm.Size = new System.Drawing.Size(544, 381);
@@ -95,6 +98,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(544, 381);
             this.Controls.Add(this.splitContainerForm);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CustomLayerPropertiesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PropertySet Editor";
@@ -108,7 +112,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.SplitContainer splitContainerForm;

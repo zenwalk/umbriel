@@ -10,6 +10,7 @@ namespace Umbriel.ArcGIS.Layer.UI
 {
     using System;
     using System.Diagnostics;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
@@ -21,6 +22,7 @@ namespace Umbriel.ArcGIS.Layer.UI
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Framework;
     using Umbriel.ArcGIS.Layer.Util;
+    using Umbriel.Extensions;
 
     /// <summary>
     /// Command that works in ArcMap/Map/PageLayout, ArcScene/SceneControl
@@ -202,6 +204,10 @@ namespace Umbriel.ArcGIS.Layer.UI
 
                         Trace.WriteLine(layerExtensions.ExtensionCount.ToString());
 
+                        List<IPropertySet> psets = layer.FindExtensionPropertySet("layerextension", "umbriel");
+                        
+
+
                         if (!LayerExtHelper.UmbrielPropertySetExists(layerExtensions))
                         {
                             propertySet = LayerExtHelper.CreateUmbrielPropertySet();
@@ -219,11 +225,15 @@ namespace Umbriel.ArcGIS.Layer.UI
                                 this.propertySetForm = new CustomLayerPropertiesForm(propertySet);
                             }
 
-                            this.propertySetForm.ShowDialog();
-
-                            if (newPropertySet)
+                            DialogResult res = this.propertySetForm.ShowDialog();
+                            
+                            if (res == DialogResult.OK)
                             {
-                                layerExtensions.AddExtension(propertySet);
+                                if (this.propertySetForm.PropertySet != null)
+                                {
+                                    LayerExtHelper.RemovePropertySet(layerExtensions);
+                                    layerExtensions.AddExtension(this.propertySetForm.PropertySet);
+                                }
                             }
 
                             this.propertySetForm.Dispose();
