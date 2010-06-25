@@ -178,7 +178,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Umbriel.GIS.Extensions\Umbriel.Extensions.csproj">
+    <ProjectReference Include="..\..\Umbriel.Extensions\Umbriel.Extensions.csproj">
       <Project>{11708003-2B1F-4CB5-A227-907004A2E95B}</Project>
       <Name>Umbriel.Extensions</Name>
     </ProjectReference>
