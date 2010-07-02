@@ -1,23 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.esriSystem;
-using ESRI.ArcGIS.Geodatabase;
-using ESRI.ArcGIS.Geometry;
-using OIDList = System.Collections.Generic.List<int>;
-using PropertyDictionary = System.Collections.Generic.Dictionary<string, string>;
-using LayerList = System.Collections.Generic.List<ESRI.ArcGIS.Carto.ILayer>;
-using Reflect = System.Reflection;
+﻿// <copyright file="ArcGISExtensions.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-06-25</date>
+// <summary>ArcGISExtensions class file</summary>
 
 namespace Umbriel.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+    using ESRI.ArcGIS.Carto;
+    using ESRI.ArcGIS.esriSystem;
+    using ESRI.ArcGIS.Geodatabase;
+    using ESRI.ArcGIS.Geometry;
+    using FeatureList = System.Collections.Generic.List<ESRI.ArcGIS.Geodatabase.IFeature>;
+    using LayerList = System.Collections.Generic.List<ESRI.ArcGIS.Carto.ILayer>;
+    using OIDList = System.Collections.Generic.List<int>;
+    using PropertyDictionary = System.Collections.Generic.Dictionary<string, string>;
+    using Reflect = System.Reflection;
+
     /// <summary>
     /// static class of extension methods to use with ESRI ArcObjects
     /// </summary>
     public static class ArcGISExtensions
     {
+        /// <summary>
+        /// Converts IFeatureCursor to a List of Features
+        /// </summary>
+        /// <param name="cursor">The IFeatureCursor</param>
+        /// <returns> System.Collections.Generic.List of ESRI.ArcGIS.Geodatabase.IFeature</returns>
+        public static FeatureList ToFeatureList(this IFeatureCursor cursor)
+        {
+            FeatureList features = new List<IFeature>();
+            IFeature feature = null;
+
+            while ((feature = cursor.NextFeature()) != null)
+            {
+                features.Add(feature);
+            }
+
+            return features;
+        }
+        
         /// <summary>
         /// Gets a list of layers from the selecteditems ISet reference
         /// </summary>
@@ -49,7 +76,7 @@ namespace Umbriel.Extensions
         /// Gets the spatial reference for ILayer
         /// </summary>
         /// <param name="value">The ILayer </param>
-        /// <returns>ISpatialReference</returns>
+        /// <returns>ISpatialReference of a layer</returns>
         public static ISpatialReference GetSpatialReference(this ILayer value)
         {
             IGeoDataset g = (IGeoDataset)value;
@@ -66,7 +93,7 @@ namespace Umbriel.Extensions
         {
             string proj4text = string.Empty;
 
-            //TODO: write ToProj4 method
+            //// TODO: write ToProj4 method
 
             return proj4text;
         }
@@ -171,6 +198,27 @@ namespace Umbriel.Extensions
 
             return oidlist;
         }
+        
+        /// <summary>
+        /// Converts a feature cursor to a list of ObjectIDs (OIDs)
+        /// </summary>
+        /// <param name="cursor">The cursor.</param>
+        /// <returns>OIDList of object ids of features in the feature cursor</returns>
+        public static OIDList ToOIDList(this IFeatureCursor cursor)
+        {
+            OIDList oidlist = new OIDList();
+            IFeature feature = null;
+            
+            while ((feature = cursor.NextFeature()) != null)
+            {
+                if (feature.HasOID)
+                {
+                    oidlist.Add(feature.OID);
+                }
+            }
+
+            return oidlist;
+        }
 
         /// <summary>
         /// Creates an object array from an OIDList
@@ -180,7 +228,7 @@ namespace Umbriel.Extensions
         public static object[] ToObjectArray(this OIDList oidlist)
         {
             List<object> objectlist = oidlist.ConvertAll<object>(x => x as object);
-            return objectlist.ToArray(); ;
+            return objectlist.ToArray();
         }
 
         /// <summary>
@@ -197,7 +245,7 @@ namespace Umbriel.Extensions
         /// Converts an IPropertySet to a Dictionary
         /// </summary>
         /// <param name="propertySet">The IPropertySet</param>
-        /// <returns>PropertyDictionary</returns>
+        /// <returns>PropertyDictionary of property names/values</returns>
         public static PropertyDictionary ToDictionary(this IPropertySet propertySet)
         {
             PropertyDictionary dict = new PropertyDictionary();
@@ -217,7 +265,7 @@ namespace Umbriel.Extensions
 
             return dict;
         }
-        
+
         /// <summary>
         /// Converts a 2-column datatable to IPropertySet
         /// </summary>
@@ -261,11 +309,11 @@ namespace Umbriel.Extensions
         /// <param name="propertysetvalue">The propertyset value.</param>
         /// <param name="comparison">The string comparison method</param>
         /// <returns>List of IPropertySet</returns>
-        public static List<IPropertySet> FindExtensionPropertySet(this ILayer layer,string propertysetname, string propertysetvalue, StringComparison comparison)
+        public static List<IPropertySet> FindExtensionPropertySet(this ILayer layer, string propertysetname, string propertysetvalue, StringComparison comparison)
         {
             List<IPropertySet> propertySets = new List<IPropertySet>();
 
-            ILayerExtensions layerExtensions = (ILayerExtensions)layer;            
+            ILayerExtensions layerExtensions = (ILayerExtensions)layer;
 
             try
             {
@@ -281,10 +329,10 @@ namespace Umbriel.Extensions
 
                             try
                             {
-                                if (propertySet.GetProperty(propertysetname).ToString().Equals(propertysetvalue,comparison))
+                                if (propertySet.GetProperty(propertysetname).ToString().Equals(propertysetvalue, comparison))
                                 {
                                     propertySets.Add(propertySet);
-                                }                         
+                                }
                             }
                             catch
                             {
@@ -300,6 +348,23 @@ namespace Umbriel.Extensions
                 Trace.WriteLine(ex.StackTrace);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Releases the specified com object
+        /// </summary>
+        /// <param name="comobject">The com object.</param>
+        /// <returns>The new value of the reference count of the RCW associated with com object</returns>
+        public static int ReleaseComObject(this object comobject)
+        {
+            int r = 0;
+
+            if (comobject != null)
+            {
+                r = System.Runtime.InteropServices.Marshal.ReleaseComObject(comobject);
+            }
+
+            return r;
         }
     }
 }
