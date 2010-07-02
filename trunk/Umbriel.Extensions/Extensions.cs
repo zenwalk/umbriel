@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using OIDList = System.Collections.Generic.List<int>;
-using Reflect = System.Reflection;
+﻿// <copyright file="Extensions.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-06-25</date>
+// <summary>Extensions class file</summary>
 
 namespace Umbriel.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using OIDList = System.Collections.Generic.List<int>;
+    using Reflect = System.Reflection;
+
     /// <summary>
     /// Other(misc) Extension Methods
     /// </summary>
@@ -40,7 +48,7 @@ namespace Umbriel.Extensions
         /// <summary>
         /// Converts a string value to boolean.
         /// </summary>
-        /// <param name="s">The s.</param>
+        /// <param name="s">The string value</param>
         /// <returns>boolean true/false</returns>
         public static bool ToBoolean(this string s)
         {
@@ -125,5 +133,27 @@ namespace Umbriel.Extensions
             }
         }
 
+        /// <summary>
+        /// Extension method for string.Format
+        /// </summary>
+        /// <param name="format">The string to be formatted.</param>
+        /// <param name="args">object parameters.</param>
+        /// <returns>formatted string</returns>
+        public static string FormatString(this string format, params object[] args)
+        {
+            return string.Format(format, args);
+        }
+
+        /// <summary>
+        /// Extension method for string.Format
+        /// </summary>
+        /// <param name="format">The string to be formatted.</param>
+        /// <param name="provider">The IFormatProvider</param>
+        /// <param name="args">object parameters.</param>
+        /// <returns>formatted string</returns>
+        public static string FormatString(this string format, IFormatProvider provider, params object[] args)
+        {
+            return string.Format(provider, format, args);
+        }        
     }
 }
