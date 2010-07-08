@@ -59,23 +59,32 @@ namespace Umbriel.GIS.ArcGISVersion
 
         private static RegistryStrings OpenKey(string remoteName)
         {
-            RegistryKey registryKey = RegistryKey.OpenRemoteBaseKey(
-                   RegistryHive.LocalMachine, remoteName).OpenSubKey(@"Software\ESRI\ArcInfo\Desktop\8.0");
-
-            string[] valuenames = registryKey.GetValueNames();
             RegistryStrings regValues = new RegistryStrings();
 
-            foreach (string regvalue in valuenames)
+            try
             {
-                System.Diagnostics.Trace.WriteLine(string.Format("{0}-{1}", regvalue, registryKey.GetValue(regvalue)));
-                regValues.Add(regvalue, registryKey.GetValue(regvalue).ToString());
+                RegistryKey registryKey = RegistryKey.OpenRemoteBaseKey(
+       RegistryHive.LocalMachine, remoteName).OpenSubKey(@"Software\ESRI\ArcInfo\Desktop\8.0");
 
+                string[] valuenames = registryKey.GetValueNames();
+
+
+                foreach (string regvalue in valuenames)
+                {
+                    System.Diagnostics.Trace.WriteLine(string.Format("{0}-{1}", regvalue, registryKey.GetValue(regvalue)));
+                    regValues.Add(regvalue, registryKey.GetValue(regvalue).ToString());
+                }
             }
-
+            catch (Exception ex)
+            {
+                string message = string.Format("Could not connect to {0} registry", remoteName);
+                System.Diagnostics.Trace.WriteLine(message);
+                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                Console.WriteLine(message);
+            }
             return regValues;
         }
-
-
+        
         private static IPStatus Ping(string hostname)
         {
             try
