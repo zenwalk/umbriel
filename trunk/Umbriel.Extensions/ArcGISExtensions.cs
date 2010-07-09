@@ -16,6 +16,7 @@ namespace Umbriel.Extensions
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.Geometry;
+    using FeatureLayerList = System.Collections.Generic.List<ESRI.ArcGIS.Carto.IFeatureLayer>;
     using FeatureList = System.Collections.Generic.List<ESRI.ArcGIS.Geodatabase.IFeature>;
     using LayerList = System.Collections.Generic.List<ESRI.ArcGIS.Carto.ILayer>;
     using OIDList = System.Collections.Generic.List<int>;
@@ -43,6 +44,127 @@ namespace Umbriel.Extensions
             }
 
             return features;
+        }
+        
+        /// <summary>
+        /// Gets the name of the featureclass. 
+        /// </summary>
+        /// <param name="layer">The IFeatureLayer</param>
+        /// <returns>string name of the featureclass.</returns>
+        public static string GetFeatureclassName(this IFeatureLayer layer)
+        {
+            return layer.GetFeatureclassName(true);
+        }
+
+        /// <summary>
+        /// Gets the name of the featureclass. If classNameOnly is set to true, the
+        /// class name is parsed from the fully qualified table name (GIS.DBO.PARCELS would return PARCELS 
+        /// </summary>
+        /// <param name="layer">The IFeatureLayer</param>
+        /// <param name="classNameOnly">if set to <c>true</c> [class name only]. </param>
+        /// <returns>string name of the featureclass.</returns>
+        public static string GetFeatureclassName(this IFeatureLayer layer, bool classNameOnly)
+        {
+            IDataset dataset = layer.FeatureClass as IDataset;
+
+            if (dataset != null)
+            {
+                if (classNameOnly)
+                {
+                    return dataset.Name.ParseObjectClassName();
+                }
+                else
+                {
+                    return dataset.Name;
+                }                
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// parses the object class table name from the fully qualified object class name:
+        /// </summary>
+        /// <param name="objectClassName">Name of the object class.</param>
+        /// <returns>
+        /// A string containing only the object class name.  So and objectClassName of 'GIS.DBO.PARCELS' would be returned as PARCELS
+        /// </returns>
+        public static string ParseObjectClassName(this string objectClassName)
+        {
+            try
+            {
+                if (objectClassName.LastIndexOf('.') > 0)
+                {
+                    return objectClassName.Substring(objectClassName.LastIndexOf('.') + 1).Trim();
+                }
+                else
+                {
+                    // if there's no period, then return the objectClassName as-is
+                    return objectClassName;
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("ParseObjectClassName  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Creates a FeatureLayer List of any feature layers that have a feature selection
+        /// </summary>
+        /// <param name="map">The map to search for selected features</param>
+        /// <returns>List of IFeatureLayer</returns>
+        public static FeatureLayerList LayersWithSelectedFeatures(this IMap map)
+        {
+            FeatureLayerList layers = new List<IFeatureLayer>();
+
+            foreach (ILayer layer in map.GetLayerList())
+            {
+                if (layer is IFeatureLayer)
+                {
+                    IFeatureLayer featureLayer = (IFeatureLayer)layer;
+                    IFeatureSelection featureSelection = (IFeatureSelection)featureLayer;
+
+                    if (featureSelection.SelectionSet.Count > 0)
+                    {
+                        layers.Add(featureLayer);
+                    }
+                }
+            }
+
+            return layers;
+        }
+
+        /// <summary>
+        /// Gets the layer list.
+        /// </summary>
+        /// <param name="map">The map to search for layers</param>
+        /// <returns>LayerList of layers in the map</returns>
+        public static LayerList GetLayerList(this IMap map)
+        {
+            try
+            {
+                LayerList layerList = new LayerList();
+
+                IEnumLayer enumLayer = (IEnumLayer)map.get_Layers(null, true);
+
+                ILayer layer = null;
+
+                while ((layer = enumLayer.Next()) != null)
+                {
+                    layerList.Add(layer);
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
         }
         
         /// <summary>
@@ -198,7 +320,7 @@ namespace Umbriel.Extensions
 
             return oidlist;
         }
-        
+
         /// <summary>
         /// Converts a feature cursor to a list of ObjectIDs (OIDs)
         /// </summary>
@@ -208,7 +330,7 @@ namespace Umbriel.Extensions
         {
             OIDList oidlist = new OIDList();
             IFeature feature = null;
-            
+
             while ((feature = cursor.NextFeature()) != null)
             {
                 if (feature.HasOID)
@@ -348,6 +470,40 @@ namespace Umbriel.Extensions
                 Trace.WriteLine(ex.StackTrace);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// returns a "square" envelope around a point
+        /// using the width value as the argument
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="width">width to use in constructing the envelope</param>
+        /// <returns>envelope around a point</returns>
+        public static IEnvelope GetEnvelope(this IPoint point, double width)
+        {
+            return point.GetEnvelope(width, width);
+        }
+
+        /// <summary>
+        /// returns a "rectangle" envelope around a point
+        /// using the width and height arguments:
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="width">width to use in constructing the envelope</param>
+        /// <param name="height">The height.</param>
+        /// <returns>envelope around a point</returns>
+        public static IEnvelope GetEnvelope(this IPoint point, double width, double height)
+        {
+            IEnvelope env = null;
+
+            if (point != null)
+            {
+                env = (IEnvelope)new EnvelopeClass();
+
+                env.PutCoords(point.X - (width / 2), point.Y - (height / 2), point.X + (width / 2), point.Y + (height / 2));
+            }
+
+            return env;
         }
 
         /// <summary>
