@@ -72,4 +72,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>cp -uv "C:\svn_workspace\umbriel.googlecode.com\trunk\Umbriel.Extensions\bin\Release\Umbriel.Extensions.dll" "C:\svn_workspace\svn.worldviewsolutions.net\trunk\DPU\ExternalLibs\Umbriel.Extensions.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

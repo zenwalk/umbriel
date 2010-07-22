@@ -268,6 +268,23 @@ namespace Umbriel.Extensions
         }
 
         /// <summary>
+        /// Sets the value of a field
+        /// </summary>
+        /// <param name="feature">The GIS feature</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="value">The new value for the field</param>
+        public static void SetValue(this IFeature feature, string fieldName, object value)
+        {
+            int fieldIndex = feature.Fields.FindField(fieldName);
+
+            if (fieldIndex.Equals(-1))
+                throw new ArgumentException("Feature has no field named: " + fieldName);
+
+            feature.set_Value(fieldIndex, value);
+        }
+
+
+        /// <summary>
         /// Converts the feature selected features to a list of ObjectIDs (OIDs)
         /// </summary>
         /// <param name="featureSelection">The feature selection.</param>
