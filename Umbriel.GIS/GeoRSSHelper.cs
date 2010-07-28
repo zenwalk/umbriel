@@ -38,15 +38,15 @@ namespace Umbriel.GIS
 
             DataTable table = new DataTable("GeoRSS");
 
-            XDocument tweetResults = XDocument.Load(uri);
+            XDocument georss = XDocument.Load(uri);
 
-            Trace.WriteLine(tweetResults.ToString());
+            Trace.WriteLine(georss.ToString());
 
             XNamespace atomNS = "http://www.w3.org/2005/Atom";
             XNamespace georssNS = "http://www.georss.org/georss";
             XNamespace geoNS = "http://www.w3.org/2003/01/geo/wgs84_pos#";
 
-            var q = from georssitem in tweetResults.Descendants("item")
+            var q = from georssitem in georss.Descendants("item")
                     select new
                     {
                         title = (string)georssitem.Element("title"),
