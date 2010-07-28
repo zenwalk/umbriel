@@ -195,6 +195,12 @@ namespace Umbriel.GIS
         }
 
 
+        /// <summary>
+        /// Determines whether [is spatial reference dot org available].
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if [is spatial reference dot org available]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsSpatialReferenceDotOrgAvailable()
         {
             WebRequest request = WebRequest.Create(Constants.SpatialReferenceDomain);

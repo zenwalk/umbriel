@@ -94,8 +94,16 @@ namespace Umbriel.GIS
         }
     }
 
-    public static class Extensions
+    /// <summary>
+    /// Extension methods
+    /// </summary>
+    internal static class Extensions
     {
+        /// <summary>
+        /// Converts string to float
+        /// </summary>
+        /// <param name="s">string input</param>
+        /// <returns>float value</returns>
         public static float ToFloat(this string s)
         {
             float output;
@@ -110,9 +118,14 @@ namespace Umbriel.GIS
             }
         }
 
-        public static float ToFloat(this object s)
+        /// <summary>
+        /// converts object value to float
+        /// </summary>
+        /// <param name="o">object representing a float value</param>
+        /// <returns>float value</returns>
+        public static float ToFloat(this object o)
         {
-            return s.ToString().ToFloat();
+            return o.ToString().ToFloat();
         }
     }
 }
