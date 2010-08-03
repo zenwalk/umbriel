@@ -323,12 +323,12 @@ namespace Umbriel.ArcGIS.Geodatabase
                     {
                         if (propertySet != null)
                         {
-                            Marshal.ReleaseComObject(propertySet);
+                            // Marshal.ReleaseComObject(propertySet);
                         }
 
                         if (workspaceFactory != null)
                         {
-                            Marshal.ReleaseComObject(workspaceFactory);
+                            // Marshal.ReleaseComObject(workspaceFactory);
                         }
                     }
                 }

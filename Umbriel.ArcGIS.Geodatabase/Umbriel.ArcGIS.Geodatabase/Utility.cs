@@ -14,6 +14,7 @@ namespace Umbriel.ArcGIS.Geodatabase
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.Geometry;
+    using Umbriel.Extensions;
     
     /// <summary>
     /// Geodatabase Utility Class
@@ -100,23 +101,25 @@ namespace Umbriel.ArcGIS.Geodatabase
         /// </returns>
         public static string ParseObjectClassName(string objectClassName)
         {
-            try
-            {
-                if (objectClassName.LastIndexOf('.') > 0)
-                {
-                    return objectClassName.Substring(objectClassName.LastIndexOf('.') + 1).Trim();
-                }
-                else
-                {
-                    // if there's no period, then return the objectClassName as-is
-                    return objectClassName;
-                }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine("ParseObjectClassName  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
-                throw;
-            }
+            return objectClassName.ParseObjectClassName();
+
+            //try
+            //{
+            //    if (objectClassName.LastIndexOf('.') > 0)
+            //    {
+            //        return objectClassName.Substring(objectClassName.LastIndexOf('.') + 1).Trim();
+            //    }
+            //    else
+            //    {
+            //        // if there's no period, then return the objectClassName as-is
+            //        return objectClassName;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Trace.WriteLine("ParseObjectClassName  Exception: " + ex.Message + "\n\nStackTrace: " + ex.StackTrace);
+            //    throw;
+            //}
         }
         
         /// <summary>
