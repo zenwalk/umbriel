@@ -93,6 +93,8 @@ namespace Umbriel.ArcMapUI
         /// </summary>
         public SelectStackGeometries()
         {
+            System.Diagnostics.Trace.WriteLine("SelectStackGeometries Constructor");
+
             base.m_category = "Umbriel";
             base.m_caption = "Select Stacked Geometries";
             base.m_message = "Highlight the layer you wish to analyze and press this button.";

@@ -1,7 +1,8 @@
-﻿using Umbriel.ArcGIS.Geodatabase;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
 using ESRI.ArcGIS.Geodatabase;
-using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Umbriel.ArcGIS.Geodatabase;
+using Umbriel.Extensions;
 
 namespace Umbriel.UnitTests
 {
@@ -89,6 +90,16 @@ namespace Umbriel.UnitTests
             testhelper.Cleanup();
 
             Assert.AreEqual(actual.Count, 1);
+
+        }
+
+
+        
+        private  void ExampleMethod()
+        {
+
+
+            
 
         }
     }

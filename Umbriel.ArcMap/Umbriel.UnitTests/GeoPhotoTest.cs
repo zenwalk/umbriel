@@ -62,24 +62,6 @@ namespace Umbriel.UnitTests
         #endregion
 
 
-        /// <summary>
-        ///A test for ReadGPSCoordinate
-        ///</summary>
-        [TestMethod()]
-        [DeploymentItem("Umbriel.GIS.dll")]
-        public void ReadGPSCoordinateTest()
-        {
-            string path = @"C:\temp\geoPhotoTesting\GPS_PhotoRename\090227111307.JPG";
-            GeoPhoto_Accessor target = new GeoPhoto_Accessor(path);
 
-            target.ReadGPSCoordinate();
-
-            Umbriel.GIS.ISpatialCoordinate coord = target.Coordinate;
-
-            System.Diagnostics.Debug.WriteLine(target.ToString());
-
-
-            Assert.IsNotNull(coord);
-        }
     }
 }
