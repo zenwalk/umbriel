@@ -28,6 +28,10 @@ namespace Umbriel.Extensions
     /// </summary>
     public static class ArcGISExtensions
     {
+
+
+
+
         /// <summary>
         /// Converts IFeatureCursor to a List of Features
         /// </summary>
@@ -45,7 +49,7 @@ namespace Umbriel.Extensions
 
             return features;
         }
-        
+
         /// <summary>
         /// Gets the name of the featureclass. 
         /// </summary>
@@ -76,7 +80,7 @@ namespace Umbriel.Extensions
                 else
                 {
                     return dataset.Name;
-                }                
+                }
             }
             else
             {
@@ -166,7 +170,54 @@ namespace Umbriel.Extensions
                 throw;
             }
         }
-        
+
+        /// <summary>
+        /// Gets the layer list of layers that match layer name parameter using StringComparison.CurrentCultureIgnoreCase
+        /// </summary>
+        /// <param name="map">The map to search for layers</param>
+        /// <param name="layerName">The name of the layer to match</param>
+        /// <returns>LayerList of layers in the map</returns>
+        public static LayerList GetLayerList(this IMap map, string layerName)
+        {
+            StringComparison stringComparison = StringComparison.CurrentCultureIgnoreCase;
+
+            return map.GetLayerList(layerName, stringComparison);
+        }
+
+        /// <summary>
+        /// Gets the layer list.
+        /// </summary>
+        /// <param name="map">The map to search for layers</param>
+        /// <param name="layerName">The name of the layer to match</param>
+        /// <param name="stringComparison">the type of string comparison to use when matching the layer name</param>
+        /// <returns>LayerList of layers in the map</returns>
+        public static LayerList GetLayerList(this IMap map, string layerName, StringComparison stringComparison)
+        {
+            try
+            {
+                LayerList layerList = new LayerList();
+
+                IEnumLayer enumLayer = (IEnumLayer)map.get_Layers(null, true);
+
+                ILayer layer = null;
+
+                while ((layer = enumLayer.Next()) != null)
+                {
+                    if (layer.Name.Equals(layerName, stringComparison))
+                    {
+                        layerList.Add(layer);
+                    }
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
         /// <summary>
         /// Gets a list of layers from the selecteditems ISet reference
         /// </summary>
@@ -282,7 +333,6 @@ namespace Umbriel.Extensions
 
             feature.set_Value(fieldIndex, value);
         }
-
 
         /// <summary>
         /// Converts the feature selected features to a list of ObjectIDs (OIDs)

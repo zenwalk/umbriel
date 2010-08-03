@@ -152,7 +152,7 @@ namespace Umbriel.ArcGIS.Layer.LayerFile
 
                 if (layer != null)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(layerFile);
+                    // System.Runtime.InteropServices.Marshal.FinalReleaseComObject(layerFile);
                 }
             }
 

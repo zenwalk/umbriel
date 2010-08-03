@@ -10,6 +10,9 @@ namespace Umbriel.ArcGIS.Layer.LayerFile
     using System.IO;
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class LayerfileIndexerHelper
     {
 

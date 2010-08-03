@@ -81,6 +81,8 @@ namespace Umbriel.ArcMapUI.UI
 
         public GeohashCalculator()
         {
+            System.Diagnostics.Trace.WriteLine("GeohashCalculator Constructor");
+
             base.m_category = "Umbriel"; //localizable text 
             base.m_caption = "Calculates a field to the geohash of the shape geometry.";  //localizable text 
             base.m_message = "Calculates a field to the geohash of the shape geometry.";  //localizable text

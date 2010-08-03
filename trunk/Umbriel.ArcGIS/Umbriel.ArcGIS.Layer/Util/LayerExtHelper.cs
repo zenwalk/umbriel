@@ -87,9 +87,7 @@ namespace Umbriel.ArcGIS.Layer.Util
                 }
             }
         }
-
-
-
+        
         /// <summary>
         /// Checks to see if a property exists in the property set
         /// </summary>
@@ -234,7 +232,7 @@ namespace Umbriel.ArcGIS.Layer.Util
                     layerFile.Open(pathLayerFile);
                     layer = layerFile.Layer;
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(layerFile);
+                    // System.Runtime.InteropServices.Marshal.ReleaseComObject(layerFile);
 
                     return layer;
                 }

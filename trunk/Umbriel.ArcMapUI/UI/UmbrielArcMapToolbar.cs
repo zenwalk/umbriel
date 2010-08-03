@@ -70,7 +70,7 @@ namespace Umbriel.ArcMapUI.UI
 
         public UmbrielArcMapToolbar()
         {
-
+            System.Diagnostics.Trace.WriteLine("Toolbar Constructor");
             string fullPath = AssemblyDirectory + @"\UmbrielArcMapToolbar.sqlite";
             string connectionstring = "Data Source={0};Version=3;";
 

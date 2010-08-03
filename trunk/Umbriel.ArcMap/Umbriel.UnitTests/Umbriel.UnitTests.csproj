@@ -105,6 +105,10 @@
       <Project>{FCF616D4-2B65-4FBE-BD52-C00539FF4014}</Project>
       <Name>Umbriel.ArcMapUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Umbriel.Extensions\Umbriel.Extensions.csproj">
+      <Project>{11708003-2B1F-4CB5-A227-907004A2E95B}</Project>
+      <Name>Umbriel.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Umbriel.GIS\Umbriel.GIS.csproj">
       <Project>{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}</Project>
       <Name>Umbriel.GIS</Name>

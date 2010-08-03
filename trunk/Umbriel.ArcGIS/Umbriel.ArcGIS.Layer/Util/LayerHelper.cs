@@ -14,7 +14,6 @@ namespace Umbriel.ArcGIS.Layer
     using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Text;
-
     using ESRI.ArcGIS.Carto;
     using ESRI.ArcGIS.Catalog;
     using ESRI.ArcGIS.esriSystem;
@@ -532,7 +531,7 @@ namespace Umbriel.ArcGIS.Layer
                     layerFile.Open(pathLayerFile);
                     layer = layerFile.Layer;
 
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(layerFile);
+                    // System.Runtime.InteropServices.Marshal.ReleaseComObject(layerFile);
 
                     return layer;
                 }
