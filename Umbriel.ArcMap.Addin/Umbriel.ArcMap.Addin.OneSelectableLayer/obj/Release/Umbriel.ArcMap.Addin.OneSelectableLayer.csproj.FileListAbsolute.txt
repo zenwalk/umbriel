@@ -1,0 +1,7 @@
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\bin\Release\Umbriel.ArcMap.Addin.OneSelectableLayer.dll
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\bin\Release\Umbriel.ArcMap.Addin.OneSelectableLayer.pdb
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\obj\Release\ResolveAssemblyReference.cache
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\obj\Release\Umbriel.ArcMap.Addin.OneSelectableLayer.dll
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\obj\Release\Umbriel.ArcMap.Addin.OneSelectableLayer.pdb
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\bin\Release\Umbriel.ArcMap.Addin.OneSelectableLayer.dll.config
+C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.OneSelectableLayer\bin\Release\Umbriel.ArcMap.Addin.OneSelectableLayer.esriAddIn
