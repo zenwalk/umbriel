@@ -1,4 +1,10 @@
-﻿
+﻿// <copyright file="OpenGoogleStreetView.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-08-19</date>
+// <summary>OpenGoogleStreetView class file</summary>
 
 namespace Umbriel.ArcMap.Addin.GoogleStreetView
 {
@@ -9,13 +15,22 @@ namespace Umbriel.ArcMap.Addin.GoogleStreetView
     using ESRI.ArcGIS.Geometry;
     using Umbriel.GIS.Google;
 
+    /// <summary>
+    /// OpenGoogleStreetView button
+    /// </summary>
     public class OpenGoogleStreetView : ESRI.ArcGIS.Desktop.AddIns.Button
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenGoogleStreetView"/> class.
+        /// </summary>
         public OpenGoogleStreetView()
         {
             Trace.WriteLine("CTOR OpenGoogleStreetView");
         }
 
+        /// <summary>
+        /// Called when [click].
+        /// </summary>
         protected override void OnClick()
         {
             Trace.WriteLine("OpenGoogleStreetView_OnClick");
@@ -29,8 +44,8 @@ namespace Umbriel.ArcMap.Addin.GoogleStreetView
 
                 if (doc.FocusMap.SpatialReference != null || doc.FocusMap.SpatialReference is IUnknownCoordinateSystem)
                 {
-                    ISpatialReference srWGS84 = this.WGS84SpatialReference();
-                    ISpatialReference srMap = doc.FocusMap.SpatialReference;
+                    ISpatialReference spatialrefWGS84 = this.WGS84SpatialReference();
+                    ISpatialReference spatialrefMap = doc.FocusMap.SpatialReference;
 
                     IEnvelope env = doc.ActiveView.Extent;
 
@@ -38,15 +53,15 @@ namespace Umbriel.ArcMap.Addin.GoogleStreetView
 
                     double metersPerUnit = 1;
 
-                    if (srMap is IProjectedCoordinateSystem)
+                    if (spatialrefMap is IProjectedCoordinateSystem)
                     {
-                        IProjectedCoordinateSystem pcs = (IProjectedCoordinateSystem)srMap;
+                        IProjectedCoordinateSystem pcs = (IProjectedCoordinateSystem)spatialrefMap;
                         metersPerUnit = pcs.CoordinateUnit.MetersPerUnit;
                     }
 
-                    srWGS84.SetFalseOriginAndUnits(-180, -90, 1000000);
+                    spatialrefWGS84.SetFalseOriginAndUnits(-180, -90, 1000000);
 
-                    env.Project(srWGS84);
+                    env.Project(spatialrefWGS84);
 
                     IArea extentArea = (IArea)env;
 
@@ -84,10 +99,11 @@ namespace Umbriel.ArcMap.Addin.GoogleStreetView
                     "Umbriel.GoogleStreetView",
                      System.Windows.Forms.MessageBoxButtons.OK);
             }
-
-
         }
 
+        /// <summary>
+        /// Called when [update].
+        /// </summary>
         protected override void OnUpdate()
         {
             Enabled = ArcMap.Application != null;
@@ -110,5 +126,4 @@ namespace Umbriel.ArcMap.Addin.GoogleStreetView
             return spatialReference;
         }
     }
-
 }
