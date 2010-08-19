@@ -1,0 +1,20 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Umbriel.ArcMap.Addin.OneSelectableLayer</Name>
+  <AddInID>{6c2436aa-ed7b-4d47-bf20-35f47b2415ba}</AddInID>
+  <Description>When toggled on, the active(highlighted) layer is the only selectable layer.</Description>
+  <Version>1.0</Version>
+  <Image>Images\Umbriel.ArcMap.Addin.OneSelectableLayer.png</Image>
+  <Author>Jay Cummins</Author>
+  <Company>Umbriel Project</Company>
+  <Date>8/18/2010</Date>
+  <Targets>
+    <Target name="Desktop" version="10.0" />
+  </Targets>
+  <AddIn language="CLR" library="Umbriel.ArcMap.Addin.OneSelectableLayer.dll" namespace="Umbriel.ArcMap.Addin.OneSelectableLayer">
+    <ArcMap>
+      <Commands>
+        <Button id="Umbriel_Project_Umbriel.ArcMap.Addin.OneSelectableLayer_OneSelectableLayerButton" class="OneSelectableLayerButton" message="When toggled on, the active layer in the table of contents is the only selectable layer." caption="One Selectable Layer" tip="When toggled on, the active layer in the table of contents is the only selectable layer." category="Umbriel" image="Images\OneSelectableLayer.png" onDemand="false"  />
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>

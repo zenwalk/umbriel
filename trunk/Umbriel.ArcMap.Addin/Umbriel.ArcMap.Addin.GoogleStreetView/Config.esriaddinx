@@ -1,0 +1,20 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Umbriel.ArcMap.Addin.GoogleStreetView</Name>
+  <AddInID>{cb18f5f3-33a9-4252-95e2-43e4a2b57b1e}</AddInID>
+  <Description>Launches Google Maps in street view mode at the current ArcMap extent.</Description>
+  <Version>1.0</Version>
+  <Image>Images\Umbriel.ArcMap.Addin.GoogleStreetView.png</Image>
+  <Author>Jay Cummins</Author>
+  <Company>Umbriel Project</Company>
+  <Date>8/4/2010</Date>
+  <Targets>
+    <Target name="Desktop" version="10.0" />
+  </Targets>
+  <AddIn language="CLR" library="Umbriel.ArcMap.Addin.GoogleStreetView.dll" namespace="Umbriel.ArcMap.Addin.GoogleStreetView">
+    <ArcMap>
+      <Commands>
+        <Button id="Umbriel_Project_Umbriel.ArcMap.Addin.GoogleStreetView_OpenGoogleStreetView" class="OpenGoogleStreetView" message="Opens the Google Street View Website at the current ArcMap extent using the default web browser." caption="Open Google Street View Website" tip="Opens the Google Street View Website at the current ArcMap extent using the default web browser." category="Add-In Controls" image="Images\OpenGoogleStreetView.png" />
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
