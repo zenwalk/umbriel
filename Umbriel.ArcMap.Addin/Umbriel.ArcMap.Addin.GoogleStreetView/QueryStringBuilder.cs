@@ -1,4 +1,4 @@
-﻿// <copyright file="GoogleMapsQStringBuilder.cs" company="Umbriel Project">
+﻿// <copyright file="QueryStringBuilder.cs" company="Umbriel Project">
 // Copyright (c) 2009 All Rights Reserved
 // </copyright>
 // <author>Jay Cummins</author>
