@@ -1,6 +1,0 @@
-C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.GoogleStreetView\bin\Debug\Umbriel.ArcMap.Addin.GoogleStreetView.dll
-C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.GoogleStreetView\bin\Debug\Umbriel.ArcMap.Addin.GoogleStreetView.pdb
-C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.GoogleStreetView\obj\Debug\ResolveAssemblyReference.cache
-C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.GoogleStreetView\obj\Debug\Umbriel.ArcMap.Addin.GoogleStreetView.dll
-C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.GoogleStreetView\obj\Debug\Umbriel.ArcMap.Addin.GoogleStreetView.pdb
-C:\svn_workspace\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.GoogleStreetView\bin\Debug\Umbriel.ArcMap.Addin.GoogleStreetView.esriAddIn
