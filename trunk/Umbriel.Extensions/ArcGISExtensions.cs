@@ -12,6 +12,7 @@ namespace Umbriel.Extensions
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
+    using System.Xml;
     using ESRI.ArcGIS.Carto;
     using ESRI.ArcGIS.esriSystem;
     using ESRI.ArcGIS.Geodatabase;
@@ -28,10 +29,6 @@ namespace Umbriel.Extensions
     /// </summary>
     public static class ArcGISExtensions
     {
-
-
-
-
         /// <summary>
         /// Converts IFeatureCursor to a List of Features
         /// </summary>
@@ -588,6 +585,30 @@ namespace Umbriel.Extensions
             }
 
             return r;
+        }
+        
+        /// <summary>
+        /// Combines 2 AddInFolderList XML files
+        /// </summary>
+        /// <param name="firstAddinFolderList">The first addin folderlist file</param>
+        /// <param name="secondAddinFolderList">The second addin folderlist file</param>
+        /// <param name="outputAddInFolderList">The output addin folderlist file</param>
+        public static void CombineAddInFolderList(string firstAddinFolderList, string secondAddinFolderList,string outputAddInFolderList  )
+        {
+            System.Xml.XmlDocument doc1 = new XmlDocument();
+            System.Xml.XmlDocument doc2 = new XmlDocument();
+
+            doc1.Load(firstAddinFolderList);
+            doc2.Load(secondAddinFolderList);
+
+            foreach (XmlNode node in doc2.DocumentElement.ChildNodes[0].ChildNodes)
+            {
+                XmlNode importNode = doc1.ImportNode(node, true);
+                doc1.DocumentElement.ChildNodes[0].AppendChild(importNode);
+            }
+
+            doc1.Save(outputAddInFolderList);
+
         }
     }
 }
