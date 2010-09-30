@@ -1,0 +1,22 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Umbriel.ArcMap.Addin.EditorTrack</Name>
+  <AddInID>{6e4b137d-628b-4824-a578-87ec1796a970}</AddInID>
+  <Description>ArcMap Addin to track editor information while editing (e.g. Editor Name, Date feature created, date feature modified, version).</Description>
+  <Version>1.0</Version>
+  <Image>Images\Umbriel.ArcMap.Addin.EditorTrack.png</Image>
+  <Author>Jay Cummins</Author>
+  <Company>Umbriel Project</Company>
+  <Date>9/28/2010</Date>
+  <Targets>
+    <Target name="Desktop" version="10.0" />
+  </Targets>
+  <AddIn language="CLR" library="Umbriel.ArcMap.Addin.EditorTrack.dll" namespace="Umbriel.ArcMap.Addin.EditorTrack">
+    <ArcMap>
+      <Editor>
+        <Extensions>
+          <Extension id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackExtension" class="EditorTrackExtension" />
+        </Extensions>
+      </Editor>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
