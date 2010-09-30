@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcMap.Addin.EditorTrack", "Umbriel.ArcMap.Addin.EditorTrack.csproj", "{F9103B25-145E-4E87-BAC1-61047535F4EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbriel.ArcMap.Addin.EditorTrackUnitTests", "EditorTrackUnitTests\Umbriel.ArcMap.Addin.EditorTrackUnitTests.csproj", "{113309D1-28A2-4D1B-9A66-3F36B8D634A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BD42A0EC-0B46-4E46-96D6-0C29A6AF9C29}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+		Umbriel.ArcMap.Addin.EditorTrack.vsmdi = Umbriel.ArcMap.Addin.EditorTrack.vsmdi
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Umbriel.ArcMap.Addin.EditorTrack.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9103B25-145E-4E87-BAC1-61047535F4EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9103B25-145E-4E87-BAC1-61047535F4EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9103B25-145E-4E87-BAC1-61047535F4EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9103B25-145E-4E87-BAC1-61047535F4EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{113309D1-28A2-4D1B-9A66-3F36B8D634A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{113309D1-28A2-4D1B-9A66-3F36B8D634A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{113309D1-28A2-4D1B-9A66-3F36B8D634A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{113309D1-28A2-4D1B-9A66-3F36B8D634A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
