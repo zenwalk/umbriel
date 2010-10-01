@@ -27,15 +27,21 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
     public class EditorTrackExtension : ESRI.ArcGIS.Desktop.AddIns.Extension
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public static bool extensionEnabled;
+
+        /// <summary>
         /// TrackingFields object - tracking settings from the EditorTrackFields.xml file
         /// </summary>
         private static TrackingFields trackingFields;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorTrackExtension"/> class.
         /// </summary>
         public EditorTrackExtension()
         {
+            extensionEnabled = true;
         }
 
         #region Properties
@@ -115,24 +121,27 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// </summary>
         public void Events_OnStartEditing()
         {
-            try
+            if (extensionEnabled)
             {
-                // it's probably pointless to keep this here--it's not likely the user is going to find this file in the cache and modify
-                trackingFields = new TrackingFields(GetEditorTrackFieldsXMLPath());
-                trackingFields.EditVersionName = ArcMap.Editor.EditWorkspace.GetVersionName();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.StackTrace);
-                System.Windows.Forms.MessageBox.Show(
-                    string.Format(
-                        "There was problem reading the {0} xml settings file.\n\nError Message:\n{1}",
-                        Constants.EditorTrackFieldsFileName,
-                        ex.Message),
-                        "Editor Track Error.",
-                         System.Windows.Forms.MessageBoxButtons.OK);
+                try
+                {
+                    // it's probably pointless to keep this here--it's not likely the user is going to find this file in the cache and modify
+                    trackingFields = new TrackingFields(GetEditorTrackFieldsXMLPath());
+                    trackingFields.EditVersionName = ArcMap.Editor.EditWorkspace.GetVersionName();
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.StackTrace);
+                    System.Windows.Forms.MessageBox.Show(
+                        string.Format(
+                            "There was problem reading the {0} xml settings file.\n\nError Message:\n{1}",
+                            Constants.EditorTrackFieldsFileName,
+                            ex.Message),
+                            "Editor Track Error.",
+                             System.Windows.Forms.MessageBoxButtons.OK);
 
-                trackingFields = null;
+                    trackingFields = null;
+                }
             }
         }
 
@@ -150,7 +159,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <param name="obj">The object that was created</param>
         public void Events_OnCreateFeature(ESRI.ArcGIS.Geodatabase.IObject obj)
         {
-            if (trackingFields != null && obj != null)
+            if (extensionEnabled && trackingFields != null && obj != null)
             {
                 ReplacementTemplate globaltemplates = trackingFields.TemplateOnCreateFields[Constants.GlobalName];
                 ReplacementTemplate featclasstemplates = null;
@@ -200,7 +209,17 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
                             if (val != null)
                             {
-                                obj.set_Value(i, val);
+                                if (val is byte[])
+                                {
+                                    IMemoryBlobStreamVariant memoryBlobStream = new MemoryBlobStreamClass();
+                                    memoryBlobStream.ImportFromVariant(val);
+
+                                    obj.set_Value(i, memoryBlobStream);
+                                }
+                                else
+                                {
+                                    obj.set_Value(i, val);
+                                }
                             }
                         }
                     }
@@ -214,7 +233,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <param name="obj">The object that was created</param>
         public void Events_OnChangeFeature(IObject obj)
         {
-            if (trackingFields != null &&  obj != null)
+            if (extensionEnabled && trackingFields != null && obj != null)
             {
                 ReplacementTemplate globaltemplates = trackingFields.TemplateOnChangeFields[Constants.GlobalName];
                 ReplacementTemplate featclasstemplates = null;
@@ -236,7 +255,17 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
                             if (val != null)
                             {
-                                obj.set_Value(i, val);
+                                if (val is byte[])
+                                {
+                                    IMemoryBlobStreamVariant memoryBlobStream = new MemoryBlobStreamClass();
+                                    memoryBlobStream.ImportFromVariant(val);
+
+                                    obj.set_Value(i, memoryBlobStream);
+                                }
+                                else
+                                {
+                                    obj.set_Value(i, val);
+                                }
                             }
                         }
                     }
@@ -254,7 +283,17 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
                             if (val != null)
                             {
-                                obj.set_Value(i, val);
+                                if (val is byte[])
+                                {
+                                    IMemoryBlobStreamVariant memoryBlobStream = new MemoryBlobStreamClass();
+                                    memoryBlobStream.ImportFromVariant(val);
+
+                                    obj.set_Value(i, memoryBlobStream);
+                                }
+                                else
+                                {
+                                    obj.set_Value(i, val);
+                                }
                             }
                         }
                     }
