@@ -1,51 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
-using FieldTrackDictionary = System.Collections.Generic.Dictionary<string, Umbriel.ArcMap.Addin.EditorTrack.FeatureclassFieldTracking>;
-using ReplacementDictionary = System.Collections.Generic.Dictionary<string, object>;
-using StringDictionary = SerializableDictionary<string, string>;
-using StringList = System.Collections.Generic.List<string>;
-using TemplateDictionary = System.Collections.Generic.Dictionary<string, Umbriel.ArcMap.Addin.EditorTrack.ReplacementTemplate>;
+﻿// <copyright file="TrackingFields.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-10-01</date>
+// <summary>TrackingFields class file</summary>
 
 namespace Umbriel.ArcMap.Addin.EditorTrack
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Xml;
+    using System.Xml.Serialization;
+    using FieldTrackDictionary = System.Collections.Generic.Dictionary<string, Umbriel.ArcMap.Addin.EditorTrack.FeatureclassFieldTracking>;
+    using ReplacementDictionary = System.Collections.Generic.Dictionary<string, object>;
+    using StringList = System.Collections.Generic.List<string>;
+    using TemplateDictionary = System.Collections.Generic.Dictionary<string, Umbriel.ArcMap.Addin.EditorTrack.ReplacementTemplate>;
+
     /// <summary>
     /// Tracking Fields Class - handles reading from the xml document
     /// </summary>
     internal class TrackingFields : XmlDocument
     {
+        #region Fields
         /// <summary>
-        /// Gets or sets the EditorTrackFields XML  file path.
+        /// The Edit Version Name
         /// </summary>
-        /// <value>The xml file path.</value>
-        public string EditorTrackFieldsFilePath { get; private set; }
+        private string editVersionName = string.Empty;
+        #endregion
 
-        /// <summary>
-        /// Gets or sets the template on change fields.
-        /// </summary>
-        /// <value>The template on change fields.</value>
-        public TemplateDictionary TemplateOnChangeFields { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the template on create fields.
-        /// </summary>
-        /// <value>The template on create fields.</value>
-        public TemplateDictionary TemplateOnCreateFields { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the FieldTrackDictionary
-        /// </summary>
-        /// <value>FieldTrackDictionary that contains the fields that are tracked for each specific featureclass</value>
-        public FieldTrackDictionary FeatureclassTrackingFields { get; private set; }
-
-        public ReplacementDictionary ReplacementFieldDictionary { get; private set; }
-
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackingFields"/> class.
         /// </summary>
@@ -54,155 +40,89 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         {
             if (File.Exists(editorTrackFieldsFilePath))
             {
-                //this.GlobalOnChangeFields = new StringDictionary();
-                //this.GlobalOnCreateFields = new StringDictionary();
-
                 this.EditorTrackFieldsFilePath = editorTrackFieldsFilePath;
                 this.Load(this.EditorTrackFieldsFilePath);
 
-
                 this.ReadReplacementTemplates();
-                this.ReadGlobalFields();
-                //this.ReadFeatureclassFields();
-
                 this.BuildReplacementDictionary();
             }
         }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets the EditorTrackFields XML  file path.
+        /// </summary>
+        /// <value>The xml file path.</value>
+        public string EditorTrackFieldsFilePath { get; private set; }
 
         /// <summary>
-        /// Reads the global fields from the field tracking xml file
-        /// and sets the GlobalOnChangeFields and  GlobalOnCreateFields properties
+        /// Gets the template on change fields.
         /// </summary>
-        public void ReadGlobalFields()
-        {
-            //try
-            //{
-            //    StringCollection fieldstrings = null;
-            //    XmlNodeList nodelist = this.GetElementsByTagName("global");
-
-            //    //read the OnChange fields
-            //    using (XmlReader reader = new XmlNodeReader(nodelist[0]["OnChange"]["ArrayOfString"]))
-            //    {
-            //        XmlSerializer serializer = new XmlSerializer(typeof(StringCollection));
-
-            //        if (serializer.CanDeserialize(reader))
-            //        {
-            //            fieldstrings = serializer.Deserialize(reader) as StringCollection;
-
-            //            List<string> list = fieldstrings.Cast<string>().ToList();
-
-            //            this.GlobalOnChangeFields = list.ToStringDictionary();
-            //        }
-            //        else
-            //        {
-            //            //do something to handle
-            //            throw new XmlException();
-            //        }
-            //    }
-
-            //    //read the OnCreate fields
-            //    using (XmlReader reader = new XmlNodeReader(nodelist[0]["OnCreate"]["ArrayOfString"]))
-            //    {
-            //        XmlSerializer serializer = new XmlSerializer(typeof(StringCollection));
-
-            //        if (serializer.CanDeserialize(reader))
-            //        {
-            //            fieldstrings = serializer.Deserialize(reader) as StringCollection;
-
-            //            List<string> list = fieldstrings.Cast<string>().ToList();
-
-            //            this.GlobalOnCreateFields = list.ToStringDictionary();
-            //        }
-            //        else
-            //        {
-            //            //do something to handle
-            //            throw new XmlException();
-            //        }
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
-        }
+        /// <value>The template on change fields.</value>
+        public TemplateDictionary TemplateOnChangeFields { get; private set; }
 
         /// <summary>
-        /// Reads the featureclass fields from the field tracking xml file
-        /// and sets the FeatureclassTrackingFields property
+        /// Gets the template on create fields.
         /// </summary>
-        public void ReadFeatureclassFields()
+        /// <value>The template on create fields.</value>
+        public TemplateDictionary TemplateOnCreateFields { get; private set; }
+
+        /// <summary>
+        /// Gets the FieldTrackDictionary
+        /// </summary>
+        /// <value>FieldTrackDictionary that contains the fields that are tracked for each specific featureclass</value>
+        public FieldTrackDictionary FeatureclassTrackingFields { get; private set; }
+
+        /// <summary>
+        /// Gets the replacement field dictionary.
+        /// </summary>
+        /// <value>The replacement field dictionary.</value>
+        public ReplacementDictionary ReplacementFieldDictionary { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the name of the edit version.
+        /// </summary>
+        /// <value>The name of the edit version.</value>
+        public string EditVersionName
         {
-            //try
-            //{
-            //    StringCollection fieldstrings = null;
+            get
+            {
+                return this.editVersionName;
+            }
 
-            //    XmlNodeList nodelist = this.SelectNodes("/config/featureclasses/featureclass");
+            set
+            {
+                this.editVersionName = value;
 
-            //    FieldTrackDictionary featureclassTrackingFields = new FieldTrackDictionary(StringComparer.CurrentCultureIgnoreCase);
-
-            //    foreach (XmlNode node in nodelist)
-            //    {
-            //        FeatureclassFieldTracking fieldTracking = new FeatureclassFieldTracking();
-
-            //        //read the OnChange fields
-            //        using (XmlReader reader = new XmlNodeReader(node["OnChange"]["ArrayOfString"]))
-            //        {
-            //            XmlSerializer serializer = new XmlSerializer(typeof(StringCollection));
-
-            //            if (serializer.CanDeserialize(reader))
-            //            {
-            //                fieldstrings = serializer.Deserialize(reader) as StringCollection;
-
-            //                List<string> list = fieldstrings.Cast<string>().ToList();
-
-            //                fieldTracking.FeatureClassName = node.Attributes["name"].ToString();
-            //                fieldTracking.OnChangeFields = list.ToStringDictionary();
-            //            }
-            //            else
-            //            {
-            //                //do something to handle
-            //                throw new XmlException();
-            //            }
-            //        }
-
-            //        // read the OnCreate fields
-            //        using (XmlReader reader = new XmlNodeReader(nodelist[0]["OnCreate"]["ArrayOfString"]))
-            //        {
-            //            XmlSerializer serializer = new XmlSerializer(typeof(StringCollection));
-
-            //            if (serializer.CanDeserialize(reader))
-            //            {
-            //                fieldstrings = serializer.Deserialize(reader) as StringCollection;
-
-            //                List<string> list = fieldstrings.Cast<string>().ToList();
-
-            //                fieldTracking.FeatureClassName = node.Attributes["name"].ToString();
-            //                fieldTracking.OnCreateFields = list.ToStringDictionary();
-            //            }
-            //            else
-            //            {
-            //                //do something to handle
-            //                throw new XmlException();
-            //            }
-            //        }
-
-            //        featureclassTrackingFields.Add(fieldTracking.FeatureClassName, fieldTracking);
-            //    }
-
-            //    this.FeatureclassTrackingFields = featureclassTrackingFields;
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
+                if (this.ReplacementFieldDictionary != null)
+                {
+                    if (this.ReplacementFieldDictionary.ContainsKey("{EDITVERSION}"))
+                    {
+                        this.ReplacementFieldDictionary["{EDITVERSION}"] = this.editVersionName;
+                    }
+                    else
+                    {
+                        this.ReplacementFieldDictionary.Add("{EDITVERSION}", this.editVersionName);
+                    }
+                }
+            }
         }
+        #endregion
 
+        #region Methods
+        /// <summary>
+        /// Reads the replacement templates from the EditorTrackFields.xml file.
+        /// </summary>
         public void ReadReplacementTemplates()
         {
             this.ReadOnCreateReplacementTemplates();
             this.ReadOnChangeReplacementTemplates();
         }
 
+        /// <summary>
+        /// Reads the 'OnCreate' replacement templates variables from the EditorTrackFields.xml file.
+        /// </summary>
         private void ReadOnCreateReplacementTemplates()
         {
             XmlNodeList nodelist = this.GetElementsByTagName("OnCreate");
@@ -216,14 +136,13 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
                     if (serializer.CanDeserialize(reader))
                     {
-                        //fieldstrings = serializer.Deserialize(reader) as StringCollection;
                         ReplacementTemplate replacementTemplate = serializer.Deserialize(reader) as ReplacementTemplate;
 
                         templates.Add(replacementTemplate.FeatureclassName, replacementTemplate);
                     }
                     else
                     {
-                        //do something to handle
+                        // do something to handle
                         throw new XmlException();
                     }
                 }
@@ -232,6 +151,9 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
             this.TemplateOnCreateFields = templates;
         }
 
+        /// <summary>
+        /// Reads the 'OnChange' replacement templates variables from the EditorTrackFields.xml file.
+        /// </summary>
         private void ReadOnChangeReplacementTemplates()
         {
             XmlNodeList nodelist = this.GetElementsByTagName("OnChange");
@@ -245,14 +167,13 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
                     if (serializer.CanDeserialize(reader))
                     {
-                        //fieldstrings = serializer.Deserialize(reader) as StringCollection;
                         ReplacementTemplate replacementTemplate = serializer.Deserialize(reader) as ReplacementTemplate;
 
                         templates.Add(replacementTemplate.FeatureclassName, replacementTemplate);
                     }
                     else
                     {
-                        //do something to handle
+                        // do something to handle
                         throw new XmlException();
                     }
                 }
@@ -268,20 +189,20 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         {
             // the usual suspects (builtin)
             ReplacementDictionary replacementDictionary = new ReplacementDictionary(Constants.DefaultReplacements, StringComparer.CurrentCultureIgnoreCase);
-            
-            //get a list of all the different replacements
+
+            // get a list of all the different replacements
             StringList environVariableReplacements = new StringList();
 
-            foreach ( KeyValuePair<string,ReplacementTemplate> kvp in this.TemplateOnChangeFields)
+            foreach (KeyValuePair<string, ReplacementTemplate> kvp in this.TemplateOnChangeFields)
             {
-                environVariableReplacements.AddRange(kvp.Value.FieldReplacements.Values.ToList<string>());                
+                environVariableReplacements.AddRange(kvp.Value.FieldReplacements.Values.ToList<string>());
             }
 
             foreach (KeyValuePair<string, ReplacementTemplate> kvp in this.TemplateOnCreateFields)
             {
                 environVariableReplacements.AddRange(kvp.Value.FieldReplacements.Values.ToList<string>());
             }
-            
+
             // just query out the {e: replacements
             StringList envrep = string.Join(",", environVariableReplacements.ToArray()).FindEnvironmentVariableReplacements();
 
@@ -304,12 +225,9 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
                     System.Diagnostics.Trace.WriteLine(e.StackTrace);
                 }
             }
-
-            //TODO: need to evaluate the remainder of the non-environment variables
-            // exclude: {NOW},{GEOHASH},{WKB},{WKT},{XCOORD},{YCOORD},{ZCOORD}
             
-
             this.ReplacementFieldDictionary = replacementDictionary;
         }
+        #endregion
     }
 }
