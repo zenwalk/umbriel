@@ -6,6 +6,8 @@
 // <date>2010-10-01</date>
 // <summary>EditorTrackExtensions class file</summary>
 
+//// TODO: implement {GEOHASH},{WKB},{WKT},{XCOORD},{YCOORD},{ZCOORD}
+
 namespace Umbriel.ArcMap.Addin.EditorTrack
 {
     using System;
