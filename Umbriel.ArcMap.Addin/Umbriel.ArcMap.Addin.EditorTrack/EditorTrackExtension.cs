@@ -14,6 +14,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using System.Diagnostics;
     using System.Xml;
     using ESRI.ArcGIS.Editor;
     using ESRI.ArcGIS.esriSystem;
@@ -99,9 +100,14 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
             this.Events2.BeforeStopEditing += delegate(bool save) { this.OnBeforeStopEditing(save); };
             this.Events.OnStartEditing += delegate { this.Events_OnStartEditing(); };
-
+            this.Events.OnStopEditing += delegate(bool save) { this.OnStopEditing(save); };
+            
             this.Events.OnCreateFeature += new IEditEvents_OnCreateFeatureEventHandler(this.Events_OnCreateFeature);
             this.Events.OnChangeFeature += new IEditEvents_OnChangeFeatureEventHandler(this.Events_OnChangeFeature);
+        }
+
+        void OnStopEditing(bool save)
+        {
         }
         
         /// <summary>
@@ -109,9 +115,25 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// </summary>
         public void Events_OnStartEditing()
         {
-            // it's probably pointless to keep this here--it's not likely the user is going to find this file in the cache and modify
-            trackingFields = new TrackingFields(GetEditorTrackFieldsXMLPath());
-            trackingFields.EditVersionName = ArcMap.Editor.EditWorkspace.GetVersionName();
+            try
+            {
+                // it's probably pointless to keep this here--it's not likely the user is going to find this file in the cache and modify
+                trackingFields = new TrackingFields(GetEditorTrackFieldsXMLPath());
+                trackingFields.EditVersionName = ArcMap.Editor.EditWorkspace.GetVersionName();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                System.Windows.Forms.MessageBox.Show(
+                    string.Format(
+                        "There was problem reading the {0} xml settings file.\n\nError Message:\n{1}",
+                        Constants.EditorTrackFieldsFileName,
+                        ex.Message),
+                        "Editor Track Error.",
+                         System.Windows.Forms.MessageBoxButtons.OK);
+
+                trackingFields = null;
+            }
         }
 
         /// <summary>
@@ -128,7 +150,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <param name="obj">The object that was created</param>
         public void Events_OnCreateFeature(ESRI.ArcGIS.Geodatabase.IObject obj)
         {
-            if (obj != null)
+            if (trackingFields != null && obj != null)
             {
                 ReplacementTemplate globaltemplates = trackingFields.TemplateOnCreateFields[Constants.GlobalName];
                 ReplacementTemplate featclasstemplates = null;
@@ -192,7 +214,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <param name="obj">The object that was created</param>
         public void Events_OnChangeFeature(IObject obj)
         {
-            if (obj != null)
+            if (trackingFields != null &&  obj != null)
             {
                 ReplacementTemplate globaltemplates = trackingFields.TemplateOnChangeFields[Constants.GlobalName];
                 ReplacementTemplate featclasstemplates = null;
