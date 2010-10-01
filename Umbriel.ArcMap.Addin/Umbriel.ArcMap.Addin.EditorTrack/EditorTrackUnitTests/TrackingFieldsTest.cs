@@ -94,18 +94,6 @@ namespace EditorTrackUnitTests
             //Assert.IsTrue((target.GlobalOnChangeFields != null && target.GlobalOnCreateFields != null));
         }
 
-        /// <summary>
-        ///A test for ReadFeatureclassFields
-        ///</summary>
-        [TestMethod()]
-        public void ReadFeatureclassFieldsTest()
-        {
-            string editorTrackFieldsFilePath = @"C:\svn_workspace\umbriel.googlecode.com\trunk\Umbriel.ArcMap.Addin\Umbriel.ArcMap.Addin.EditorTrack\EditorTrackFields.xml";
-            TrackingFields target = new TrackingFields(editorTrackFieldsFilePath); 
-            target.ReadFeatureclassFields();
-
-            Assert.IsNotNull(target.FeatureclassTrackingFields);
-        }
 
         [TestMethod()]
         public void SerializeReplacementTemplate()
