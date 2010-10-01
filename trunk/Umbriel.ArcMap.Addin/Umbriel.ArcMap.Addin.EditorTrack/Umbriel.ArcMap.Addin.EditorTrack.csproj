@@ -52,6 +52,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ESRI.ArcGIS.ADF.Local, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Carto, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
       <Private>False</Private>
     </Reference>
@@ -62,8 +68,19 @@
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.System">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.SystemUI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Umbriel.Extensions">
+      <HintPath>Ext\Umbriel.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -78,12 +95,16 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Umbriel.ArcMap\Umbriel.ArcMap.Editor\Util\Geohasher.cs">
+      <Link>Util\Geohasher.cs</Link>
+    </Compile>
+    <Compile Include="EditorTrackToggleButton.cs" />
     <Compile Include="Config.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Config.esriaddinx</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="EditorTrackExtensions.cs" />
+    <Compile Include="Util\EditorTrackExtensions.cs" />
     <Compile Include="FeatureclassFieldTracking.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -146,6 +167,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <AddInContent Include="Images\EditorTrackToggleButton.png" />
+    <EmbeddedResource Include="Images\EditorTrackToggleButton_Off.png" />
+    <EmbeddedResource Include="Images\EditorTrackToggleButton_On.png" />
+    <Content Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Umbriel.GIS\Umbriel.GIS.vs2010.csproj">
+      <Project>{2972BC11-8866-4FEA-87DF-0CCBB4DEC42E}</Project>
+      <Name>Umbriel.GIS.vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <ZipFileExtension>esriAddIn</ZipFileExtension>

@@ -6,12 +6,22 @@
   <Image>Images\Umbriel.ArcMap.Addin.EditorTrack.png</Image>
   <Author>Jay Cummins</Author>
   <Company>Umbriel Project</Company>
-  <Date>9/28/2010</Date>
+  <Date>10/1/2010</Date>
   <Targets>
     <Target name="Desktop" version="10.0" />
   </Targets>
   <AddIn language="CLR" library="Umbriel.ArcMap.Addin.EditorTrack.dll" namespace="Umbriel.ArcMap.Addin.EditorTrack">
     <ArcMap>
+      <Toolbars>
+        <Toolbar id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_Editor_Track_Toolbar" caption="Editor Track Toolbar" showInitially="true">
+          <Items>
+            <Button refID="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackToggleButton" />
+          </Items>
+        </Toolbar>
+      </Toolbars>
+      <Commands>
+        <Button id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackToggleButton" class="EditorTrackToggleButton" message="Toggles Editor Track On/Off" caption="Toggles Editor Track On/Off" tip="Toggles Editor Track On/Off" category="Umbriel Project" image="Images\EditorTrackToggleButton.png" />
+      </Commands>
       <Editor>
         <Extensions>
           <Extension id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackExtension" class="EditorTrackExtension" />
