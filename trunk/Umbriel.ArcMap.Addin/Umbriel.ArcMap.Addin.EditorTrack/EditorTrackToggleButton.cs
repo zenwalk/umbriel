@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 using System.Text;
 using ESRI.ArcGIS.ADF.BaseClasses;
 using ESRI.ArcGIS.ArcMapUI;
@@ -32,21 +33,40 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
 
         public EditorTrackToggleButton()
         {
+            Trace.WriteLine("EditorTrackToggleButton CTOR");
+
+
             System.Drawing.Bitmap offBitmap = new System.Drawing.Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Umbriel.ArcMap.Addin.EditorTrack.Images.EditorTrackToggleButton_Off.png"));
             System.Drawing.Bitmap onBitmap = new System.Drawing.Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Umbriel.ArcMap.Addin.EditorTrack.Images.EditorTrackToggleButton_On.png"));
 
             this.offBitmapPictureDisp = ESRI.ArcGIS.ADF.COMSupport.OLE.GetIPictureDispFromBitmap(offBitmap);
             this.onBitmapPictureDisp = ESRI.ArcGIS.ADF.COMSupport.OLE.GetIPictureDispFromBitmap(onBitmap);
+            
+            
+
+            Trace.WriteLine(string.Format(
+    "EditorTrackToggleButton CTOR extensionEnabled = {0}",
+    EditorTrackHelper.extensionEnabled));
+
+            this.Checked = EditorTrackHelper.extensionEnabled;
         }
 
+        
         protected override void OnClick()
         {
-            EditorTrackExtension.extensionEnabled = !EditorTrackExtension.extensionEnabled;
+            EditorTrackHelper.extensionEnabled = !EditorTrackHelper.extensionEnabled;
+            this.Checked = EditorTrackHelper.extensionEnabled;
+            
+            Trace.WriteLine(EditorTrackHelper.extensionEnabled.FormatObjectValue("EditorTrackHelper.extensionEnabled"));
+            
+            //EditorTrackHelper.extensionEnabled
+            
+
             this.UpdateBitmap();
         }
 
         protected override void OnUpdate()
-        {
+        {            
         }
 
         /// <summary>
@@ -54,19 +74,24 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// </summary>
         private void UpdateBitmap()
         {
+            Trace.WriteLine("enter UpdateBitmap");
             try
             {
                 ICommandItem commandItem = ArcMap.Application.Document.CommandBars.Find("Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackToggleButton", true, true);
 
-                if (EditorTrackExtension.extensionEnabled)
+                if (EditorTrackHelper.extensionEnabled)
                 {
+                    Trace.WriteLine("Setting Enabled BitMap");
                     commandItem.FaceID = this.onBitmapPictureDisp;
                     commandItem.Refresh();
+                    Trace.WriteLine("After Enabled BitMap Refresh.");
                 }
                 else
                 {
+                    Trace.WriteLine("Setting Disabled BitMap");
                     commandItem.FaceID = this.offBitmapPictureDisp;
                     commandItem.Refresh();
+                    Trace.WriteLine("After Disabled BitMap Refresh.");
                 }
             }
             catch (Exception e)
@@ -74,6 +99,11 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
                 System.Diagnostics.Trace.WriteLine(e.StackTrace);
                 throw;
             }
+
+            Trace.WriteLine("exit  UpdateBitmap");
         }
+
+
+
     }
 }

@@ -2,7 +2,7 @@
   <Name>Umbriel.ArcMap.Addin.EditorTrack</Name>
   <AddInID>{6e4b137d-628b-4824-a578-87ec1796a970}</AddInID>
   <Description>ArcMap Addin to track editor information while editing (e.g. Editor Name, Date feature created, date feature modified, version).</Description>
-  <Version>1.0</Version>
+  <Version>1.1.21</Version>
   <Image>Images\Umbriel.ArcMap.Addin.EditorTrack.png</Image>
   <Author>Jay Cummins</Author>
   <Company>Umbriel Project</Company>
@@ -20,11 +20,11 @@
         </Toolbar>
       </Toolbars>
       <Commands>
-        <Button id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackToggleButton" class="EditorTrackToggleButton" message="Toggles Editor Track On/Off" caption="Toggles Editor Track On/Off" tip="Toggles Editor Track On/Off" category="Umbriel Project" image="Images\EditorTrackToggleButton.png" />
+        <Button id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackToggleButton" class="EditorTrackToggleButton" message="Toggles Editor Track On/Off" caption="Toggles Editor Track On/Off" tip="Toggles Editor Track On/Off" category="Umbriel Project" image="Images\EditorTrackToggleButton.png"  onDemand="false"/>
       </Commands>
       <Editor>
         <Extensions>
-          <Extension id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackExtension" class="EditorTrackExtension" />
+          <Extension id="Umbriel_Project_Umbriel.ArcMap.Addin.EditorTrack_EditorTrackExtension" class="EditorTrackExtension" autoLoad="true" />
         </Extensions>
       </Editor>
     </ArcMap>

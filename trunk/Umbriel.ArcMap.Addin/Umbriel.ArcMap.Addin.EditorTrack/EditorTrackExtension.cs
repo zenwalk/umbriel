@@ -29,7 +29,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <summary>
         /// 
         /// </summary>
-        public static bool extensionEnabled;
+        // public static bool extensionEnabled;
 
         /// <summary>
         /// TrackingFields object - tracking settings from the EditorTrackFields.xml file
@@ -41,7 +41,11 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// </summary>
         public EditorTrackExtension()
         {
-            extensionEnabled = true;
+            Trace.WriteLine("EditorTrackExtension CTOR");
+
+            //EditorTrackHelper.extensionEnabled = true;
+
+            Trace.WriteLine(EditorTrackHelper.extensionEnabled.FormatObjectValue("extensionEnabled"));
         }
 
         #region Properties
@@ -121,7 +125,8 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// </summary>
         public void Events_OnStartEditing()
         {
-            if (extensionEnabled)
+
+            if (EditorTrackHelper.extensionEnabled)
             {
                 try
                 {
@@ -159,7 +164,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <param name="obj">The object that was created</param>
         public void Events_OnCreateFeature(ESRI.ArcGIS.Geodatabase.IObject obj)
         {
-            if (extensionEnabled && trackingFields != null && obj != null)
+            if (EditorTrackHelper.extensionEnabled && trackingFields != null && obj != null)
             {
                 ReplacementTemplate globaltemplates = trackingFields.TemplateOnCreateFields[Constants.GlobalName];
                 ReplacementTemplate featclasstemplates = null;
@@ -233,7 +238,7 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
         /// <param name="obj">The object that was created</param>
         public void Events_OnChangeFeature(IObject obj)
         {
-            if (extensionEnabled && trackingFields != null && obj != null)
+            if (EditorTrackHelper.extensionEnabled && trackingFields != null && obj != null)
             {
                 ReplacementTemplate globaltemplates = trackingFields.TemplateOnChangeFields[Constants.GlobalName];
                 ReplacementTemplate featclasstemplates = null;
@@ -311,6 +316,9 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
             IEditor theEditor = ArcMap.Editor;
 
             this.WireEditorEvents();
+
+            Trace.WriteLine("EditorTrackExtension OnStartup");
+            Trace.WriteLine(EditorTrackHelper.extensionEnabled.FormatObjectValue("extensionEnabled"));
         }
 
         /// <summary>
