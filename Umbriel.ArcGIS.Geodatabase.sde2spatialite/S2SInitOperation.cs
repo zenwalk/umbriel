@@ -156,7 +156,7 @@ namespace Umbriel.ArcGIS.Geodatabase.sde2spatialite
         private void PrintMessage(string value)
         {
             Trace.WriteLineIf(this.operationTraceSwitch.TraceVerbose, value);
-        }        
+        }
 
         /// <summary>
         /// Sets the SRID value from the args
@@ -252,6 +252,11 @@ namespace Umbriel.ArcGIS.Geodatabase.sde2spatialite
 
             IFeatureWorkspace wrkspc = (IFeatureWorkspace)workspace;
 
+            if (!string.IsNullOrEmpty(this.operationArguments["D"]))
+            {
+                geodatabaseTableName = this.operationArguments["D"] + "." + geodatabaseTableName;
+            }
+
             fc = wrkspc.OpenFeatureClass(geodatabaseTableName);
             IDataset ds = (IDataset)fc;
 
@@ -293,10 +298,10 @@ namespace Umbriel.ArcGIS.Geodatabase.sde2spatialite
                         this.operationTraceSwitch.Level = TraceLevel.Off;
                         break;
                     case "error":
-                        this.operationTraceSwitch.Level  = TraceLevel.Error;
+                        this.operationTraceSwitch.Level = TraceLevel.Error;
                         break;
                     case "warning":
-                        this.operationTraceSwitch.Level  = TraceLevel.Warning;
+                        this.operationTraceSwitch.Level = TraceLevel.Warning;
                         break;
                     case "info":
                         this.operationTraceSwitch.Level = TraceLevel.Info;
@@ -370,7 +375,7 @@ namespace Umbriel.ArcGIS.Geodatabase.sde2spatialite
                 {
                     connection.Open();
                     this.PrintMessage("Spatialite Database Opened.");
-                    
+
                     IFeatureCursor cursor;
                     IFeatureClass fc;
                     int spatialreferenceID;
@@ -405,7 +410,15 @@ namespace Umbriel.ArcGIS.Geodatabase.sde2spatialite
                             if (!this.TableExist(connection, spatialiteTableName))
                             {
                                 this.PrintMessage("Spatialite Table Name = " + spatialiteTableName + " created.");
-                                extloadCommand.CommandText = Util.S2SHelper.GenerateCreateTableSQL(this.Workspace, tablename, spatialiteTableName, out fieldmappings, geometryfieldname);
+
+                                string tname = tablename;
+                                
+                                if (!string.IsNullOrEmpty(this.operationArguments["D"]))
+                                {
+                                    tname = this.operationArguments["D"] + "." + tname;
+                                }
+
+                                extloadCommand.CommandText = Util.S2SHelper.GenerateCreateTableSQL(this.Workspace, tname, spatialiteTableName, out fieldmappings, geometryfieldname);
                                 extloadCommand.ExecuteNonQuery();
                                 newtable = true;
                             }
@@ -542,17 +555,17 @@ namespace Umbriel.ArcGIS.Geodatabase.sde2spatialite
                             }
                         }
 
-                            // update the geometry field:
-                            using (SQLiteCommand updateCommand = connection.CreateCommand())
-                            {
-                                this.PrintInformation("Updating geometry from WKT...");
-                                updateCommand.CommandText = string.Format(Constants.SQLUpdateGeomFromWKT, spatialiteTableName, geometryfieldname, "WKT", this.SpatialReferenceID.ToString(), geometrytype);
-                                this.PrintMessage("SQL: " + updateCommand.CommandText);
-                                updateCommand.ExecuteNonQuery();
-                                this.PrintInformation("...geometry update from WKT complete.");
-                            }                        
+                        // update the geometry field:
+                        using (SQLiteCommand updateCommand = connection.CreateCommand())
+                        {
+                            this.PrintInformation("Updating geometry from WKT...");
+                            updateCommand.CommandText = string.Format(Constants.SQLUpdateGeomFromWKT, spatialiteTableName, geometryfieldname, "WKT", this.SpatialReferenceID.ToString(), geometrytype);
+                            this.PrintMessage("SQL: " + updateCommand.CommandText);
+                            updateCommand.ExecuteNonQuery();
+                            this.PrintInformation("...geometry update from WKT complete.");
+                        }
                     }
-                    
+
                     connection.Close();
                 }
 
