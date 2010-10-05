@@ -180,5 +180,10 @@ namespace Umbriel.ArcMap.Addin.EditorTrack
             byte[] b = factory.CreateWkbVariantFromGeometry(geometry) as byte[];
             return b;
         }
+
+        public static string FormatObjectValue(this object o, string name)
+        {
+            return string.Format("{0}={1}", name, o.ToString());
+        }
     }
 }

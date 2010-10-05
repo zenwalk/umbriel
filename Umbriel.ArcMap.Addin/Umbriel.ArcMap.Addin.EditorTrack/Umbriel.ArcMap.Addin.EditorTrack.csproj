@@ -115,6 +115,7 @@
     <Compile Include="ReplacementTemplate.cs" />
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="TrackingFields.cs" />
+    <Compile Include="Util\EditorTrackHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">
@@ -200,4 +201,8 @@
       <Host>ArcMap</Host>
     </ESRIAddInProperties>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
