@@ -109,12 +109,12 @@ public static class Extensions
             }
             else
             {
-                throw new System.Exception("Could not parse string value: " + o.ToString());
+                throw new System.Exception("Could not parse object value: " + o.ToString());
             }
         }
         else
         {
-            throw new System.ArgumentException("String is not numeric.");
+            throw new System.ArgumentException("object is not numeric.");
         }
     }
 }
