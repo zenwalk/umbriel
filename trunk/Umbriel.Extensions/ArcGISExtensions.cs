@@ -586,14 +586,14 @@ namespace Umbriel.Extensions
 
             return r;
         }
-        
+
         /// <summary>
         /// Combines 2 AddInFolderList XML files
         /// </summary>
         /// <param name="firstAddinFolderList">The first addin folderlist file</param>
         /// <param name="secondAddinFolderList">The second addin folderlist file</param>
         /// <param name="outputAddInFolderList">The output addin folderlist file</param>
-        public static void CombineAddInFolderList(string firstAddinFolderList, string secondAddinFolderList,string outputAddInFolderList  )
+        public static void CombineAddInFolderList(string firstAddinFolderList, string secondAddinFolderList, string outputAddInFolderList)
         {
             System.Xml.XmlDocument doc1 = new XmlDocument();
             System.Xml.XmlDocument doc2 = new XmlDocument();
@@ -610,5 +610,218 @@ namespace Umbriel.Extensions
             doc1.Save(outputAddInFolderList);
 
         }
+
+        /// <summary>
+        /// Method that searches feature layers by the featureclass name and does not use an exact match
+        /// of the featureclass name
+        /// </summary>
+        /// <param name="map">IMap in which to search</param>
+        /// <param name="featureclassName">name of the featureclass</param>
+        /// <returns>List of IFeatureLayer that matches the featureclassname (not the layer name)</returns>
+        public static List<IFeatureLayer> FindFeatureLayers(this IMap map, string featureclassName)
+        {
+            return  map.FindFeatureLayers(featureclassName, false);
+        }
+
+        /// <summary>
+        /// Method that searches feature layers by the featureclass name:
+        /// </summary>
+        /// <param name="map">IMap in which to search</param>
+        /// <param name="featureclassName">Search criteria for the featureclass name</param>
+        /// <param name="exactMatch">Exact string/case match</param>
+        /// <returns>List of IFeatureLayer that matches the featureclassname (not the layer name)</returns>
+        public static List<IFeatureLayer> FindFeatureLayers(this IMap map, string featureclassName, bool exactMatch)
+        {
+            try
+            {
+                List<IFeatureLayer> layerList = new List<IFeatureLayer>();
+
+                IEnumLayer enumLayer = (IEnumLayer)map.get_Layers(null, true);
+
+                ILayer layer = null;
+
+                while ((layer = enumLayer.Next()) != null)
+                {
+                    Trace.WriteLine(layer.Name);
+
+                    if (layer is IFeatureLayer || layer is IGeoFeatureLayer)
+                    {
+                        IFeatureLayer featLayer = (IFeatureLayer)layer;
+                        IDataset dataset = (IDataset)featLayer;
+
+                        if (exactMatch)
+                        {
+                            if (dataset.BrowseName.Equals(featureclassName))
+                            {
+                                layerList.Add(featLayer);
+                            }
+                        }
+                        else
+                        {
+                            if (dataset.BrowseName.IndexOf(featureclassName, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                            {
+                                layerList.Add(featLayer);
+                            }
+                        }
+                    }
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Finds the feature layers.
+        /// </summary>
+        /// <param name="map">IMap in which to search</param>
+        /// <returns>List of IFeatureLayer  within an IMap</returns>
+        public static List<IFeatureLayer> FindFeatureLayers(this IMap map)
+        {
+            try
+            {
+                List<IFeatureLayer> layerList = new List<IFeatureLayer>();
+
+                IEnumLayer enumLayer = (IEnumLayer)map.get_Layers(null, true);
+
+                ILayer layer = null;
+
+                while ((layer = enumLayer.Next()) != null)
+                {
+                    Trace.WriteLine(layer.Name);
+
+                    if (layer is IFeatureLayer || layer is IGeoFeatureLayer)
+                    {
+                        IFeatureLayer featLayer = (IFeatureLayer)layer;
+                        IDataset dataset = (IDataset)featLayer;
+
+                        layerList.Add(featLayer);
+                    }
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Finds the feature layers.
+        /// </summary>
+        /// <param name="map">IMap in which to search</param>
+        /// <param name="service">The service string to search for</param>
+        /// <param name="exactMatch">if set to <c>true</c> [exact match].</param>
+        /// <param name="stringComparison">The string comparison.</param>
+        /// <param name="searchFeatureclassName">if set to <c>true</c> [search featureclass name].</param>
+        /// <returns>List of IFeatureLayer  within an IMap</returns>
+        public static List<IFeatureLayer> FindFeatureLayers(this IMap map,
+            string search,
+            bool exactMatch,
+            StringComparison stringComparison,
+            bool searchFeatureclassName = false)
+        {
+            try
+            {
+                List<IFeatureLayer> layerList = new List<IFeatureLayer>();
+
+                IEnumLayer layers = map.get_Layers(null, true);
+                ILayer layer = null;
+                
+                while ((layer = layers.Next()) != null)
+                {
+                    if (layer is IFeatureLayer)
+                    {
+                        if (searchFeatureclassName)
+                        {
+                            IFeatureLayer featureLayer = (IFeatureLayer)layer;
+                            
+                            IDataLayer dataLayer = (IDataLayer)layer;
+                            IDatasetName datasetName = (IDatasetName)dataLayer.DataSourceName;
+
+                            IWorkspaceName workspaceName = (IWorkspaceName)datasetName.WorkspaceName;
+
+                            //IFeatureClass featureClass = geoFeatureLayer.FeatureClass;
+                            //IDataset dataset = (IDataset)featureClass;
+
+                            //IWorkspace workspace = dataset.Workspace;
+
+                            IPropertySet propertySet = workspaceName.ConnectionProperties;
+
+                            Dictionary<string, string> properties = propertySet.ToDictionary();
+
+                            if (exactMatch)
+                            {
+                                if (datasetName.Name.Equals(search, stringComparison))
+                                {
+                                    layerList.Add(featureLayer);
+                                }
+                            }
+                            else
+                            {
+                                if (datasetName.Name.IndexOf(search, 1, stringComparison) > -1)
+                                {
+                                    layerList.Add(featureLayer);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (exactMatch)
+                            {
+                                if (layer.Name.Equals(search, stringComparison))
+                                {
+                                    layerList.Add(layer as IFeatureLayer);
+                                }
+                            }
+                            else
+                            {
+                                if (layer.Name.IndexOf(search, 1, stringComparison) > -1)
+                                {
+                                    layerList.Add(layer as IFeatureLayer);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return layerList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                throw;
+            }
+        }
+
+        public static void TraceLayerProperties(this IMap map)
+        {
+            string s = "Layer: {0} is visible: {1}";
+            string ms = "IMapLayers2: {0} is visible: {1}. Parent is visible:{2}";
+
+            IEnumLayer enumLayer = (IEnumLayer)map.get_Layers(null, true);
+            IMapLayers2 mapLayers = map as IMapLayers2;
+            ILayer layer = null;
+
+            while ((layer = enumLayer.Next()) != null)
+            {
+                bool isvis;
+                bool isparentvis;
+
+                mapLayers.IsLayerVisibleEx(layer, out isvis, out isparentvis);
+
+                ILayer2 layer2 = layer as ILayer2;
+                Trace.WriteLine(s.FormatString(layer2.Name, layer2.Visible));
+
+                Trace.WriteLine(ms.FormatString(layer2.Name, isvis,isparentvis));
+            }
+        }
+
     }
 }
