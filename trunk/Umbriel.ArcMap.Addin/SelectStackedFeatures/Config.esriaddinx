@@ -1,0 +1,32 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>SelectStackedFeaturesAddIn</Name>
+  <AddInID>{ec43f782-5184-4243-98c2-83b6b38cfa49}</AddInID>
+  <Description>Addin that selects features that have identical geometries</Description>
+  <Version>1.0</Version>
+  <Image>Images\SelectStackedFeatures.png</Image>
+  <Author>Jay Cummins</Author>
+  <Company>Umbriel Project</Company>
+  <Date>10/15/2010</Date>
+  <Targets>
+    <Target name="Desktop"
+            version="10.0" />
+  </Targets>
+  <AddIn language="CLR"
+         library="SelectStackedFeatures.dll"
+         namespace="SelectStackedFeatures">
+    <ArcMap>
+      <Commands>
+        <Button id="Umbriel_Project_SelectStackedFeatures_SelectStackedFeaturesButton"
+                class="SelectStackedFeaturesButton"
+                message="Select stacked features in the highlighted layer."
+                caption="Select stacked features in the highlighted layer."
+                tip="Select stacked features in the highlighted layer of the Table of Contents."
+                category="Umbriel"
+                image="Images\SelectStackedFeaturesButton.png">
+          <Help heading="Select Stacked Features">Highlight a feature layer in the table of contents, and press this button to select any geometries that are identical.</Help>
+        </Button>
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
