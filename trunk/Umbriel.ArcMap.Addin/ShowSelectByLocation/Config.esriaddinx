@@ -1,0 +1,32 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>ShowSelectByLocation</Name>
+  <AddInID>{f4c06d65-fc97-4e76-84e0-02e14a0cc92f}</AddInID>
+  <Description>Show SelectByLocation Workaround</Description>
+  <Version>1.0</Version>
+  <Image>Images\ShowSelectByLocation.png</Image>
+  <Author>Jay Cummins</Author>
+  <Company>Umbriel Project</Company>
+  <Date>10/18/2010</Date>
+  <Targets>
+    <Target name="Desktop"
+            version="10.0" />
+  </Targets>
+  <AddIn language="CLR"
+         library="ShowSelectByLocation.dll"
+         namespace="ShowSelectByLocation">
+    <ArcMap>
+      <Commands>
+        <Button id="Umbriel_Project_ShowSelectByLocation_ShowSelectByLocationButton"
+                class="ShowSelectByLocationButton"
+                message="Show Select By Location Dialog Box"
+                caption="Show Select By Location"
+                tip="Show Select By Location Dialog Box"
+                category="Umbriel"
+                image="Images\ShowSelectByLocationButton.png">
+          <Help heading="Show Select By Location">Show Select By Location Dialog Box and puts window on top.</Help>
+        </Button>
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
