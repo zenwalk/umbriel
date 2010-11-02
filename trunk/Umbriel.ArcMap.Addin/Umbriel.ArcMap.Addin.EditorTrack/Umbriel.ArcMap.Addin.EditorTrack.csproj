@@ -158,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <AddInContent Include="Instructions.doc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AddInContent>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
