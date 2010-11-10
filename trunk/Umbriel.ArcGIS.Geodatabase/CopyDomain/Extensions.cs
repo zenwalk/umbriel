@@ -51,7 +51,7 @@ namespace CopyDomain
         /// Converts string to Workspace
         /// </summary>
         /// <param name="s">The connection string  for geodatabase</param>
-        /// <returns>IWorkspace</returns>
+        /// <returns>geodatabase IWorkspace </returns>
         public static IWorkspace ToWorkspace(this string s)
         {
             IWorkspace workspace = null;
