@@ -1,0 +1,18 @@
+﻿CopyDomain.exe <source workspace> <target workspace> <domain name>
+
+<workspace>: 
+             path to sde connection file (sde)
+             (or) path to personal geodatabase(mdb)
+             (or) path to file geodatabase(gdb)
+
+<domain name>:
+             single domain name
+             (or) a comma-delimited list of domain names
+             (or) use *   for all domains.
+
+
+            
+
+
+
+	
