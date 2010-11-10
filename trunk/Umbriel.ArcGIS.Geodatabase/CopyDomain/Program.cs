@@ -1,24 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using ESRI.ArcGIS.DataSourcesFile;
-using ESRI.ArcGIS.DataSourcesGDB;
-using ESRI.ArcGIS.esriSystem;
-using ESRI.ArcGIS.Geodatabase;
-using DomainList = System.Collections.Generic.List<ESRI.ArcGIS.Geodatabase.IDomain>;
-
+// <copyright file="Program.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-11-10</date>
+// <summary>CopyDomain program class file</summary>
 
 namespace CopyDomain
 {
-    class Program
+    using System;
+    using System.Diagnostics;
+    using ESRI.ArcGIS.esriSystem;
+    using ESRI.ArcGIS.Geodatabase;
+    using DomainList = System.Collections.Generic.List<ESRI.ArcGIS.Geodatabase.IDomain>;
+
+    /// <summary>
+    /// CopyDomain Program Class 
+    /// </summary>
+    public class Program
     {
-        private static LicenseInitializer m_AOLicenseInitializer = new CopyDomain.LicenseInitializer();
+        /// <summary>
+        /// ESRI LicenseInitializer
+        /// </summary>
+        private static LicenseInitializer esriLicenseInitializer = new CopyDomain.LicenseInitializer();
 
+        /// <summary>
+        /// Main method
+        /// </summary>
+        /// <param name="args">command line args.</param>
         [STAThread()]
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-
             // display the usage when
             if (System.Environment.CommandLine.IndexOf("-h", 0, System.StringComparison.CurrentCultureIgnoreCase) >= 0 |
                 System.Environment.CommandLine.IndexOf("--help", 0, System.StringComparison.CurrentCultureIgnoreCase) >= 0 |
@@ -29,8 +41,9 @@ namespace CopyDomain
                 return;
             }
 
-            //ESRI License Initializer generated code.
-            m_AOLicenseInitializer.InitializeApplication(new esriLicenseProductCode[] { esriLicenseProductCode.esriLicenseProductCodeArcEditor },
+            // ESRI License Initializer generated code.
+            esriLicenseInitializer.InitializeApplication(
+                new esriLicenseProductCode[] { esriLicenseProductCode.esriLicenseProductCodeArcEditor },
             new esriLicenseExtensionCode[] { });
 
             DomainList domains = new DomainList();
@@ -65,7 +78,7 @@ namespace CopyDomain
             }
             else
             {
-                //assume the domain is a single domain
+                // assume the domain is a single domain
                     try
                     {
                         domains.Add(originalWorkspaceDomains.get_DomainByName(domain));
@@ -96,11 +109,9 @@ namespace CopyDomain
                 }
             }
 
-            //Do not make any call to ArcObjects after ShutDownApplication()
-            m_AOLicenseInitializer.ShutdownApplication();
+            // Do not make any call to ArcObjects after ShutDownApplication()
+            esriLicenseInitializer.ShutdownApplication();
         }
-
-
 
         /// <summary>
         /// Writes the usage to the console
@@ -137,6 +148,5 @@ namespace CopyDomain
                 return string.Empty;
             }
         }
-
     }
 }

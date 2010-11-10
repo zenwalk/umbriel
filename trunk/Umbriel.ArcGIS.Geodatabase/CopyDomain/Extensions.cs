@@ -1,24 +1,23 @@
-﻿namespace CopyDomain
+﻿// <copyright file="Extensions.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-11-10</date>
+// <summary>Extensions class file</summary>
+
+namespace CopyDomain
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data;
     using System.Diagnostics;
-    using System.Xml;
-    using ESRI.ArcGIS.esriSystem;
-    using ESRI.ArcGIS.Geodatabase;
     using ESRI.ArcGIS.DataSourcesGDB;
-    using ESRI.ArcGIS.DataSourcesFile;
-    using FeatureList = System.Collections.Generic.List<ESRI.ArcGIS.Geodatabase.IFeature>;
-    using OIDList = System.Collections.Generic.List<int>;
-    using PropertyDictionary = System.Collections.Generic.Dictionary<string, string>;
+    using ESRI.ArcGIS.Geodatabase;
     using DomainList = System.Collections.Generic.List<ESRI.ArcGIS.Geodatabase.IDomain>;
-    using Reflect = System.Reflection;
 
     /// <summary>
     /// static class of extension methods to use with ESRI ArcObjects
     /// </summary>
-    public static class ArcGISExtensions
+    public static class Extensions
     {
         /// <summary>
         /// parses the object class table name from the fully qualified object class name:
