@@ -131,13 +131,11 @@ namespace CopyDomain
                 Console.WriteLine(usage);
 
                 // tack on the version info:
-                string tail;
                 Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                string ver = v.Major.ToString() + "." + v.Minor.ToString() + "." + v.Revision.ToString() + "." + v.Build.ToString();
 
-                tail = "CopyDomain.exe " + ver;
+                string ver = "CopyDomain.exe {0}.{1}";
 
-                Console.WriteLine(tail);
+                Console.WriteLine(ver.FormatString(v.Major.ToString(), v.Minor.ToString()));
 
                 return usage;
             }
