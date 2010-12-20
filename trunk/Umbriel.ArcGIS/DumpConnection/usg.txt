@@ -1,0 +1,6 @@
+﻿DumpConnection.exe -Rv  -f <filepath>
+
+-f        File Path
+-R       Search recursively
+-v       Verbose
+
