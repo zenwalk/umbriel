@@ -1,257 +1,166 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using ESRI.ArcGIS.esriSystem;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.Framework;
-using ESRI.ArcGIS.DataSourcesGDB;
-using ESRI.ArcGIS.Geodatabase;
-using ConnectionStringList = System.Collections.Generic.List<string>;
+// <copyright file="Program.cs" company="Umbriel Project">
+// Copyright (c) 2010 All Right Reserved
+// </copyright>
+// <author>Jay Cummins</author>
+// <email>cumminsjp@gmail.com</email>
+// <date>2010-12-20</date>
+// <summary>DumpConnection program class file</summary>
 
 
 namespace DumpConnection
 {
+    using System;
+    using System.IO;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Diagnostics;
+    using ESRI.ArcGIS.esriSystem;
+    using ESRI.ArcGIS.Carto;
+    using ESRI.ArcGIS.Framework;
+    using ESRI.ArcGIS.DataSourcesGDB;
+    using ESRI.ArcGIS.Geodatabase;
+    using ConnectionStringList = System.Collections.Generic.List<string>;
+    using StringList = System.Collections.Generic.List<string>;
+    using FileList = System.Collections.Generic.List<System.IO.FileInfo>;
+
+    /// <summary>
+    /// 
+    /// </summary>
     class Program
     {
-        private  const string LayerConnectionString =  "LayerName={0},{1},{2}";
+
 
         private static LicenseInitializer m_AOLicenseInitializer = new DumpConnection.LicenseInitializer();
-    
+
         [STAThread()]
         static void Main(string[] args)
         {
-            string dirpath = args[0];
-
-            string fileext = "*.lyr";
-
-            if (args.Length >  1)
+            // display the usage when
+            if (System.Environment.CommandLine.IndexOf("-h", 0, System.StringComparison.CurrentCultureIgnoreCase) >= 0 |
+                System.Environment.CommandLine.IndexOf("--help", 0, System.StringComparison.CurrentCultureIgnoreCase) >= 0 |
+                System.Environment.CommandLine.IndexOf("/?", 0, System.StringComparison.CurrentCultureIgnoreCase) >= 0 |
+                System.Environment.CommandLine.IndexOf("-help", 0, System.StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                args.Length < 1)
             {
-                fileext = string.Format("*.{0}", args[1]);
+                Usage();
+                return;
             }
 
+            StringList argList = new StringList(args);
 
+            int i = argList.IndexOf("-f");
+
+            FileConnections.Recurse = argList.Contains("-R");
+
+            FileConnections.SearchPath = (argList[i + 1]).Trim('"');
+
+            FileList filesToSearch = new FileList();
+
+            if (File.Exists(FileConnections.SearchPath))
+            {
+                filesToSearch.Add(new FileInfo(FileConnections.SearchPath));
+            }
+            else
+            {
+                Trace.WriteLine("FileConnections.SearchPath={0}".FormatString(FileConnections.SearchPath));
+                if (Directory.Exists(FileConnections.SearchPath))
+                {
+                    DirectoryInfo directory = new DirectoryInfo(FileConnections.SearchPath);
+
+                    filesToSearch.AddRange(
+                        directory.GetFiles("*.mxd", (FileConnections.Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)));
+
+                    filesToSearch.AddRange(
+                        directory.GetFiles("*.lyr", (FileConnections.Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)));
+                }
+                else
+                {
+                    DirectoryInfo directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(FileConnections.SearchPath));
+
+                    string filesearchPattern = FileConnections.WildcardExtensionSearch.FormatString(System.IO.Path.GetExtension(FileConnections.SearchPath));
+
+                    filesToSearch.AddRange(
+                        directory.GetFiles(
+                            filesearchPattern, (FileConnections.Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)));  
+                }
+            }
+
+            if (argList.Contains("-v"))
+            {
+                Console.WriteLine("Files to be read: ");
+                Console.WriteLine("-----------------------------------");
+                foreach (FileInfo fi in filesToSearch)
+                {
+                    Console.WriteLine(fi.FullName);
+                }
+                Console.WriteLine("Total: {0} -----------------------------------".FormatString(filesToSearch.Count));
+            }
             
-
-
-
             //ESRI License Initializer generated code.
             m_AOLicenseInitializer.InitializeApplication(new esriLicenseProductCode[] { esriLicenseProductCode.esriLicenseProductCodeArcView },
             new esriLicenseExtensionCode[] { });
 
 
-            if (File.Exists(dirpath))
+            ConnectionStringList list = new ConnectionStringList();
+
+            foreach (FileInfo file in filesToSearch)
             {
-                Console.WriteLine(string.Join("\n", ReadFile(dirpath).ToArray()));
-                m_AOLicenseInitializer.ShutdownApplication();
-                return;
-            }
-            else
-            {
-                if (System.IO.Directory.Exists(dirpath).Equals(false))
+                try
                 {
-                    Console.WriteLine(string.Format("{0} does not exist", dirpath));
-                    m_AOLicenseInitializer.ShutdownApplication();
-                    return;
+                    list.AddRange(FileConnections.ReadFile(file.FullName));
                 }
+                catch (Exception e)
+                {
+                    if (argList.Contains("-v"))
+                    {
+                        Trace.WriteLine(e.StackTrace);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }                
             }
 
-            DirectoryInfo di = new DirectoryInfo(dirpath);
-
-            FileInfo[] files = di.GetFiles(fileext, SearchOption.AllDirectories);
-
-            foreach (FileInfo file in files)
-            {
-                ConnectionStringList list = new ConnectionStringList();
-
-                list.AddRange(ReadFile(file.FullName));
-
-                //if (System.IO.Path.GetExtension(file.FullName).Equals(".lyr"))
-                //{
-                //    list = GetConnectionString(OpenLayerFile(file.FullName), file.FullName);
-                //}
-                //else if (System.IO.Path.GetExtension(file.FullName).Equals(".mxd"))
-                //{
-                //    IMapDocument mapdoc = OpenMapDocument(file.FullName);
-
-                //    for (int i = 0; i < mapdoc.MapCount; i++)
-                //    {
-                //        IMap map = mapdoc.Map[i];
-                //        if (map != null)
-                //        {
-                //            IEnumLayer layers =  map.get_Layers(null,true);
-                //            ILayer maplayer = null;
-
-                //            while ((maplayer = layers.Next()) != null)
-                //            {
-                //                if (maplayer != null)
-                //                {
-                //                    list.AddRange(GetConnectionString(maplayer, file.FullName));
-                //                }
-                //            }
-                            
-                //        }
-                //    }
-                //}
-
-                Console.WriteLine(string.Join("\n", list.ToArray()));                
-            }
-
-                        
-
-            // string filePath = @"\\w-dpu-48\dpu_gisdata\Layers\dpu\wControlValve.lyr";
-
+            Console.WriteLine(string.Join("\n", list.ToArray()));
 
             //ESRI License Initializer generated code.
             //Do not make any call to ArcObjects after ShutDownApplication()
             m_AOLicenseInitializer.ShutdownApplication();
         }
 
-        private static ConnectionStringList GetConnectionString(ILayer layer,string filepath)
+        /// <summary>
+        /// Writes the usage to the console
+        /// </summary>
+        /// <returns>string containing the usage text to be displayed</returns>
+        private static string Usage()
         {
-            ConnectionStringList connectionStrings = new ConnectionStringList();
-
-            if (layer is IFeatureLayer)
+            try
             {
-                IFeatureLayer featureLayer = layer as IFeatureLayer;
+                System.Reflection.Assembly assemblyID = System.Reflection.Assembly.GetExecutingAssembly();
+                string[] resNames = assemblyID.GetManifestResourceNames();
+                System.IO.Stream streamID = assemblyID.GetManifestResourceStream("DumpConnection.usg.txt");
+                System.IO.StreamReader sr = new System.IO.StreamReader(streamID);
 
-                IDataset dataset = featureLayer.FeatureClass as IDataset;
+                string usage = sr.ReadToEnd();
+                Console.WriteLine(usage);
 
-                if (dataset != null)
-                {
-                    object propertyNames;
-                    object propertyValues;
+                // tack on the version info:
+                Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
-                    dataset.Workspace.ConnectionProperties.GetAllProperties(out propertyNames, out propertyValues);
+                string ver = "DumpConnection.exe {0}.{1}";
 
-                    connectionStrings.Add(
-                        string.Format(LayerConnectionString, layer.Name, MakeConnectionString(propertyNames, propertyValues), filepath));
-                }
-                else
-                {
-                    connectionStrings.Add(string.Format(LayerConnectionString, layer.Name, "No Dataset Information", filepath));
-                }
+                Console.WriteLine(ver.FormatString(v.Major.ToString(), v.Minor.ToString()));
 
-
+                return usage;
             }
-            else if (layer is IGroupLayer)
+            catch (Exception ex)
             {
-                ICompositeLayer compositeLayer = layer as ICompositeLayer;
-
-                for (int i = 0; i < compositeLayer.Count; i++)
-                {
-                    ILayer subLayer = compositeLayer.Layer[i];
-
-                    connectionStrings.AddRange(GetConnectionString(subLayer, filepath));
-                }                
+                Console.WriteLine("Error displaying usage text: ");
+                Console.WriteLine(ex.StackTrace);
+                Trace.WriteLine(ex.StackTrace);
+                return string.Empty;
             }
-            else
-            {
-            }
-
-            return connectionStrings;
         }
-
-        private static string MakeConnectionString(object propnames, object propvalues)
-        {
-            ConnectionStringList connstrings = new ConnectionStringList();
-
-            string kvp = "{0}={1}";
-
-            System.Array propNameArray = (System.Array)propnames;
-            System.Array propValuesArray = (System.Array)propvalues;
-
-            for (int i = 0; i < propValuesArray.Length; i++)
-			{
-                connstrings.Add(string.Format(kvp, propNameArray.GetValue(i), propValuesArray.GetValue(i)));
-			}
-
-            return string.Join(",", connstrings.ToArray());
-        }
-
-        private static IPropertySet GetConnectionProperties(string path)
-        {
-            return null;
-
-        }
-
-        private static IMapDocument OpenMapDocument(string path)
-        {
-            IMapDocument mapdoc = new MapDocumentClass();
-            mapdoc.Open(path);
-
-            return mapdoc;
-
-            
-
-        }
-
-        private static ILayer  OpenLayerFile(string path)
-        {
-            // Create a new GxLayer
-            ESRI.ArcGIS.Catalog.IGxLayer gxLayer = new ESRI.ArcGIS.Catalog.GxLayerClass();
-
-            ESRI.ArcGIS.Catalog.IGxFile gxFile = (ESRI.ArcGIS.Catalog.IGxFile)gxLayer; //Explicit Cast
-
-            // Set the path for where the layerfile is located on disk
-            gxFile.Path = path;
-
-
-            if (!(gxLayer.Layer == null))
-            {
-                return gxLayer.Layer;
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        private static ConnectionStringList ReadFile(string path)
-        {
-            ConnectionStringList list = new ConnectionStringList();
-
-            FileInfo file = new FileInfo(path);
-
-            if (file.Exists)
-            {
-                if (System.IO.Path.GetExtension(file.FullName).Equals(".lyr"))
-                {
-                    list = GetConnectionString(OpenLayerFile(file.FullName), file.FullName);
-                }
-                else if (System.IO.Path.GetExtension(file.FullName).Equals(".mxd"))
-                {
-                    IMapDocument mapdoc = OpenMapDocument(file.FullName);
-
-                    for (int i = 0; i < mapdoc.MapCount; i++)
-                    {
-                        IMap map = mapdoc.Map[i];
-                        if (map != null)
-                        {
-                            IEnumLayer layers = map.get_Layers(null, true);
-                            ILayer maplayer = null;
-
-                            while ((maplayer = layers.Next()) != null)
-                            {
-                                if (maplayer != null)
-                                {
-                                    list.AddRange(GetConnectionString(maplayer, file.FullName));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine(string.Format("'{0}' does not exist.", path));
-            }
-
-            return list;
-        }
-
-
-
     }
 }
