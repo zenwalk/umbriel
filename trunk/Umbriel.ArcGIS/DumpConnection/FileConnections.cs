@@ -11,6 +11,7 @@ namespace DumpConnection
     using ESRI.ArcGIS.Carto;
     using ESRI.ArcGIS.Framework;
     using ESRI.ArcGIS.DataSourcesGDB;
+    using ESRI.ArcGIS.GISClient;
     using ESRI.ArcGIS.Geodatabase;
     using ConnectionStringList = System.Collections.Generic.List<string>;
 
@@ -27,6 +28,8 @@ namespace DumpConnection
         internal static ConnectionStringList GetConnectionString(ILayer layer, string filepath)
         {
             ConnectionStringList connectionStrings = new ConnectionStringList();
+
+            Trace.WriteLine("ConnectionStringList LayerName: {0})".FormatString(layer.Name));
 
             if (layer is IFeatureLayer)
             {
@@ -48,8 +51,57 @@ namespace DumpConnection
                 {
                     connectionStrings.Add(string.Format(LayerConnectionString, layer.Name, "No Dataset Information", filepath));
                 }
+            }
+            else if (layer is ImageServerLayer)
+            {
+                IImageServerLayer imageserverlayer = layer as IImageServerLayer;
+                IImageServerLayer2 imageserverlayer2 = layer as IImageServerLayer2;
+                if (imageserverlayer != null)
+                {
+                    IAGSServerObject2 serverobject = (imageserverlayer.DataSource) as IAGSServerObject2;
+                    if (serverobject != null)
+                    {
+                        IAGSServerObjectName serverobjectname = serverobject.FullName as IAGSServerObjectName;
+                        if (serverobjectname != null)
+                        {
+                            //name, description, url
+                            string s = "{0},{1},{2}";
+                            string servicename = serverobjectname.Name;
+                            string serviceurl = serverobjectname.URL;
+                            string servicetype = serverobjectname.Type;
 
+                            connectionStrings.Add(s.FormatString(
+                                servicename,
+                                servicetype,
+                                serviceurl));
+                        }
+                    }
+                    Trace.WriteLine(imageserverlayer2.ServiceProperties);
+                }
+            }
+            else if (layer is MapServerLayer)
+            {
+                IMapServerLayer mapServerLayer = layer as IMapServerLayer;
 
+                if (mapServerLayer != null)
+                {
+                    try
+                    {
+                        IAGSServerObjectName agsson;
+                        string docLocation = string.Empty;
+                        string mapname = string.Empty;
+
+                        mapServerLayer.GetConnectionInfo(out agsson, out docLocation, out mapname);
+                        string s = "{0},{1},{2}";
+
+                        connectionStrings.Add(s.FormatString(agsson.Name, agsson.Type, agsson.URL));
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.StackTrace);
+                        throw;
+                    }
+                }
             }
             else if (layer is IGroupLayer)
             {
@@ -153,6 +205,8 @@ namespace DumpConnection
                             {
                                 if (maplayer != null)
                                 {
+                                    Trace.WriteLine("Layer CoClass: {0}".FormatString(maplayer.WhichCoClassAmI()));
+
                                     list.AddRange(GetConnectionString(maplayer, file.FullName));
                                 }
                             }
