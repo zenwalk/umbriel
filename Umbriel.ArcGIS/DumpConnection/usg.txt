@@ -1,4 +1,4 @@
-﻿DumpConnection.exe -Rv  -f <filepath>
+﻿DumpConnection.exe -R -v  -f <filepath>
 
 -f        File Path
 -R       Search recursively

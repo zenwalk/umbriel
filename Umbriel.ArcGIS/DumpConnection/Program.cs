@@ -81,9 +81,10 @@ namespace DumpConnection
 
                     filesToSearch.AddRange(
                         directory.GetFiles(
-                            filesearchPattern, (FileConnections.Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)));  
+                            filesearchPattern, (FileConnections.Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)));
                 }
             }
+
 
             if (argList.Contains("-v"))
             {
@@ -95,7 +96,9 @@ namespace DumpConnection
                 }
                 Console.WriteLine("Total: {0} -----------------------------------".FormatString(filesToSearch.Count));
             }
-            
+
+
+
             //ESRI License Initializer generated code.
             m_AOLicenseInitializer.InitializeApplication(new esriLicenseProductCode[] { esriLicenseProductCode.esriLicenseProductCodeArcView },
             new esriLicenseExtensionCode[] { });
@@ -119,7 +122,7 @@ namespace DumpConnection
                     {
                         throw;
                     }
-                }                
+                }
             }
 
             Console.WriteLine(string.Join("\n", list.ToArray()));
@@ -163,7 +166,8 @@ namespace DumpConnection
             }
         }
 
-
-        
     }
+
+
 }
+
