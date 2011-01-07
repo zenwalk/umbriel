@@ -25,6 +25,7 @@ namespace SelectStackedFeatures
         /// </summary>
         public SelectStackedFeaturesButton()
         {
+ 
         }
 
         /// <summary>
@@ -181,8 +182,8 @@ namespace SelectStackedFeatures
         /// <param name="message">The message.</param>
         private void OnMessageStatus(string message)
         {            
-            ArcMap.Application.StatusBar.set_Message(0, message);
-            System.Windows.Forms.Application.DoEvents();            
+            // ArcMap.Application.StatusBar.set_Message(ArcMap.Application.hWnd, message);
+            // System.Windows.Forms.Application.DoEvents();            
         }
     }
 }
