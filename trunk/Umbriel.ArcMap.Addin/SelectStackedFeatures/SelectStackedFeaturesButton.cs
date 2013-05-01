@@ -9,6 +9,8 @@
 namespace SelectStackedFeatures
 {
     using System;
+    using System.Windows.Forms;
+    using System.Diagnostics;
     using System.Collections.Generic;
     using ESRI.ArcGIS.ArcMapUI;
     using ESRI.ArcGIS.Carto;
@@ -21,11 +23,17 @@ namespace SelectStackedFeatures
     public class SelectStackedFeaturesButton : ESRI.ArcGIS.Desktop.AddIns.Button
     {
         /// <summary>
+        /// log4net log
+        /// </summary>
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SelectStackedFeaturesButton"/> class.
         /// </summary>
         public SelectStackedFeaturesButton()
         {
- 
+            log4net.Config.XmlConfigurator.Configure(); 
         }
 
         /// <summary>
@@ -33,6 +41,13 @@ namespace SelectStackedFeatures
         /// </summary>
         protected override void OnClick()
         {
+            log.Debug("Enter");
+
+            try
+            {
+
+
+  
             ArcMap.Application.CurrentTool = null;
 
             IMxDocument doc = (IMxDocument)ArcMap.Application.Document;
@@ -125,6 +140,21 @@ namespace SelectStackedFeatures
                     "Select Stack Geometries",
                     System.Windows.Forms.MessageBoxButtons.OK);
             }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                System.Windows.Forms.MessageBox.Show(
+                                  string.Format("An error has occurred: {0}\n{1}",ex.Message,ex.StackTrace),
+                                  "Select Stack Geometries",
+                                  MessageBoxButtons.OK);
+
+            }
+
+            log.Debug("Return");
+
+
         }
 
         /// <summary>
