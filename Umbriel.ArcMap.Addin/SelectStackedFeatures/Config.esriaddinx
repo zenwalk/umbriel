@@ -3,11 +3,11 @@
   <Name>SelectStackedFeaturesAddIn</Name>
   <AddInID>{ec43f782-5184-4243-98c2-83b6b38cfa49}</AddInID>
   <Description>Addin that selects features that have identical geometries</Description>
-  <Version>1.0</Version>
+  <Version>1.1</Version>
   <Image>Images\SelectStackedFeatures.png</Image>
   <Author>Jay Cummins</Author>
   <Company>Umbriel Project</Company>
-  <Date>10/15/2010</Date>
+  <Date>5/1/2013</Date>
   <Targets>
     <Target name="Desktop"
             version="10.0" />
